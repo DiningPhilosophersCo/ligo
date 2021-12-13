@@ -1,3 +1,4 @@
+let compare_stdlib = compare;
 include List
 
 let rec remove n = function
@@ -85,7 +86,7 @@ let unopt ~default x = match x with
   | Some x -> x
 
 let rec remove_element ?compare:cmp x lst =
-  let compare = unopt ~default:compare cmp in
+  let compare = unopt ~default:compare_stdlib cmp in
   match lst with
   | [] -> raise (Failure "X_list.remove_element")
   | hd :: tl when compare x hd = 0 -> tl
@@ -193,7 +194,7 @@ let to_singleton = function
    arguments *)
 
 let rec mem ?compare:cmp x =
-  let compare = unopt ~default:compare cmp in
+  let compare = unopt ~default:compare_stdlib cmp in
   function
   | [] -> false
   | a::l -> compare a x = 0 || mem ~compare x l
@@ -205,13 +206,13 @@ let rec memq ?eq:eq x =
   | a::l -> eq a x || memq ~eq x l
 
 let rec assoc ?compare:cmp x =
-  let compare = unopt ~default:compare cmp in
+  let compare = unopt ~default:compare_stdlib cmp in
   function
     [] -> raise Not_found
   | (a,b)::l -> if compare a x = 0 then b else assoc ~compare x l
 
 let rec assoc_opt ?compare:cmp x =
-  let compare = unopt ~default:compare cmp in
+  let compare = unopt ~default:compare_stdlib cmp in
   function
     [] -> None
   | (a,b)::l -> if compare a x = 0 then Some b else assoc_opt ~compare x l
