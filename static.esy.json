@@ -1,0 +1,372 @@
+{
+  "name": "ligo",
+  "version": "0.31.0",
+  "source": "./esy.json",
+  "esy": {
+    "buildEnv": {
+      "LIGO_VERSION": "0.31.0"
+    },
+    "release": {
+      "bin": ["ligo"],
+      "includePackages": [
+        "root",
+        "esy-libev",
+        "@esy-ocaml/libffi",
+        "@opam/hacl-star-raw",
+        "@opam/conf-libev",
+        "esy-gmp"
+      ],
+      "rewritePrefix": true
+    }
+  },
+  "override": {
+    "build": "dune build -p #{self.name} --profile static",
+    "//": "HACK! We shouldn't have to resolve to no-source like this for npm-release. It shouldn't try to build them in the first place!",
+    "resolutions": {
+      "ocaml": "4.10.1002-musl.static.flambda",
+      "@opam/merlin": {
+        "source": "no-source:",
+        "override": {
+          "build": "true"
+        }
+      },
+      "@opam/ocaml-lsp-server": {
+        "source": "no-source:",
+        "override": {
+          "build": "true"
+        }
+      },
+      "@opam/ocamlformat": {
+        "source": "no-source:",
+        "override": {
+          "build": "true"
+        }
+      },
+      "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#7a759aed307f986d43006c50b8ced677e18b5a6d",
+      "@esy-ocaml/libffi": "ManasJayanth/esy-libffi:esy.json#41698aeda66c004df26c0c1d80a191503bada03d",
+      "@opam/conf-libffi": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*"
+          }
+        }
+      },
+      "@opam/conf-libev": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "esy-libev": "*"
+          }
+        }
+      },
+      "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
+        "version": "opam:8.2",
+        "override": {
+          "build": [
+            ["rm", "-r", "vendors"],
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
+              "dune",
+              "build",
+              "-p",
+              "tezos-embedded-protocol-008-PtEdo2Zk",
+              "-j",
+              "4"
+            ],
+            [
+              "mv",
+              "src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.install",
+              "./"
+            ]
+          ],
+          "buildEnvOverride": {
+            "DYLD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}"
+          },
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*",
+            "esy-libev": "*"
+          }
+        }
+      },
+      "esy-libev": "esy-packages/libev:package.json#0817b2d",
+      "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+      "@opam/conduit-lwt-unix": "opam:4.0.1",
+      "@opam/hacl-star": "opam:0.3.2",
+      "@opam/hacl-star-raw": {
+        "version": "opam:0.3.2",
+        "override": {
+          "exportedEnv": {
+            "DYLD_LIBRARY_PATH": {
+              "scope": "global",
+              "val": "#{self.lib / 'hacl-star-raw'}:$DYLD_LIBRARY_PATH"
+            },
+            "LD_LIBRARY_PATH": {
+              "scope": "global",
+              "val": "#{self.lib / 'hacl-star-raw'}:$LD_LIBRARY_PATH"
+            }
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$DYLD_LIBRARY_PATH",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$LD_LIBRARY_PATH"
+          },
+          "dependencies": {
+            "@opam/ctypes": "*",
+            "@opam/ctypes-foreign": "*",
+            "@opam/ocamlfind": "*",
+            "@esy-ocaml/libffi": "*"
+          },
+          "buildsInSource": true,
+          "build": [
+            ["sh", "-exc", "cd raw && ./configure"],
+            ["make", "-C", "raw"]
+          ],
+          "install": [["make", "-C", "raw", "install-hacl-star-raw"]]
+        }
+      },
+      "@opam/conf-rust": {
+        "source": "no-source:",
+        "override": {
+          "build": ["true"],
+          "dependencies": {
+            "esy-rustup": "*"
+          }
+        }
+      },
+      "@opam/tezos-base": "opam:8.2",
+      "@opam/bls12-381": {
+        "version": "opam:0.4.3",
+        "override": {
+          "buildsInSource": "_build",
+          "build": [
+            ["dune", "build", "-j", "4", "-p", "bls12-381", "@install"]
+          ],
+          "install": [["esy-installer", "bls12-381.install"]],
+          "buildEnvOverride": {
+            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
+          },
+          "dependencies": {
+            "@opam/tezos-rust-libs": "*"
+          }
+        }
+      },
+      "@opam/bls12-381-unix": {
+        "source": "https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#fe25427dbc9f01a676532c6e0c9d75a72bf42b51",
+        "override": {
+          "buildsInSource": "_build",
+          "build": [
+            ["dune", "build", "-j", "4", "-p", "bls12-381-unix", "@install"]
+          ],
+          "install": [["esy-installer", "bls12-381-unix.install"]],
+          "buildEnvOverride": {
+            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
+          },
+          "dependencies": {
+            "@opam/conf-rust": "*",
+            "@opam/dune": "*",
+            "@opam/ff-sig": "*",
+            "@opam/zarith": "*",
+            "@opam/ctypes": "*",
+            "@opam/ctypes-foreign": "*",
+            "@opam/bls12-381-gen": "*",
+            "@opam/bls12-381": "*",
+            "@opam/hex": "*",
+            "@opam/tezos-rust-libs": "*"
+          }
+        }
+      },
+      "@opam/tezos-protocol-compiler": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {
+            "@opam/bls12-381-unix": "*"
+          }
+        }
+      },
+      "@opam/tezos-rust-libs": {
+        "version": "opam:1.1",
+        "override": {
+          "buildEnv": {
+            "RUSTFLAGS": "--codegen target-feature=-crt-static"
+          }
+        }
+      },
+      "@opam/bls12-381-legacy": {
+        "source": "https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25",
+        "override": {
+          "buildsInSource": "_build",
+          "build": [
+            ["dune", "build", "-j", "4", "-p", "bls12-381-legacy", "@install"]
+          ],
+          "install": [["esy-installer", "bls12-381-legacy.install"]],
+          "buildEnvOverride": {
+            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
+          },
+          "dependencies": {
+            "@opam/conf-rust": "*",
+            "@opam/dune": "*",
+            "@opam/ff-sig": "*",
+            "@opam/zarith": "*",
+            "@opam/ctypes": "*",
+            "@opam/ctypes-foreign": "*",
+            "@opam/bls12-381-gen": "*",
+            "@opam/tezos-rust-libs": "*"
+          }
+        }
+      },
+      "esy-rustup": "ManasJayanth/esy-rustup:esy.json#e07d864138ed41c5a151a4065063521d0588eb2a",
+      "@opam/simple-utils": "link:./vendors/ligo-utils/simple-utils/simple-utils.opam",
+      "@opam/tezos-utils": "link:./vendors/ligo-utils/tezos-utils/tezos-utils.opam",
+      "@opam/UnionFind": "link:./vendors/UnionFind/UnionFind.opam",
+      "@opam/Preprocessor": "link:./vendors/Preprocessor/Preprocessor.opam",
+      "@opam/ParserLib": "link:./vendors/ParserLib/ParserLib.opam",
+      "@opam/LexerLib": "link:./vendors/LexerLib/LexerLib.opam",
+      "@opam/tezos-memory-proto-alpha": "link:./vendors/ligo-utils/memory-proto-alpha/tezos-memory-proto-alpha.opam",
+      "@opam/RedBlackTrees": "link:./vendors/Red-Black_Trees/RedBlackTrees.opam",
+      "@opam/ligo_008_PtEdo2Zk_test_helpers": "link:./vendors/ligo-utils/ligo_008_PtEdo2Zk_test_helpers/ligo-008-PtEdo2Zk-test-helpers.opam",
+      "@opam/proto-alpha-utils": "link:./vendors/ligo-utils/proto-alpha-utils/proto-alpha-utils.opam",
+      "@opam/zarith": "opam:1.11",
+      "@opam/conf-hidapi": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "yarn-pkg-config": "*",
+            "esy-hidapi": "*"
+          }
+        }
+      },
+      "esy-hidapi": "esy-packages/esy-hidapi:esy.json#e21f930d6474e460fa5bb955a26505f6c3500c7a",
+      "libtool": "ManasJayanth/esy-libtool:esy.json#d6725b52f8d021539e92d182d29979951e706836",
+      "@opam/resto-cohttp-server": "opam:0.5",
+      "@opam/resto-directory": "opam:0.5",
+      "@opam/resto-cohttp": "opam:0.5",
+      "@opam/resto": "opam:0.5",
+      "@opam/resto-cohttp-client": "opam:0.5",
+      "@opam/tezos-error-monad": "opam:8.2",
+      "@opam/tezos-shell-services": "opam:8.2",
+      "@opam/tezos-client-base": "opam:8.2",
+      "@opam/irmin-pack": "opam:2.2.0",
+      "@opam/irmin": "opam:2.2.0",
+      "@opam/tezos-p2p-services": "opam:8.2",
+      "@opam/tezos-version": "opam:8.2",
+      "@opam/tezos-sapling": {
+        "version": "opam:8.2",
+        "override": {
+          "buildEnvOverride": {
+            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
+          },
+          "dependencies": {
+            "@opam/tezos-crypto": "*",
+            "@opam/dune": "*",
+            "@opam/ctypes-foreign": "*",
+            "@esy-ocaml/substs": "*",
+            "@opam/tezos-rust-libs": "*"
+          }
+        }
+      },
+      "@opam/tezos-micheline": "opam:8.2",
+      "@opam/tezos-stdlib-unix": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {}
+        }
+      },
+      "@opam/tezos-clic": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {
+            "@opam/tezos-lwt-result-stdlib": "*"
+          }
+        }
+      },
+      "@opam/tezos-crypto": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {
+            "@opam/bls12-381-unix": "*",
+            "@opam/tezos-error-monad": "*"
+          }
+        }
+      },
+      "@opam/tezos-protocol-compiler": {
+        "version": "opam:8.2",
+        "override": {
+          "build": [
+            "rm -rf vendors",
+            "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' src/lib_protocol_compiler/dune",
+            "dune build -j 4 -p tezos-protocol-compiler",
+            "mv src/lib_protocol_compiler/tezos-protocol-compiler.install ./"
+          ],
+          "dependencies": {
+            "@opam/bls12-381-unix": "*"
+          }
+        }
+      },
+      "@opam/tezos-protocol-008-PtEdo2Zk": {
+        "version": "opam:8.2",
+        "override": {
+          "build": [
+            ["rm", "-r", "vendors"],
+            [
+              "sed",
+              "-i.back",
+              "-e",
+              "s/-nostdlib//g",
+              "#{self.target_dir}/src/proto_008_PtEdo2Zk/lib_protocol/dune.inc"
+            ],
+            ["dune", "build", "-p", "tezos-protocol-008-PtEdo2Zk", "-j", "4"],
+            [
+              "mv",
+              "src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.install",
+              "./"
+            ]
+          ]
+        }
+      },
+      "@opam/tezos-protocol-008-PtEdo2Zk-parameters": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*"
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+          },
+          "build": [
+            ["rm", "-r", "vendors"],
+            "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' src/proto_008_PtEdo2Zk/lib_parameters/dune",
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
+              "dune",
+              "build",
+              "-p",
+              "tezos-protocol-008-PtEdo2Zk-parameters",
+              "-j",
+              "4"
+            ],
+            [
+              "mv",
+              "src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.install",
+              "./"
+            ]
+          ]
+        }
+      },
+      "@opam/tezos-event-logging": {
+        "version": "opam:8.2",
+        "override": {
+          "dependencies": {
+            "@opam/tezos-error-monad": "*",
+            "@opam/lwt_log": "*"
+          }
+        }
+      }
+    }
+  }
+}
