@@ -3,11 +3,30 @@ name: Build ligo
 on: push
 
 jobs:
-  build-platform:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build image marigold-dev/ligo
+        run: docker build . -f ./docker/DevImage.Dockerfile -t marigold-dev/ligo
+      - name: Run container to copy the assets
+        run: docker container run -itd --name ligo-container marigold-dev/ligo
+      - name: Copy assets outside
+        run: docker cp ligo-container:/app/_release $PWD/_container_release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux
+          path: _container_release/
+
+  non-linux:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest] # , windows-latest
+        os: [macOS-latest] # , windows-latest
     steps:
       - name: Install libudev-dev and libusb-1.0-0-dev on ubuntu
         run: sudo apt-get install -y libudev-dev libusb-1.0-0-dev
@@ -50,9 +69,12 @@ jobs:
         with:
           name: ${{ matrix.os }}
           path: _release/
+
   prepare-publish:
     name: Prepare publish to npm
-    needs: build-platform
+    needs:
+      - non-linux
+      - linux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v1
@@ -68,7 +90,7 @@ jobs:
       - name: Download Linux release
         uses: actions/download-artifact@v1
         with:
-          name: ubuntu-latest
+          name: linux
       # - name: Download Windows release
       #   uses: actions/download-artifact@v1
       #   with:
@@ -83,7 +105,7 @@ jobs:
           mkdir -p _release/platform-linux
           # mkdir -p _release/platform-windows-x64
           mkdir -p _release/platform-darwin
-          cp -a ubuntu-latest/. _release/platform-linux
+          cp -a linux/. _release/platform-linux
           # cp -a windows-latest/. _release/platform-windows-x64
           cp -a macOS-latest/. _release/platform-darwin
       - name: Prepare package
