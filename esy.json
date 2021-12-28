@@ -89,6 +89,7 @@
     "@opam/ocamlformat": "0.19.0"
   },
   "resolutions": {
+    "@opam/getopt": "ulrikstrid/ocaml-getopt:getopt.opam#645ab74",
     "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#7a759aed307f986d43006c50b8ced677e18b5a6d",
     "@esy-ocaml/libffi": "ManasJayanth/esy-libffi:esy.json#41698aeda66c004df26c0c1d80a191503bada03d",
     "@opam/conf-libffi": {
@@ -139,7 +140,35 @@
         }
       }
     },
-    "esy-libev": "esy-packages/libev:package.json#0817b2d",
+    "esy-rustup": {
+  "source": "https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#979e8139734d39313b0147e0db3bfd2675f49507",
+  "override": {
+    "buildsInSource": true,
+    "buildEnv": {
+      "RUSTUP_USE_CURL": "1",
+      "CARGO_HOME": "#{self.install}",
+      "RUSTUP_HOME": "#{self.install / '.rustup'}"
+    },
+    "exportedEnv": {
+      "CARGO_HOME": {
+        "val": "#{self.install}",
+        "scope": "global"
+      },
+      "RUSTUP_HOME": {
+        "val": "#{self.install / '.rustup'}",
+        "scope": "global"
+      }
+    },
+    "build": [
+      [
+        "sh",
+        "-c",
+        "./rustup-init.sh -y --no-modify-path --default-toolchain 1.51 --profile minimal #{os == 'windows' ? '--default-host=x86_64-pc-windows-gnu' : ''}"
+      ]
+    ]
+  }
+    },
+    "esy-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
     "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
     "@opam/conduit-lwt-unix": "4.0.1",
     "@opam/hacl-star": "0.3.2",
@@ -185,7 +214,7 @@
     },
     "@opam/tezos-base": "8.2",
     "@opam/bls12-381": {
-      "version": "opam:0.4.3",
+      "source": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a",
       "override": {
         "buildsInSource": "_build",
         "build": [["dune", "build", "-j", "4", "-p", "bls12-381", "@install"]],
@@ -199,7 +228,7 @@
       }
     },
     "@opam/bls12-381-unix": {
-      "source": "https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#fe25427dbc9f01a676532c6e0c9d75a72bf42b51",
+      "source": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a",
       "override": {
         "buildsInSource": "_build",
         "build": [
@@ -255,7 +284,6 @@
         }
       }
     },
-    "esy-rustup": "ManasJayanth/esy-rustup:esy.json#e07d864138ed41c5a151a4065063521d0588eb2a",
     "@opam/simple-utils": "link:./vendors/ligo-utils/simple-utils/simple-utils.opam",
     "@opam/tezos-utils": "link:./vendors/ligo-utils/tezos-utils/tezos-utils.opam",
     "@opam/UnionFind": "link:./vendors/UnionFind/UnionFind.opam",

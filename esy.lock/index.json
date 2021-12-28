@@ -1,5 +1,5 @@
 {
-  "checksum": "335cde650a2d5286ddc02eba876ff8d9",
+  "checksum": "9d14dc0df7ca162dc397b6e63f928ce7",
   "root": "ligo@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -71,15 +71,15 @@
         "@opam/ipaddr@opam:5.2.0@6ac621fb", "@opam/hex@opam:1.4.0@41725494",
         "@opam/hacl-star-raw@opam:0.3.2@7d095a91",
         "@opam/hacl-star@opam:0.3.2@bf74eb6c",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/domain-name@opam:0.3.0@46ccc517",
         "@opam/data-encoding@opam:0.2@0868556b",
         "@opam/ctypes@opam:0.20.0@4e68beca",
         "@opam/coq@opam:8.13.1@b9e398cc",
-        "@opam/bls12-381-unix@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51@5a57b5a8",
+        "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8",
         "@opam/bls12-381-legacy@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25@adee7cff",
-        "@opam/bls12-381@opam:0.4.3@bff7ae54",
+        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/alcotest-lwt@opam:1.5.0@f1f00af0",
         "@opam/alcotest@opam:1.5.0@c3a8eb69",
@@ -111,9 +111,9 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@0d1c61c6": {
+    "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224": {
       "id":
-        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@0d1c61c6",
+        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224",
       "name": "esy-rustup",
       "version":
         "archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507",
@@ -124,25 +124,45 @@
         ]
       },
       "overrides": [
-        "esy.lock/overrides/0d1c61c63aae1254c4c4885d62bcf385/esy.json"
+        {
+          "buildsInSource": true,
+          "buildEnv": {
+            "RUSTUP_USE_CURL": "1",
+            "CARGO_HOME": "#{self.install}",
+            "RUSTUP_HOME": "#{self.install / '.rustup'}"
+          },
+          "exportedEnv": {
+            "CARGO_HOME": { "val": "#{self.install}", "scope": "global" },
+            "RUSTUP_HOME": {
+              "val": "#{self.install / '.rustup'}",
+              "scope": "global"
+            }
+          },
+          "build": [
+            [
+              "sh", "-c",
+              "./rustup-init.sh -y --no-modify-path --default-toolchain 1.51 --profile minimal #{os == 'windows' ? '--default-host=x86_64-pc-windows-gnu' : ''}"
+            ]
+          ]
+        }
       ],
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794@4e346fbb": {
+    "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@d202330d": {
       "id":
-        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794@4e346fbb",
+        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@d202330d",
       "name": "esy-libev",
       "version":
-        "archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794",
+        "archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b",
       "source": {
         "type": "install",
         "source": [
-          "archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794"
+          "archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b"
         ]
       },
       "overrides": [
-        "esy.lock/overrides/4e346fbbfd5b2e26f800bf2caeea7abf/package.json"
+        "esy.lock/overrides/d202330d7742e66dddc1582a6de9f2de/package.json"
       ],
       "dependencies": [],
       "devDependencies": []
@@ -1394,7 +1414,7 @@
         "@opam/tezos-protocol-environment@opam:8.2@5e0fed53",
         "@opam/ocp-ocamlres@opam:0.4@532b94ca",
         "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/bls12-381-unix@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51@5a57b5a8",
+        "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1804,7 +1824,7 @@
         }
       ],
       "dependencies": [
-        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794@4e346fbb",
+        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@d202330d",
         "@opam/tezos-protocol-updater@opam:8.2@78c628a8",
         "@opam/tezos-protocol-008-PtEdo2Zk@opam:8.2@a23f44a4",
         "@opam/hacl-star-raw@opam:0.3.2@7d095a91",
@@ -1849,8 +1869,8 @@
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/hacl-star@opam:0.3.2@bf74eb6c",
         "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/bls12-381-unix@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51@5a57b5a8",
-        "@opam/bls12-381@opam:0.4.3@bff7ae54",
+        "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8",
+        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1860,7 +1880,7 @@
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/hacl-star@opam:0.3.2@bf74eb6c",
         "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/bls12-381@opam:0.4.3@bff7ae54"
+        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f"
       ]
     },
     "@opam/tezos-client-base@opam:8.2@7a93bbef": {
@@ -5010,30 +5030,23 @@
         "ocaml@4.10.2000@d41d8cd9", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
-    "@opam/getopt@opam:20120615@6dd6ef99": {
-      "id": "@opam/getopt@opam:20120615@6dd6ef99",
+    "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9": {
+      "id":
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
       "name": "@opam/getopt",
-      "version": "opam:20120615",
+      "version": "github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/eb/ebd953313fa183d596704e41b90178ee#md5:ebd953313fa183d596704e41b90178ee",
-          "archive:https://download.ocamlcore.org/ocaml-getopt/ocaml-getopt/20120615/ocaml-getopt-20120615.tar.gz#md5:ebd953313fa183d596704e41b90178ee"
-        ],
-        "opam": {
-          "name": "getopt",
-          "version": "20120615",
-          "path": "esy.lock/opam/getopt.20120615"
-        }
+        "source": [ "github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74" ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.10.2000@d41d8cd9", "@opam/ocamlfind@opam:1.9.1@b748edf6",
-        "@opam/ocamlbuild@opam:0.14.0@0dee4078",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/stdlib-shims@opam:0.3.0@0d088929",
+        "@opam/dune@opam:2.9.1@1e504822", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.10.2000@d41d8cd9", "@opam/ocamlfind@opam:1.9.1@b748edf6"
+        "@opam/stdlib-shims@opam:0.3.0@0d088929",
+        "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
     "@opam/fpath@opam:0.7.3@674d8125": {
@@ -5669,7 +5682,7 @@
         { "build": [ "true" ], "dependencies": { "esy-rustup": "*" } }
       ],
       "dependencies": [
-        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@0d1c61c6"
+        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224"
       ],
       "devDependencies": []
     },
@@ -5733,7 +5746,7 @@
       "source": { "type": "install", "source": [ "no-source:" ] },
       "overrides": [ { "dependencies": { "esy-libev": "*" } } ],
       "dependencies": [
-        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.25.tar.gz#sha1:f78a1338a0b975fb396b0b6558709211b6ccd794@4e346fbb"
+        "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@d202330d"
       ],
       "devDependencies": []
     },
@@ -6149,16 +6162,16 @@
         "@opam/astring@opam:0.8.5@1300cee8"
       ]
     },
-    "@opam/bls12-381-unix@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51@5a57b5a8": {
+    "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8": {
       "id":
-        "@opam/bls12-381-unix@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51@5a57b5a8",
+        "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8",
       "name": "@opam/bls12-381-unix",
       "version":
-        "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51",
+        "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#sha1:fe25427dbc9f01a676532c6e0c9d75a72bf42b51"
+          "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a"
         ]
       },
       "overrides": [
@@ -6188,17 +6201,21 @@
         }
       ],
       "dependencies": [
-        "@opam/zarith@opam:1.11@6b66cdc1",
+        "ocaml@4.10.2000@d41d8cd9", "@opam/zarith@opam:1.11@6b66cdc1",
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
         "@opam/hex@opam:1.4.0@41725494", "@opam/ff-sig@opam:0.6.2@13e04ec3",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/ctypes-foreign@opam:0.18.0@4201a88c",
         "@opam/ctypes@opam:0.20.0@4e68beca",
         "@opam/conf-rust@no-source:@3165ff25",
-        "@opam/bls12-381-gen@opam:0.4.3@685aa827",
-        "@opam/bls12-381@opam:0.4.3@bff7ae54"
+        "@opam/bls12-381-gen@opam:0.5.0@c1c850c9",
+        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
-      "devDependencies": []
+      "devDependencies": [
+        "ocaml@4.10.2000@d41d8cd9", "@opam/zarith@opam:1.11@6b66cdc1",
+        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822"
+      ]
     },
     "@opam/bls12-381-legacy@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25@adee7cff": {
       "id":
@@ -6244,24 +6261,24 @@
         "@opam/ctypes-foreign@opam:0.18.0@4201a88c",
         "@opam/ctypes@opam:0.20.0@4e68beca",
         "@opam/conf-rust@no-source:@3165ff25",
-        "@opam/bls12-381-gen@opam:0.4.3@685aa827"
+        "@opam/bls12-381-gen@opam:0.5.0@c1c850c9"
       ],
       "devDependencies": []
     },
-    "@opam/bls12-381-gen@opam:0.4.3@685aa827": {
-      "id": "@opam/bls12-381-gen@opam:0.4.3@685aa827",
+    "@opam/bls12-381-gen@opam:0.5.0@c1c850c9": {
+      "id": "@opam/bls12-381-gen@opam:0.5.0@c1c850c9",
       "name": "@opam/bls12-381-gen",
-      "version": "opam:0.4.3",
+      "version": "opam:0.5.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/f8/f81a4562579a69cc0312d6c948678d35#md5:f81a4562579a69cc0312d6c948678d35",
-          "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.bz2#md5:f81a4562579a69cc0312d6c948678d35"
+          "archive:https://opam.ocaml.org/cache/md5/5e/5e550e69578c3b991b661c16f012a644#md5:5e550e69578c3b991b661c16f012a644",
+          "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.5.0/ocaml-bls12-381-0.5.0.tar.bz2#md5:5e550e69578c3b991b661c16f012a644"
         ],
         "opam": {
           "name": "bls12-381-gen",
-          "version": "0.4.3",
-          "path": "esy.lock/opam/bls12-381-gen.0.4.3"
+          "version": "0.5.0",
+          "path": "esy.lock/opam/bls12-381-gen.0.5.0"
         }
       },
       "overrides": [],
@@ -6275,21 +6292,17 @@
         "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
-    "@opam/bls12-381@opam:0.4.3@bff7ae54": {
-      "id": "@opam/bls12-381@opam:0.4.3@bff7ae54",
+    "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f": {
+      "id":
+        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f",
       "name": "@opam/bls12-381",
-      "version": "opam:0.4.3",
+      "version":
+        "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/f8/f81a4562579a69cc0312d6c948678d35#md5:f81a4562579a69cc0312d6c948678d35",
-          "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.bz2#md5:f81a4562579a69cc0312d6c948678d35"
-        ],
-        "opam": {
-          "name": "bls12-381",
-          "version": "0.4.3",
-          "path": "esy.lock/opam/bls12-381.0.4.3"
-        }
+          "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a"
+        ]
       },
       "overrides": [
         {
@@ -6308,13 +6321,11 @@
         "ocaml@4.10.2000@d41d8cd9", "@opam/zarith@opam:1.11@6b66cdc1",
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
         "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/bls12-381-gen@opam:0.4.3@685aa827",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.10.2000@d41d8cd9", "@opam/zarith@opam:1.11@6b66cdc1",
-        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/bls12-381-gen@opam:0.4.3@685aa827"
+        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822"
       ]
     },
     "@opam/bisect_ppx@opam:2.7.0@ad70f359": {
@@ -6784,7 +6795,7 @@
         "ocaml@4.10.2000@d41d8cd9",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
         "@opam/menhir@opam:20211012@1135eab2",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76",
@@ -6794,7 +6805,7 @@
         "ocaml@4.10.2000@d41d8cd9",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
         "@opam/menhir@opam:20211012@1135eab2",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76"
@@ -6814,7 +6825,7 @@
         "ocaml@4.10.2000@d41d8cd9",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
         "@opam/menhir@opam:20211012@1135eab2",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76",
@@ -6824,7 +6835,7 @@
         "ocaml@4.10.2000@d41d8cd9",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
         "@opam/menhir@opam:20211012@1135eab2",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76"
@@ -6843,7 +6854,7 @@
       "dependencies": [
         "ocaml@4.10.2000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76",
@@ -6852,7 +6863,7 @@
       "devDependencies": [
         "ocaml@4.10.2000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/simple-utils@link:vendors/ligo-utils/simple-utils/simple-utils.opam",
-        "@opam/getopt@opam:20120615@6dd6ef99",
+        "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/base@opam:v0.14.2@04880a76"
