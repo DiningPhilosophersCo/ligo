@@ -110,11 +110,17 @@
         }
       }
     },
+    "@opam/tezos-lwt-result-stdlib": {
+      "source": "./vendors/tezos_8_2/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+      "override": {
+        "buildsInSource": "_build",
+        "build": [["dune", "build", "-p", "tezos-lwt-result-stdlib", "-j", "4"]]
+      }
+    },
     "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.opam",
       "override": {
         "build": [
-          ["rm", "-r", "vendors"],
           [
             "env",
             "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
@@ -124,11 +130,6 @@
             "tezos-embedded-protocol-008-PtEdo2Zk",
             "-j",
             "4"
-          ],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.install",
-            "./"
           ]
         ],
         "buildEnvOverride": {
@@ -229,9 +230,9 @@
         }
       }
     },
-    "@opam/tezos-base": "8.2",
+    "@opam/tezos-base": "./vendors/tezos_8_2/src/lib_base/tezos-base.opam",
     "@opam/tezos-protocol-compiler": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
       "override": {
         "dependencies": {
           "@opam/bls12-381-unix": "*"
@@ -298,7 +299,7 @@
     "@opam/tezos-p2p-services": "8.2",
     "@opam/tezos-version": "8.2",
     "@opam/tezos-sapling": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_sapling/tezos-sapling.opam",
       "override": {
         "buildEnvOverride": {
           "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
@@ -312,15 +313,15 @@
         }
       }
     },
-    "@opam/tezos-micheline": "8.2",
+    "@opam/tezos-micheline": "./vendors/tezos_8_2/src/lib_micheline/tezos-micheline.opam",
     "@opam/tezos-stdlib-unix": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
       "override": {
         "dependencies": {}
       }
     },
     "@opam/tezos-clic": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_clic/tezos-clic.opam",
       "override": {
         "dependencies": {
           "@opam/tezos-lwt-result-stdlib": "*"
@@ -328,7 +329,7 @@
       }
     },
     "@opam/tezos-crypto": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_crypto/tezos-crypto.opam",
       "override": {
         "dependencies": {
           "@opam/bls12-381-unix": "*",
@@ -337,13 +338,11 @@
       }
     },
     "@opam/tezos-protocol-compiler": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
       "override": {
         "build": [
-          "rm -rf vendors",
-          "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' src/lib_protocol_compiler/dune",
-          "dune build -j 4 -p tezos-protocol-compiler",
-          "mv src/lib_protocol_compiler/tezos-protocol-compiler.install ./"
+          "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' dune",
+          "dune build -j 4 -p tezos-protocol-compiler"
         ],
         "dependencies": {
           "@opam/bls12-381-unix": "*"
@@ -351,28 +350,16 @@
       }
     },
     "@opam/tezos-protocol-008-PtEdo2Zk": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.opam",
       "override": {
         "build": [
-          ["rm", "-r", "vendors"],
-          [
-            "sed",
-            "-i.back",
-            "-e",
-            "s/-nostdlib//g",
-            "#{self.target_dir}/src/proto_008_PtEdo2Zk/lib_protocol/dune.inc"
-          ],
-          ["dune", "build", "-p", "tezos-protocol-008-PtEdo2Zk", "-j", "4"],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.install",
-            "./"
-          ]
+          ["sed", "-i.back", "-e", "s/-nostdlib//g", "dune.inc"],
+          ["dune", "build", "-p", "tezos-protocol-008-PtEdo2Zk", "-j", "4"]
         ]
       }
     },
     "@opam/tezos-protocol-008-PtEdo2Zk-parameters": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.opam",
       "override": {
         "dependencies": {
           "@esy-ocaml/libffi": "*",
@@ -383,8 +370,7 @@
           "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
         },
         "build": [
-          ["rm", "-r", "vendors"],
-          "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' src/proto_008_PtEdo2Zk/lib_parameters/dune",
+          "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' dune",
           [
             "env",
             "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
@@ -394,23 +380,20 @@
             "tezos-protocol-008-PtEdo2Zk-parameters",
             "-j",
             "4"
-          ],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.install",
-            "./"
           ]
         ]
       }
     },
     "@opam/tezos-event-logging": {
-      "version": "opam:8.2",
+      "source": "./vendors/tezos_8_2/src/lib_event_logging/tezos-event-logging.opam",
       "override": {
         "dependencies": {
           "@opam/tezos-error-monad": "*",
           "@opam/lwt_log": "*"
         }
       }
-    }
+    },
+    "@opam/tezos-rpc": "link:./vendors/tezos_8_2/src/lib_rpc/tezos-rpc.opam",
+    "@opam/tezos-rpc-http": "link:./vendors/tezos_8_2/src/lib_rpc_http/tezos-rpc-http.opam"
   }
 }
