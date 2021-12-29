@@ -1,5 +1,5 @@
 {
-  "checksum": "f4a9e029f3a924afd529e9ba84bd33cc",
+  "checksum": "64791f5a25bdedf25c30c30c8a2498ab",
   "root": "ligo@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -45,7 +45,7 @@
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
         "@opam/terminal_size@opam:0.1.4@98f7842a",
         "@opam/sexplib@opam:v0.14.0@61ef150a",
-        "@opam/secp256k1-internal@opam:0.2.0@54945e35",
+        "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
         "@opam/ringo-lwt@opam:0.5@9319b89f", "@opam/ringo@opam:0.5@2f28117a",
         "@opam/resto-directory@opam:0.5@487139df",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
@@ -1487,7 +1487,7 @@
         "@opam/tezos-protocol-008-PtEdo2Zk@opam:8.2@a23f44a4",
         "@opam/hacl-star-raw@opam:0.3.2@7d095a91",
         "@opam/dune@opam:2.9.1@1e504822", "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609"
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
       ],
       "devDependencies": [
         "@opam/tezos-protocol-008-PtEdo2Zk@opam:8.2@a23f44a4",
@@ -1843,7 +1843,7 @@
         "@opam/tezos-protocol-008-PtEdo2Zk@opam:8.2@a23f44a4",
         "@opam/hacl-star-raw@opam:0.3.2@7d095a91",
         "@opam/dune@opam:2.9.1@1e504822", "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609"
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
       ],
       "devDependencies": [
         "@opam/tezos-protocol-updater@opam:8.2@78c628a8",
@@ -1879,7 +1879,7 @@
         "@opam/uecc@opam:0.3@3caf28d0", "@opam/tezos-rpc@opam:8.2@8e9784c5",
         "@opam/tezos-error-monad@opam:8.2@bdd0df90",
         "@opam/tezos-clic@opam:8.2@4cf4d926",
-        "@opam/secp256k1-internal@opam:0.2.0@54945e35",
+        "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/hacl-star@opam:0.3.2@bf74eb6c",
         "@opam/dune@opam:2.9.1@1e504822",
@@ -1890,7 +1890,7 @@
       "devDependencies": [
         "@opam/uecc@opam:0.3@3caf28d0", "@opam/tezos-rpc@opam:8.2@8e9784c5",
         "@opam/tezos-clic@opam:8.2@4cf4d926",
-        "@opam/secp256k1-internal@opam:0.2.0@54945e35",
+        "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/hacl-star@opam:0.3.2@bf74eb6c",
         "@opam/dune@opam:2.9.1@1e504822",
@@ -2224,21 +2224,17 @@
       ],
       "devDependencies": [ "ocaml@4.10.2000@d41d8cd9" ]
     },
-    "@opam/secp256k1-internal@opam:0.2.0@54945e35": {
-      "id": "@opam/secp256k1-internal@opam:0.2.0@54945e35",
+    "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9": {
+      "id":
+        "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
       "name": "@opam/secp256k1-internal",
-      "version": "opam:0.2.0",
+      "version":
+        "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/56/56a12978d13058761ae495068ad683f1da837b2e280c70b2042c4325926a12f1#sha256:56a12978d13058761ae495068ad683f1da837b2e280c70b2042c4325926a12f1",
-          "archive:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal/-/archive/v0.2/ocaml-secp256k1-internal-v0.2.tar.bz2#sha256:56a12978d13058761ae495068ad683f1da837b2e280c70b2042c4325926a12f1"
-        ],
-        "opam": {
-          "name": "secp256k1-internal",
-          "version": "0.2.0",
-          "path": "esy.lock/opam/secp256k1-internal.0.2.0"
-        }
+          "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -2246,6 +2242,7 @@
         "@opam/dune-configurator@opam:2.9.1@b7cf7a02",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/cstruct@opam:6.0.1@69eae449",
+        "@opam/conf-pkg-config@opam:2@85f8644d",
         "@opam/conf-gmp@opam:3@a623586f",
         "@opam/bigstring@opam:0.3@d98556f0",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -2255,6 +2252,7 @@
         "@opam/dune-configurator@opam:2.9.1@b7cf7a02",
         "@opam/dune@opam:2.9.1@1e504822",
         "@opam/cstruct@opam:6.0.1@69eae449",
+        "@opam/conf-pkg-config@opam:2@85f8644d",
         "@opam/bigstring@opam:0.3@d98556f0"
       ]
     },
@@ -4982,7 +4980,7 @@
         "@opam/ctypes@opam:0.20.0@4e68beca",
         "@opam/conf-which@opam:1@f2a4f9c4",
         "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609"
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
       ],
       "devDependencies": [
         "ocaml@4.10.2000@d41d8cd9",
@@ -5525,7 +5523,7 @@
         "@opam/conf-pkg-config@opam:2@85f8644d",
         "@opam/conf-libffi@no-source:@8cbeabd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609"
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
       ],
       "devDependencies": [ "@opam/conf-libffi@no-source:@8cbeabd9" ]
     },
@@ -5687,6 +5685,22 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
+    "@opam/conf-texinfo@github:esy-packages/esy-texinfo:package.json#4a05feafbbcc4c57d5d25899fbdab98961b9a69c@d41d8cd9": {
+      "id":
+        "@opam/conf-texinfo@github:esy-packages/esy-texinfo:package.json#4a05feafbbcc4c57d5d25899fbdab98961b9a69c@d41d8cd9",
+      "name": "@opam/conf-texinfo",
+      "version":
+        "github:esy-packages/esy-texinfo:package.json#4a05feafbbcc4c57d5d25899fbdab98961b9a69c",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-packages/esy-texinfo:package.json#4a05feafbbcc4c57d5d25899fbdab98961b9a69c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "@opam/conf-rust@no-source:@3165ff25": {
       "id": "@opam/conf-rust@no-source:@3165ff25",
       "name": "@opam/conf-rust",
@@ -5749,7 +5763,7 @@
       "source": { "type": "install", "source": [ "no-source:" ] },
       "overrides": [ { "dependencies": { "@esy-ocaml/libffi": "*" } } ],
       "dependencies": [
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609"
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
       ],
       "devDependencies": []
     },
@@ -6849,9 +6863,9 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609": {
+    "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80": {
       "id":
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@076bf609",
+        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80",
       "name": "@esy-ocaml/libffi",
       "version":
         "archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa",
@@ -6862,9 +6876,11 @@
         ]
       },
       "overrides": [
-        "esy.lock/overrides/076bf60993fed26b415d088cee6e7529/esy.json"
+        "esy.lock/overrides/069bcd80a23ad80f17a2c6af0e92f3e9/esy.json"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "@opam/conf-texinfo@github:esy-packages/esy-texinfo:package.json#4a05feafbbcc4c57d5d25899fbdab98961b9a69c@d41d8cd9"
+      ],
       "devDependencies": []
     }
   }
