@@ -1,5 +1,5 @@
 {
-  "checksum": "9d14dc0df7ca162dc397b6e63f928ce7",
+  "checksum": "f4a9e029f3a924afd529e9ba84bd33cc",
   "root": "ligo@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -78,7 +78,6 @@
         "@opam/ctypes@opam:0.20.0@4e68beca",
         "@opam/coq@opam:8.13.1@b9e398cc",
         "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@5a57b5a8",
-        "@opam/bls12-381-legacy@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25@adee7cff",
         "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#c3a1b4931f26a0082111cf36d2119fbfaef99f0a@048ede9f",
         "@opam/bisect_ppx@opam:2.7.0@ad70f359",
         "@opam/alcotest-lwt@opam:1.5.0@f1f00af0",
@@ -111,9 +110,9 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224": {
+    "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@fd8c1918": {
       "id":
-        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224",
+        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@fd8c1918",
       "name": "esy-rustup",
       "version":
         "archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507",
@@ -128,8 +127,8 @@
           "buildsInSource": true,
           "buildEnv": {
             "RUSTUP_USE_CURL": "1",
-            "CARGO_HOME": "#{self.install}",
-            "RUSTUP_HOME": "#{self.install / '.rustup'}"
+            "CARGO_HOME": "#{self.target_dir}",
+            "RUSTUP_HOME": "#{self.target_dir / '.rustup'}"
           },
           "exportedEnv": {
             "CARGO_HOME": { "val": "#{self.install}", "scope": "global" },
@@ -143,6 +142,21 @@
               "sh", "-c",
               "./rustup-init.sh -y --no-modify-path --default-toolchain 1.51 --profile minimal #{os == 'windows' ? '--default-host=x86_64-pc-windows-gnu' : ''}"
             ]
+          ],
+          "install": [
+            "cp #{self.target_dir}/bin/cargo-fmt#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/cargo-miri#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/cargo#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/clippy-driver#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rls#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rust-gdb#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rust-lldb#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustc#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustdoc#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustfmt#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustup#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp -R #{self.target_dir}/.cargo #{self.install}/.cargo",
+            "cp -R #{self.target_dir}/.rustup #{self.install}/.rustup"
           ]
         }
       ],
@@ -5682,7 +5696,7 @@
         { "build": [ "true" ], "dependencies": { "esy-rustup": "*" } }
       ],
       "dependencies": [
-        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@a1f30224"
+        "esy-rustup@archive:https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#sha1:979e8139734d39313b0147e0db3bfd2675f49507@fd8c1918"
       ],
       "devDependencies": []
     },
@@ -6216,54 +6230,6 @@
         "ocaml@4.10.2000@d41d8cd9", "@opam/zarith@opam:1.11@6b66cdc1",
         "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822"
       ]
-    },
-    "@opam/bls12-381-legacy@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25@adee7cff": {
-      "id":
-        "@opam/bls12-381-legacy@archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25@adee7cff",
-      "name": "@opam/bls12-381-legacy",
-      "version":
-        "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25"
-        ]
-      },
-      "overrides": [
-        {
-          "buildsInSource": "_build",
-          "build": [
-            [
-              "dune", "build", "-j", "4", "-p", "bls12-381-legacy",
-              "@install"
-            ]
-          ],
-          "install": [ [ "esy-installer", "bls12-381-legacy.install" ] ],
-          "buildEnvOverride": {
-            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-          },
-          "dependencies": {
-            "@opam/conf-rust": "*",
-            "@opam/dune": "*",
-            "@opam/ff-sig": "*",
-            "@opam/zarith": "*",
-            "@opam/ctypes": "*",
-            "@opam/ctypes-foreign": "*",
-            "@opam/bls12-381-gen": "*",
-            "@opam/tezos-rust-libs": "*"
-          }
-        }
-      ],
-      "dependencies": [
-        "@opam/zarith@opam:1.11@6b66cdc1",
-        "@opam/tezos-rust-libs@opam:1.1@02945c1d",
-        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.1@1e504822",
-        "@opam/ctypes-foreign@opam:0.18.0@4201a88c",
-        "@opam/ctypes@opam:0.20.0@4e68beca",
-        "@opam/conf-rust@no-source:@3165ff25",
-        "@opam/bls12-381-gen@opam:0.5.0@c1c850c9"
-      ],
-      "devDependencies": []
     },
     "@opam/bls12-381-gen@opam:0.5.0@c1c850c9": {
       "id": "@opam/bls12-381-gen@opam:0.5.0@c1c850c9",
