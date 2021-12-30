@@ -10,10 +10,11 @@
   (libraries
     ;; Vendor
     simple-utils
+    base
     ;; Third party
     getopt
     uutf)
-  (flags (:standard -open Core))
+  (flags (:standard -open Base))
 )
 
 ;; Build of the version source (for the user, as a CLI option)

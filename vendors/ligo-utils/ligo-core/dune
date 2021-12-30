@@ -1,0 +1,4 @@
+(library
+ (public_name ligo-core)
+ (name ligo_core)
+ (libraries base))

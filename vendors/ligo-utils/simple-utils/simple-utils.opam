@@ -13,7 +13,8 @@ bug-reports  : "https://gitlab.com/ligolang/ligo-utils/issues"
 depends      : ["dune"
                 "base"
                 "yojson"
-                "core"
+                "ligo-core"
+                "base"
                 "ppx_deriving"
                 "ppx_deriving_yojson"]
 build        : [["dune" "build" "-p" name]]

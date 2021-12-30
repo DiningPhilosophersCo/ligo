@@ -5,10 +5,11 @@
   (public_name simple-utils)
   (libraries
     ;; Third party
-   core
+   base
+   ligo-core
    yojson
    result
    unix
    str)
-  (flags (:standard -open Core))
+  (flags (:standard -open Base -open Ligo_core))
 )
