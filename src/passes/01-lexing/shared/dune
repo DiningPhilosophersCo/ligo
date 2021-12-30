@@ -5,22 +5,20 @@
 ;; Build of the lexer as a library
 
 (library
-  (name lexing_shared)
-  (public_name ligo.lexing.shared)
-  (libraries
-     ;; Vendors
-     simple-utils
-     Preprocessor
-     LexerLib
-     ;; LIGO
-     preprocessing
-     ;; Third party
-     zarith
-     str)
-  (modules
-     Errors Formatter Token Common
-     Lexer Self_tokens LexerMainGen UnlexerGen)
-  (modules_without_implementation
-     Token Self_tokens)
-  (preprocess
-    (pps bisect_ppx --conditional)))
+ (name lexing_shared)
+ (public_name ligo.lexing.shared)
+ (instrumentation
+  (backend bisect_ppx))
+ (libraries
+  ;; Vendors
+  simple-utils
+  Preprocessor
+  LexerLib
+  ;; LIGO
+  preprocessing_shared
+  ;; Third party
+  zarith
+  str)
+ (modules Errors Formatter Token Common Wrap Lexer Self_tokens LexerMainGen
+   UnlexerGen)
+ (modules_without_implementation Token Self_tokens))

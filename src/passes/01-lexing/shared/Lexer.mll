@@ -5,6 +5,8 @@
 
 [@@@warning "-42"]
 
+module Array = Caml.Array
+
 (* VENDOR DEPENDENCIES *)
 
 module Region = Simple_utils.Region
@@ -23,8 +25,10 @@ module Make (Token : Token.S) =
     type error =
       Unexpected_character of char
     | Non_canonical_zero
-    | Reserved_name of string
     | Invalid_symbol of string
+    | Unsupported_nat_syntax
+    | Unsupported_mutez_syntax
+    | Unsupported_lang_syntax
     | Invalid_natural
     | Unterminated_verbatim
     | Invalid_linemarker_argument
@@ -37,14 +41,17 @@ module Make (Token : Token.S) =
     | Non_canonical_zero ->
         "Non-canonical zero.\n\
          Hint: Use 0."
-    | Reserved_name s ->
-        sprintf "Reserved name: \"%s\".\n\
-         Hint: Change the name." s
     | Invalid_symbol s ->
         sprintf "Invalid symbol: %S.\n\
                  Hint: Check the LIGO syntax you use." s
     | Invalid_natural ->
         "Invalid natural number."
+    | Unsupported_nat_syntax ->
+        "Unsupported nat syntax. Please use annotations instead."
+    | Unsupported_mutez_syntax ->
+        "Unsupported (mu)tez syntax. Please use annotations instead."
+    | Unsupported_lang_syntax ->
+        "Unsupported code injection syntax."
     | Unterminated_verbatim ->
        "Unterminated verbatim.\n\
         Hint: Close with \"|}\"."
@@ -104,28 +111,34 @@ module Make (Token : Token.S) =
           fail region Non_canonical_zero
       | Error Token.Invalid_natural ->
           fail region Invalid_natural
+      | Error Token.Unsupported_nat_syntax ->
+          fail region Unsupported_nat_syntax
 
     let mk_mutez state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
       match Token.mk_mutez lexeme region with
         Ok token ->
           Core.Token token, state
-      | Error Token.Non_canonical_zero ->
+      | Error Token.Non_canonical_zero_tez ->
           fail region Non_canonical_zero
+      | Error Token.Unsupported_mutez_syntax ->
+          fail region Unsupported_mutez_syntax
 
     let mk_tez state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
-      let lexeme = Str.string_before lexeme (String.index lexeme 't') in
+      let lexeme = Str.string_before lexeme (String.index_exn lexeme 't') in
       let lexeme = Z.mul (Z.of_int 1_000_000) (Z.of_string lexeme) in
       match Token.mk_mutez (Z.to_string lexeme ^ "mutez") region with
         Ok token ->
           Core.Token token, state
-      | Error Token.Non_canonical_zero ->
+      | Error Token.Non_canonical_zero_tez ->
           fail region Non_canonical_zero
+      | Error Token.Unsupported_mutez_syntax ->
+          fail region Unsupported_mutez_syntax
 
     let format_tez s =
       match String.index s '.' with
-        index ->
+        Some (index) ->
           let len         = String.length s in
           let integral    = Str.first_chars s index
           and fractional  = Str.last_chars s (len-index-1) in
@@ -135,37 +148,36 @@ module Make (Token : Token.S) =
           let mutez       = Q.make num den |> Q.mul million in
           let should_be_1 = Q.den mutez in
           if Z.equal Z.one should_be_1 then Some (Q.num mutez) else None
-      | exception Not_found -> assert false
+      | None -> assert false
 
-    let mk_tez_decimal state buffer =
+    let mk_tez_dec state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
       let lexeme = Str.(global_replace (regexp "_") "" lexeme) in
-      let lexeme = Str.string_before lexeme (String.index lexeme 't') in
+      let lexeme = Str.string_before lexeme (String.index_exn lexeme 't') in
       match format_tez lexeme with
         None -> assert false
       | Some tz ->
           match Token.mk_mutez (Z.to_string tz ^ "mutez") region with
             Ok token ->
               Core.Token token, state
-          | Error Token.Non_canonical_zero ->
+          | Error Token.Non_canonical_zero_tez ->
               fail region Non_canonical_zero
+          | Error Token.Unsupported_mutez_syntax ->
+              fail region Unsupported_mutez_syntax
 
     let mk_ident state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
-      match Token.mk_ident lexeme region with
-        Ok token ->
-          Core.Token token, state
-      | Error Token.Reserved_name ->
-          fail region (Reserved_name lexeme)
+      let token = Token.mk_ident lexeme region
+      in Core.Token token, state
 
     let mk_attr attr state buffer =
       let Core.{region; state; _} = state#sync buffer in
       let token = Token.mk_attr attr region
       in Core.Token token, state
 
-    let mk_constr state buffer =
+    let mk_uident state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
-      let token = Token.mk_constr lexeme region
+      let token = Token.mk_uident lexeme region
       in Core.Token token, state
 
     let mk_lang lang state buffer =
@@ -174,8 +186,11 @@ module Make (Token : Token.S) =
       let stop               = region#stop in
       let lang_reg           = Region.make ~start ~stop in
       let lang               = Region.{value=lang; region=lang_reg} in
-      let token              = Token.mk_lang lang region
-      in Core.Token token, state
+      match Token.mk_lang lang region with
+        Ok token ->
+          Core.Token token, state
+      | Error Token.Unsupported_lang_syntax ->
+          fail region Unsupported_lang_syntax
 
     let mk_sym state buffer =
       let Core.{region; lexeme; state} = state#sync buffer in
@@ -187,7 +202,7 @@ module Make (Token : Token.S) =
 
     let mk_eof state buffer =
       let Core.{region; state; _} = state#sync buffer in
-      let token = Token.eof region
+      let token = Token.mk_eof region
       in Core.Token token, state
 
 (* END HEADER *)
@@ -207,26 +222,28 @@ let capital    = ['A'-'Z']
 let letter     = small | capital
 let ident      = small (letter | '_' | digit)* |
                  '_' (letter | '_' (letter | digit) | digit)+
-let constr     = capital (letter | '_' | digit)*
+let uident    = capital (letter | '_' | digit)*
 let attr       = letter (letter | '_' | ':' | digit)*
 let hexa_digit = digit | ['A'-'F' 'a'-'f']
 let byte       = hexa_digit hexa_digit
 let byte_seq   = byte | byte (byte | '_')* byte
-let bytes      = "0x" (byte_seq? as seq)
+let bytes      = "0x" (byte_seq? as b)
 let string     = [^'"' '\\' '\n']*  (* For strings of #include *)
 let directive  = '#' (blank* as space) (small+ as id) (* For #include *)
 
 (* Symbols *)
 
-let common_sym     =   ';' | ',' | '(' | ')'  | '[' | ']'  | '{' | '}'
-                     | '=' | ':' | '|' | '.' | '_' | '^'
-                     | '+' | '-' | '*' | '/'  | '<' | "<=" | '>' | ">="
-let pascaligo_sym  = "->" | "=/=" | '#' | ":="
-let cameligo_sym   = "->" | "<>" | "::" | "||" | "&&"
-let reasonligo_sym = '!' | "=>" | "!=" | "==" | "++" | "..." | "||" | "&&"
-let jsligo_sym     = "++" | "--" | "..." | '?' | '&' | '!' | '~' | '%'
-                     | "<<<" | ">>>" | "==" | "!=" | "+=" | "-=" | "*="
-                     | "%=" | "<<<=" | ">>>=" | "&=" | "|=" | "^=" | "=>"
+let common_sym     =   ";" | "," | "(" | ")"  | "[" | "]"  | "{" | "}"
+                     | "=" | ":" | "|" | "." | "_" | "^"
+                     | "+" | "-" | "*" | "/"  | "<" | "<=" | ">" | ">="
+let pascaligo_sym  = "->" | "=/=" | "#" | ":="
+let cameligo_sym   = "->" | "<>" | "::" | "||" | "&&" | "'"
+let reasonligo_sym = "!" | "=>" | "!=" | "==" | "++" | "..."
+                     | "||" | "&&"
+let jsligo_sym     = "++" | "--" | "..." | "?" | "&" | "!" | "~" | "%"
+                     | "<<<" | "==" | "!=" | "+=" | "-=" | "*=" | "/="
+                     | "%=" | "<<<=" | "&=" | "|="
+                     | "^=" | "=>" (* | ">>>" | ">>>=" *)
 
 let symbol =
   common_sym
@@ -241,33 +258,28 @@ let symbol =
    through recursive calls. *)
 
 rule scan state = parse
-  ident                  { mk_ident        state lexbuf }
-| constr                 { mk_constr       state lexbuf }
-| bytes                  { mk_bytes seq    state lexbuf }
-| natural 'n'            { mk_nat          state lexbuf }
-| natural "mutez"        { mk_mutez        state lexbuf }
-| natural "tz"
-| natural "tez"          { mk_tez          state lexbuf }
-| decimal "tz"
-| decimal "tez"          { mk_tez_decimal  state lexbuf }
-| natural                { mk_int          state lexbuf }
-| symbol                 { mk_sym          state lexbuf }
-| eof                    { mk_eof          state lexbuf }
-| "[@" (attr as a) "]"   { mk_attr       a state lexbuf }
-| "[%" (attr as l)       { mk_lang       l state lexbuf }
+  ident                  { mk_ident   state lexbuf }
+| uident                 { mk_uident  state lexbuf }
+| bytes                  { mk_bytes b state lexbuf }
+| natural "n"            { mk_nat     state lexbuf }
+| natural "mutez"        { mk_mutez   state lexbuf }
+| natural ("tz" | "tez") { mk_tez     state lexbuf }
+| decimal ("tz" | "tez") { mk_tez_dec state lexbuf }
+| natural                { mk_int     state lexbuf }
+| symbol                 { mk_sym     state lexbuf }
+| eof                    { mk_eof     state lexbuf }
+| "[@" (attr as a) "]"   { mk_attr  a state lexbuf }
+| "[%" (attr as l)       { mk_lang  l state lexbuf }
 
-| "`"
-| "{|" as lexeme {
-    if lexeme = fst Token.verbatim_delimiters then (
+| "`" | "{|" as lexeme {
+    if String.equal lexeme @@ fst Token.verbatim_delimiters then
       let Core.{region; state; _} = state#sync lexbuf in
-      let thread = Core.mk_thread region
-      in scan_verbatim (snd Token.verbatim_delimiters) thread state lexbuf |> mk_verbatim
-    )
-    else (
+      let thread = Core.mk_thread region in
+      let verb_end = snd Token.verbatim_delimiters
+      in scan_verbatim verb_end thread state lexbuf |> mk_verbatim
+    else
       let Core.{region; _} = state#sync lexbuf
-      in fail region (Unexpected_character lexeme.[0])
-    )
-  }
+      in fail region (Unexpected_character lexeme.[0]) }
 
 | _ as c { let Core.{region; _} = state#sync lexbuf
            in fail region (Unexpected_character c) }
@@ -285,15 +297,13 @@ and scan_verbatim verbatim_end thread state = parse
              and state = state#set_pos (state#pos#new_line nl) in
              scan_verbatim verbatim_end (thread#push_string nl) state lexbuf }
 | eof      { fail thread#opening Unterminated_verbatim }
-| "`" 
-| "|}" as lexeme  { 
-  if verbatim_end = lexeme then  
-    Core.(thread, (state#sync lexbuf).state) 
-  else 
+| "`"
+| "|}" as lexeme  {
+  if String.equal verbatim_end lexeme then
+    Core.(thread, (state#sync lexbuf).state)
+  else
     let Core.{state; _} = state#sync lexbuf in
-    scan_verbatim verbatim_end (thread#push_string lexeme) state lexbuf
-  
-} 
+    scan_verbatim verbatim_end (thread#push_string lexeme) state lexbuf }
 | _ as c   { let Core.{state; _} = state#sync lexbuf in
              scan_verbatim verbatim_end (thread#push_char c) state lexbuf }
 

@@ -29,7 +29,7 @@ module Make (File        : FILE)
       let msg = Printf.sprintf "Command-line error: %s\n" msg
       in Printf.eprintf "\027[31m%s\027[0m%!" msg
 
-    let print_and_quit msg = print_string msg; flush stdout; exit 0
+    let print_and_quit msg = print_string msg; Out_channel.flush stdout; exit 0
 
     (* Checking for errors and valid exits *)
 
@@ -44,7 +44,7 @@ module Make (File        : FILE)
            cli_error (Printf.sprintf "Choose either %s or %s." o1 o2)
       | `Done ->
            match CLI.Preprocessor_CLI.extension with
-             Some ext when ext <> File.extension ->
+             Some ext when String.equal ext File.extension ->
                let msg =
                  Printf.sprintf "Expected extension %s." File.extension
                in cli_error msg
@@ -147,7 +147,7 @@ module Make (File        : FILE)
                 set_window ~current:token ~last;
                 store := tokens;
                 token
-            | [] -> Token.eof Region.ghost
+            | [] -> Token.mk_eof Region.ghost
           in Stdlib.Ok token
         else
           let lex_units = Scan.LexUnits.from_lexbuf config lexbuf
@@ -164,22 +164,22 @@ module Make (File        : FILE)
       Preprocessor.PreprocMainGen.Make (CLI.Preprocessor_CLI)
 
     let scan_all () : unit =
-      if CLI.preprocess then
-        match Preproc.preprocess () with
-          Stdlib.Error _ -> () (* Already printed *)
-        | Ok (buffer, _deps) ->
-            (* Module dependencies are dropped. *)
-            let string = Buffer.contents buffer in
-            let lexbuf = Lexing.from_string string in
-            match Scan.Tokens.from_lexbuf config lexbuf with
-              Stdlib.Error msg -> print_in_red msg
-            | Ok _ -> ()
-      else
-        let lex_units =
+      let lex_units =
+        if CLI.preprocess then
+          match Preproc.preprocess () with
+            Stdlib.Error (_buffer, msg) ->
+              (* Buffer [_buffer] already printed *)
+              Stdlib.Error msg
+          | Ok (buffer, _deps) ->
+              (* Module dependencies [_deps] are dropped. *)
+              let string = Buffer.contents buffer in
+              let lexbuf = Lexing.from_string string
+              in Scan.LexUnits.from_lexbuf config lexbuf
+        else
           match config#input with
             Some path -> Scan.LexUnits.from_file config path
-          |      None -> Scan.LexUnits.from_channel config stdin
-        in match Self_tokens.filter lex_units with
-              Stdlib.Error msg -> print_in_red msg
-            | Ok _ -> ()
+          |      None -> Scan.LexUnits.from_channel config In_channel.stdin
+      in match Self_tokens.filter lex_units with
+           Stdlib.Error msg -> print_in_red msg
+         | Ok _ -> ()
   end

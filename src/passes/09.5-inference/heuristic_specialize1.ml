@@ -13,9 +13,8 @@ module INDEXES = functor (Type_variable : sig type t end) (Type_variable_abstrac
   end
 end
 
-module Core = Typesystem.Core
+module Core = Typesystem.Types
 open Solver_types
-open Trace
 open Typer_common.Errors
 open Ast_core.Reasons
 
@@ -50,12 +49,12 @@ module M = functor (Type_variable : sig type t end) (Type_variable_abstraction :
   | SC_Constructor c                ->
     (* vice versa *)
     let other_cs = MultiSet.elements @@ Grouped_by_variable.get_polys_by_lhs (repr c.tv) Indexes.grouped_by_variable in
-    let cs_pairs = List.map (fun x -> { poly = x ; a_k_var = c }) other_cs in
+    let cs_pairs = List.map ~f:(fun x -> { poly = x ; a_k_var = c }) other_cs in
     cs_pairs
   | SC_Alias       _                -> failwith "alias should not be visible here"
   | SC_Poly        p                ->
     let other_cs = MultiSet.elements @@ Grouped_by_variable.get_constructors_by_lhs (repr p.tv) Indexes.grouped_by_variable in
-    let cs_pairs = List.map (fun x -> { poly = p ; a_k_var = x }) other_cs in
+    let cs_pairs = List.map ~f:(fun x -> { poly = p ; a_k_var = x }) other_cs in
     cs_pairs
   | SC_Typeclass   _                -> []
   | SC_Access_label _               -> []
@@ -71,11 +70,11 @@ let alias_selector : type_variable -> type_variable -> flds -> selector_output l
   let a_ctors = MultiSet.elements @@ Grouped_by_variable.get_constructors_by_lhs a Indexes.grouped_by_variable in
   let b_polys = MultiSet.elements @@ Grouped_by_variable.get_polys_by_lhs b Indexes.grouped_by_variable in
   let b_ctors = MultiSet.elements @@ Grouped_by_variable.get_constructors_by_lhs b Indexes.grouped_by_variable in
-  List.flatten @@
+  List.concat @@
   List.map
-    (fun poly ->
+    ~f:(fun poly ->
        List.map
-         (fun ctor ->
+         ~f:(fun ctor ->
             { poly ; a_k_var = ctor })
          (a_ctors @ b_ctors))
     (a_polys @ b_polys)
@@ -87,7 +86,7 @@ let get_referenced_constraints ({ poly; a_k_var } : selector_output) : type_cons
   ]
 
 let propagator : (selector_output , typer_error) Type_variable_abstraction.Solver_types.propagator =
-  fun selected repr ->
+  fun ~raise:_ selected repr ->
   (* Format.eprintf "In specialize propagator for %a\n%!" pp_selector_output selected; *)
   let a = selected.poly in
   let b = selected.a_k_var in
@@ -112,7 +111,7 @@ let propagator : (selector_output , typer_error) Type_variable_abstraction.Solve
   
   let eq1 = Misc.c_equation (wrap (Todo "solver: propagator: specialize1 eq1") @@ P_variable (repr b.tv)) reduced "propagator: specialize1" in
   let eqs = eq1 :: new_constraints in
-    ok [
+    [
         {
           remove_constraints = [ SC_Poly a ];
           add_constraints = eqs;
@@ -159,4 +158,3 @@ type nonrec selector_output = MM.selector_output = {
 let selector = Compat.selector
 let propagator = Compat.propagator
 let comparator = Compat.comparator
-

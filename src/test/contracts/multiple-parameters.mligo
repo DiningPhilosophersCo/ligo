@@ -1,6 +1,10 @@
 (* Test function with several parameters *)
 
-let abcde_curried (a : int)  (b : int)  (c : int)  (d : int)  (e : int) : int =
+let ab (a,b: int * int) : int = a + b
+
+let abcd (a,b,c,d : int * int * int * int) : int = a + b + c + d + 2
+
+let abcde_curried (_a : int)  (_b : int)  (c : int)  (_d : int)  (e : int) : int =
   c + e + 3
 
 let abcde (x : int * int * int * int * int) : int =

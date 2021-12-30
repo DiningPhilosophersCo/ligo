@@ -1,9 +1,10 @@
+module List      = Core.List
 module Michelson = Tezos_utils.Michelson
 
 include Memory_proto_alpha
 let init_environment = Init_proto_alpha.init_environment
 let dummy_environment = Init_proto_alpha.dummy_environment
-
+let test_environment = Init_proto_alpha.test_environment
 
 open Protocol
 open Script_typed_ir
@@ -16,8 +17,8 @@ module X = struct
   open Alpha_environment.Error_monad
 
   let rec stack_ty_eq
-    : type ta tb. context -> int -> ta stack_ty -> tb stack_ty ->
-      ((ta stack_ty, tb stack_ty) eq * context) tzresult
+    : type ta tb ra rb. context -> int -> (ta, ra) stack_ty -> (tb, rb) stack_ty ->
+      (((ta, ra) stack_ty, (tb, rb) stack_ty) eq * context) tzresult
     = fun ctxt lvl ta tb ->
       let dummy_loc  = 0 in (*TODO not sure ..*)
       match ta, tb with
@@ -25,8 +26,8 @@ module X = struct
         ty_eq ctxt dummy_loc tva tvb |>
         record_trace (Bad_stack_item lvl) >>? fun (Eq, ctxt) ->
         stack_ty_eq ctxt (lvl + 1) ra rb >>? fun (Eq, ctxt) ->
-        (Ok (Eq, ctxt) : ((ta stack_ty, tb stack_ty) eq * context) tzresult)
-      | Empty_t, Empty_t -> Ok (Eq, ctxt)
+        (Ok (Eq, ctxt) : (((ta, ra) stack_ty, (tb, rb) stack_ty) eq * context) tzresult)
+      | Bot_t, Bot_t -> Ok (Eq, ctxt)
       | _, _ -> error Bad_stack_length
 
 
@@ -42,14 +43,14 @@ end
 
 open X_error_monad
 
-let stack_ty_eq (type a b)
-    ?(tezos_context = dummy_environment.tezos_context)
-    (a:a stack_ty) (b:b stack_ty) =
+let stack_ty_eq (type a ra b rb)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
+    (a:(a, ra) stack_ty) (b:(b, rb) stack_ty) =
   alpha_wrap (X.stack_ty_eq tezos_context 0 a b) >>? fun (Eq, _) ->
   ok Eq
 
 let ty_eq (type a b)
-    ?(tezos_context = dummy_environment.tezos_context)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     (a:a ty) (b:b ty)
   =
   alpha_wrap (Script_ir_translator.ty_eq tezos_context 0 a b) >>? fun (Eq, _) ->
@@ -58,7 +59,7 @@ let ty_eq (type a b)
 (* should not need lwt *)
 let prims_of_strings michelson =
   let (michelson, errs) =
-    Tezos_client_008_PtEdo2Zk.Michelson_v1_macros.expand_rec michelson in
+    Tezos_client_011_PtHangz2.Michelson_v1_macros.expand_rec michelson in
   match errs with
   | _ :: _ ->
     Lwt.return (Error errs)
@@ -74,11 +75,12 @@ let lazy_expr expr =
     let open Alpha_context in
     Script.lazy_expr expr
 
-let parse_michelson (type aft)
-    ?(tezos_context = dummy_environment.tezos_context)
+(*
+let parse_michelson (type aft aft'.)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     ~top_level michelson
     ?type_logger
-    (bef:'a Script_typed_ir.stack_ty) (aft:aft Script_typed_ir.stack_ty)
+    (bef:('a, 'b) Script_typed_ir.stack_ty) (aft:(aft, aft') Script_typed_ir.stack_ty)
   =
   prims_of_strings michelson >>=? fun michelson ->
   parse_instr
@@ -89,18 +91,19 @@ let parse_michelson (type aft)
   | Typed descr -> (
       Lwt.return (
         alpha_wrap (X.stack_ty_eq tezos_context 0 descr.aft aft) >>? fun (Eq, _) ->
-        let descr : (_, aft) Script_typed_ir.descr = {descr with aft} in
+        let descr : ('a, 'b, aft, aft') Script_ir_translator.descr = {descr with aft} in
         Ok descr
       )
     )
   | _ -> Lwt.return @@ error_exn (Failure "Typing instr failed")
+  *)
 
-let parse_michelson_fail (type aft)
-    ?(tezos_context = dummy_environment.tezos_context)
+let parse_michelson_fail (type aft aftr)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     ~top_level michelson
     ?type_logger
-    (bef:'a Script_typed_ir.stack_ty) (aft:aft Script_typed_ir.stack_ty)
-    : (('a, aft) descr, error trace) result Lwt.t
+    (bef:('a, 'b) Script_typed_ir.stack_ty) (aft:(aft, aftr) Script_typed_ir.stack_ty)
+    : (('a, 'b, aft, aftr) descr, error trace) result Lwt.t
   =
   prims_of_strings michelson >>=? fun michelson ->
   parse_instr
@@ -111,21 +114,21 @@ let parse_michelson_fail (type aft)
   | Typed descr -> (
       Lwt.return (
         alpha_wrap (X.stack_ty_eq tezos_context 0 descr.aft aft) >>? fun (Eq, _) ->
-        let descr : (_, aft) Script_typed_ir.descr = {descr with aft} in
-        Ok descr
+          let descr : (_, _, aft, aftr) descr = {descr with aft} in
+          Ok descr
       )
     )
   | Failed { descr } ->
-      Lwt.return (Ok (descr aft))
+    Lwt.return (Ok (descr aft))
 
 let parse_michelson_data
-    ?(tezos_context = dummy_environment.tezos_context)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     michelson ty =
   parse_data tezos_context ty michelson ~legacy:false ~allow_forged:true >>=?? fun (data, _) ->
   return data
 
 let parse_michelson_ty
-    ?(tezos_context = dummy_environment.tezos_context)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     ?(allow_operation = true) ?(allow_contract = true) ?(allow_lazy_storage = true) ?(allow_ticket = true)
     michelson =
   Lwt.return @@ parse_ty tezos_context ~allow_operation michelson ~legacy:false ~allow_contract ~allow_lazy_storage ~ allow_ticket >>=?? fun (ty, _) ->
@@ -137,14 +140,14 @@ let strings_of_prims michelson =
   Tezos_micheline.Micheline.root michelson
 
 let unparse_michelson_data
-    ?(tezos_context = dummy_environment.tezos_context)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     ty value =
   unparse_data tezos_context
     Readable ty value >>=?? fun (michelson, _) ->
   return (strings_of_prims michelson)
 
 let unparse_michelson_ty
-    ?(tezos_context = dummy_environment.tezos_context)
+    ?(tezos_context = (dummy_environment ()).tezos_context)
     ty =
   Lwt.return @@ Script_ir_translator.unparse_ty tezos_context ty >>=?? fun (michelson, _) ->
   return (strings_of_prims michelson)
@@ -193,17 +196,18 @@ let fake_bake tezos_context chain_id now =
                     | _ -> Stdlib.failwith "bad timestamp")
         ~protocol_data
         ())
-      >>= fun x -> Lwt.return @@ Alpha_environment.wrap_error x >>=? fun state ->
+      >>= fun x -> Lwt.return @@ Alpha_environment.wrap_tzresult x >>=? fun state ->
                       return state.ctxt) in
   tezos_context
 
 let make_options
-    ?(tezos_context = dummy_environment.tezos_context)
-    ?(now = Alpha_context.Script_timestamp.now dummy_environment.tezos_context)
-    ?(sender = (List.nth dummy_environment.identities 0).implicit_contract)
+    ?(env = (dummy_environment ()))
+    ?(tezos_context = env.tezos_context)
+    ?(now = Alpha_context.Script_timestamp.now env.tezos_context)
+    ?(sender = (List.nth_exn env.identities 0).implicit_contract)
     ?(self = default_self)
     ?(parameter_ty = t_unit)
-    ?(source = (List.nth dummy_environment.identities 1).implicit_contract)
+    ?(source = (List.nth_exn env.identities 1).implicit_contract)
     ?(amount = Alpha_context.Tez.one)
     ?(balance = Alpha_context.Tez.zero)
     ?(chain_id = Environment.Chain_id.zero)
@@ -258,20 +262,9 @@ let make_options
     now = Script_timestamp.now tezos_context ;
   }
 
-let default_options = make_options ()
+let no_trace_logger = None
 
-(* copied from script_interpreter.ml (not exposed) *)
-module No_trace : STEP_LOGGER = struct
-  let log_interp _ctxt _descr _stack = ()
-
-  let log_entry _ctxt _descr _stack = ()
-
-  let log_exit _ctxt _descr _stack = ()
-
-  let get_log () = return None
-end
-
-let interpret ?(options = default_options) (instr:('a, 'b) descr) bef : (_*_) tzresult Lwt.t  =
+let interpret ?(options = make_options ()) (instr:('a, 'b, 'c, 'd) kdescr) bef : (_*_) tzresult Lwt.t  =
   let {
     tezos_context ;
     source ;
@@ -283,11 +276,12 @@ let interpret ?(options = default_options) (instr:('a, 'b) descr) bef : (_*_) tz
     now = _ ;
   } = options in
   let step_constants = { source ; self ; payer ; amount ; chain_id } in
-  Script_interpreter.step (module No_trace : STEP_LOGGER) tezos_context step_constants instr bef >>=??
-  fun (stack, _) -> return stack
+  (* (EmptyCell, EmptyCell) feels wrong here ..*)
+  Script_interpreter.step no_trace_logger tezos_context step_constants instr bef (EmptyCell, EmptyCell) >>=??
+  fun (stack, _, _) -> return stack
 
 let unparse_ty_michelson ty =
-  Lwt.return @@ Script_ir_translator.unparse_ty dummy_environment.tezos_context ty >>=??
+  Lwt.return @@ Script_ir_translator.unparse_ty (dummy_environment ()).tezos_context ty >>=??
   fun (n,_) -> return n
 
 type typecheck_res =
@@ -299,19 +293,20 @@ type typecheck_res =
 let typecheck_contract contract =
   let contract' = Tezos_micheline.Micheline.strip_locations contract in
   let legacy = false in
-  Script_ir_translator.typecheck_code ~legacy dummy_environment.tezos_context contract' >>= fun x ->
+  Script_ir_translator.typecheck_code ~legacy (dummy_environment ()).tezos_context contract' >>= fun x ->
   match x with
   | Ok _ -> return @@ contract
-  | Error errs -> Lwt.return @@ Error (List.map (alpha_error_wrap) errs)
+  | Error errs -> Lwt.return @@ Error (Alpha_environment.wrap_tztrace errs)
 
 type 'a interpret_res =
   | Succeed of 'a
   | Fail of Script_repr.expr
 
 let failure_interpret
-    ?(options = default_options)
-    (instr:('b, 'a) descr)
-    (bef:'b) : 'a interpret_res tzresult Lwt.t =
+    ?(options = make_options ())
+    (instr:('a, 's, 'b, 'u) descr)
+    (bef:'a)
+    stackb : _ interpret_res tzresult Lwt.t =
   let {
     tezos_context ;
     source ;
@@ -322,15 +317,30 @@ let failure_interpret
     balance = _ ;
     now = _ ;
   } = options in
+
+  let descr = instr in
+  let kinfo = {iloc = descr.loc ; kstack_ty = descr.bef} in
+  let kinfoh = {iloc = descr.loc ; kstack_ty = descr.aft} in
+  let kinstr = descr.instr.apply kinfo (IHalt kinfoh) in
+  let kdescr = {
+    kloc = descr.loc ;
+    kbef = descr.bef ;
+    kaft = descr.aft ;
+    kinstr;
+  } in
+  let instr = kdescr in
+
   let step_constants = { source ; self ; payer ; amount ; chain_id } in
-  Script_interpreter.step (module No_trace : STEP_LOGGER) tezos_context step_constants instr bef >>= fun x ->
+  Script_interpreter.step no_trace_logger tezos_context step_constants instr bef stackb >>= fun x ->
   match x with
-  | Ok (s , _ctxt) -> return @@ Succeed s
-  | Error ((Reject (_, expr, _))::_t) -> return @@ Fail expr (* This catches failwith errors *)
-  | Error errs -> Lwt.return @@ Error (List.map (alpha_error_wrap) errs)
+  | Ok (s, _, _ctxt) -> return @@ Succeed s
+  | Error errs ->
+    match Alpha_environment.wrap_tztrace errs with 
+      Alpha_environment.(Ecoproto_error ( (Reject (_, expr, _)))::_t) -> return @@ Fail expr (* This catches failwith errors *)
+    | _ -> Lwt.return @@ Error (Alpha_environment.wrap_tztrace errs)
 
 let pack (data_ty: 'a ty) (data: 'a) : bytes tzresult Lwt.t =
-  pack_data dummy_environment.tezos_context data_ty data >>=?? fun (packed,_) -> return packed
+  pack_data (dummy_environment ()).tezos_context data_ty data >>=?? fun (packed,_) -> return packed
 
 let strings_of_prims = Michelson_v1_primitives.strings_of_prims
 

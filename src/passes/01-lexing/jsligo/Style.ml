@@ -38,14 +38,15 @@ let fail region error =
 
 (* Predicates on the tokens *)
 
-let is_int    = function Token.Int _ -> true | _ -> false
+let is_int    = function Token.Int _    -> true | _ -> false
 let is_string = function Token.String _ -> true | _ -> false
-let is_bytes  = function Token.Bytes _ -> true | _ -> false
+let is_bytes  = function Token.Bytes _  -> true | _ -> false
 
 let is_hexa = function
-  Token.Uident
-    Region.{value="A"|"a"|"B"|"b"|"C"|"c"
-                 |"D"|"d"|"E"|"e"|"F"|"f"; _} -> true
+  Token.UIdent t -> (match t#payload with 
+      "A"| "a"| "B"| "b"| "C"| "c"| "D"| "d"| "E"| "e"| "F"| "f" -> true
+    | _ -> false
+    )
   | _ -> false
 
 let is_sym =
@@ -69,7 +70,6 @@ let is_sym =
   | COLON _
   | DOT _
   | ELLIPSIS _
-  | QMARK _
   | BOOL_OR _
   | BOOL_AND _
   | BOOL_NOT _

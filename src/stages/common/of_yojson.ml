@@ -2,7 +2,7 @@ open Types
 
 let label = function
   | `List [`String "Label"; `String l] -> Ok (Label l)
-  | _ -> Utils.error_yojson_format "Label of string"
+  | _ -> Simple_utils.Utils.error_yojson_format "Label of string"
 
 let binding f g = function
   | `List [x;y] ->
@@ -12,12 +12,12 @@ let binding f g = function
   | _ -> None
 
 let err_bad_format =
-  Utils.error_yojson_format
+  Simple_utils.Utils.error_yojson_format
     "A label map, represented as an array [ [string , element] , ... ]."
 
 let bindings f g = function
   | `List xs ->
-     begin match Option.bind_map_list (binding f g) xs with
+     begin match Option.all @@ List.map ~f:(binding f g) xs with
      | None -> err_bad_format
      | Some xs -> Ok xs end
   | _ -> err_bad_format

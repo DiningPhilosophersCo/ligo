@@ -1,39 +1,18 @@
+module Location    = Simple_utils.Location
+module Var         = Simple_utils.Var
+module List        = Simple_utils.List
+module Ligo_string = Simple_utils.Ligo_string
 open Types
-
-let bind_lmap (l:_ label_map) =
-  let open Trace in
-  let open LMap in
-  let aux k v prev =
-    prev >>? fun prev' ->
-    v >>? fun v' ->
-    ok @@ add k v' prev' in
-  fold aux l (ok empty)
-
-let bind_fold_lmap f init (lmap:_ LMap.t) =
-  let open Trace in
-  let aux k v prev =
-    prev >>? fun prev' ->
-    f prev' k v
-  in
-  LMap.fold aux lmap init
-
-let bind_map_lmap f map = bind_lmap (LMap.map f map)
-let bind_map_lmap_t f map = bind_lmap (
-  LMap.map 
-    (fun ({associated_type;_}) -> 
-      f associated_type)
-    map)
-let bind_map_lmapi f map = bind_lmap (LMap.mapi f map)
 
 let range i j =
   let rec aux i j acc = if i >= j then acc else aux i (j-1) (j-1 :: acc) in
   aux i j []
 
 let label_range i j =
-  List.map (fun i -> Label (string_of_int i)) @@ range i j
+  List.map ~f:(fun i -> Label (string_of_int i)) @@ range i j
 
 let is_tuple_lmap m =
-  List.for_all (fun i -> LMap.mem i m) @@ (label_range 0 (LMap.cardinal m))
+  List.for_all ~f:(fun i -> LMap.mem i m) @@ (label_range 0 (LMap.cardinal m))
 
 let get_pair m =
   match (LMap.find_opt (Label "0") m , LMap.find_opt (Label "1") m) with
@@ -44,7 +23,7 @@ let tuple_of_record (m: _ LMap.t) =
   let aux i = 
     let label = Label (string_of_int i) in
     let opt = LMap.find_opt (label) m in
-    Option.bind (fun opt -> Some ((label,opt),i+1)) opt
+    Option.bind ~f: (fun opt -> Some ((label,opt),i+1)) opt
   in
   Base.Sequence.to_list @@ Base.Sequence.unfold ~init:0 ~f:aux
 
@@ -54,7 +33,7 @@ let kv_list_of_t_sum ?(layout = L_tree) (m: row_element LMap.t) =
   | L_tree -> lst
   | L_comb -> (
       let aux (_ , { associated_type = _ ; decl_pos = a ; _ }) (_ , { associated_type = _ ; decl_pos = b ; _ }) = Int.compare a b in
-      List.sort aux lst
+      List.sort ~compare:aux lst
     )
 
 let kv_list_of_t_record_or_tuple ?(layout = L_tree) (m: row_element LMap.t) =
@@ -67,7 +46,7 @@ let kv_list_of_t_record_or_tuple ?(layout = L_tree) (m: row_element LMap.t) =
   | L_tree -> lst
   | L_comb -> (
       let aux (_ , { associated_type = _ ; decl_pos = a ; _ }) (_ , { associated_type = _ ; decl_pos = b ; _ }) = Int.compare a b in
-      List.sort aux lst
+      List.sort ~compare:aux lst
     )
 
 let kv_list_of_record_or_tuple ~layout record_t_content record =
@@ -77,24 +56,24 @@ let kv_list_of_record_or_tuple ~layout record_t_content record =
     else LMap.to_kv_list record
   in
   match layout with
-  | L_tree -> List.map snd exps
+  | L_tree -> List.map ~f:snd exps
   | L_comb -> (
     let types = LMap.to_kv_list record_t_content in
-    let te = List.map (fun ((label_t,t),(label_e,e)) ->
-      assert (label_t = label_e) ; (*TODO TEST*)
-      (t,e)) (List.combine types exps) in
-    let s = List.sort (fun ({ associated_type = _ ; decl_pos = a ; _ },_) ({ associated_type = _ ; decl_pos = b ; _ },_) -> Int.compare a b) te in
-    List.map snd s
+    let te = List.map ~f:(fun ((label_t,t),(label_e,e)) ->
+      assert (Compare.label label_t label_e = 0) ; (*TODO TEST*)
+      (t,e)) (List.zip_exn types exps) in
+    let s = List.sort ~compare:(fun ({ associated_type = _ ; decl_pos = a ; _ },_) ({ associated_type = _ ; decl_pos = b ; _ },_) -> Int.compare a b) te in
+    List.map ~f:snd s
   )
 
 let remove_empty_annotation (ann : string option) : string option =
   match ann with
   | Some "" -> None
-  | Some ann -> Some (String.uncapitalize_ascii ann)
+  | Some ann -> Some ann
   | None -> None
 
 let is_michelson_or (t: _ label_map) =
-  let s = List.sort (fun (Label k1, _) (Label k2, _) -> String.compare k1 k2) @@
+  let s = List.sort ~compare:(fun (Label k1, _) (Label k2, _) -> String.compare k1 k2) @@
     LMap.to_kv_list t in
   match s with
   | [ (Label "M_left", ta) ; (Label "M_right", tb) ] -> Some (ta,tb)
@@ -103,7 +82,7 @@ let is_michelson_or (t: _ label_map) =
 let is_michelson_pair (t: row_element label_map) : (row_element * row_element) option =
   match LMap.to_list t with
   | [ a ; b ] -> (
-      if List.for_all (fun i -> LMap.mem i t) @@ (label_range 0 2)
+      if List.for_all ~f:(fun i -> LMap.mem i t) @@ (label_range 0 2)
       && Option.(
         is_some a.michelson_annotation || is_some b.michelson_annotation
       )
@@ -111,3 +90,72 @@ let is_michelson_pair (t: row_element label_map) : (row_element * row_element) o
       else None
     )
   | _ -> None
+
+let get_entrypoint (entrypoint : string) (t : type_expression) : type_expression option =
+  match t.type_content with
+  | T_sum {content;_} ->
+     let f (Label n, (v, t)) = match v with
+         | None -> (String.lowercase n, t)
+         | Some n -> (String.lowercase n, t) in
+     let annots = content
+                  |> LMap.map (fun x -> (x.michelson_annotation, x.associated_type))
+                  |> LMap.to_kv_list |> List.map ~f in
+     List.Assoc.find annots ~equal:String.equal entrypoint
+  | _ -> None
+
+let rec subst_type v t (u : type_expression) =
+  let self = subst_type in
+  match u.type_content with
+  | T_variable v' when Var.equal v v' -> t
+  | T_arrow {type1;type2} ->
+     let type1 = self v t type1 in
+     let type2 = self v t type2 in
+     { u with type_content = T_arrow {type1;type2} }
+  | T_abstraction {ty_binder;kind;type_} when not (Var.equal (Location.unwrap ty_binder) v) ->
+     let type_ = self v t type_ in
+     { u with type_content = T_abstraction {ty_binder;kind;type_} }
+  | T_for_all {ty_binder;kind;type_} when not (Var.equal (Location.unwrap ty_binder) v) ->
+     let type_ = self v t type_ in
+     { u with type_content = T_for_all {ty_binder;kind;type_} }
+  | T_constant {language;injection;parameters} ->
+     let parameters = List.map ~f:(self v t) parameters in
+     { u with type_content = T_constant {language;injection;parameters} }
+  | T_sum {content; layout} ->
+     let content = LMap.map (fun {associated_type; michelson_annotation; decl_pos} : row_element ->
+                       {associated_type = self v t associated_type; michelson_annotation;decl_pos}) content in
+     { u with type_content = T_sum {content; layout} }
+  | T_record {content; layout} ->
+     let content = LMap.map (fun {associated_type; michelson_annotation; decl_pos} : row_element ->
+                       {associated_type = self v t associated_type; michelson_annotation;decl_pos}) content in
+     { u with type_content = T_record {content; layout} }
+  | _ -> u
+
+(* This function transforms a type `∀ v1 ... vn . t` into the pair `([ v1 ; .. ; vn ] , t)` *)
+let destruct_for_alls (t : type_expression) =
+  let rec destruct_for_alls type_vars (t : type_expression) = match t.type_content with
+    | T_for_all { ty_binder ; type_ ; _ } ->
+       destruct_for_alls (Location.unwrap ty_binder :: type_vars) type_
+    | _ -> (type_vars, t)
+  in destruct_for_alls [] t
+
+(* This function transforms a type `t1 -> ... -> tn -> t` into the pair `([ t1 ; .. ; tn ] , t)` *)
+let destruct_arrows (t : type_expression) =
+  let rec destruct_arrows type_vars (t : type_expression) = match t.type_content with
+    | T_arrow { type1 ; type2 } ->
+       destruct_arrows (type1 :: type_vars) type2
+    | _ -> (type_vars, t)
+  in destruct_arrows [] t
+
+(* This function takes an expression l and a list of arguments [e1; ...; en] and constructs `l e1 ... en`,
+   but it checks that types make sense (i.e. l has a function type with enough arguments) *)
+let build_applications_opt (lamb : expression) (args : expression list) =
+  let rec aux lamb' (args : expression list) (t : type_expression) = match args, t.type_content with
+    | arg :: args', T_arrow { type1 = _; type2 }  ->
+       aux (Combinators.make_e (E_application {lamb=lamb';args=arg}) type2) args' type2
+    | [], _ ->
+       Some {lamb' with type_expression = t}
+    | _, _ ->
+       None in
+  aux lamb args lamb.type_expression
+
+let is_generalizable_variable name = String.equal (String.sub (Var.to_name name) ~pos:0 ~len:1) "_"

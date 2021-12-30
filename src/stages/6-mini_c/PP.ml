@@ -54,6 +54,8 @@ and type_constant ppf (tb:type_base) : unit =
     | TB_bls12_381_g2        -> "bls12_381_g2"
     | TB_bls12_381_fr        -> "bls12_381_fr"
     | TB_never -> "never"
+    | TB_chest -> "chest"
+    | TB_chest_key -> "chest_key"
     in
   fprintf ppf "%s" s
 
@@ -138,7 +140,7 @@ and expression_content ppf (e:expression_content) = match e with
   | E_let_tuple (expr, (fields, body)) ->
       fprintf ppf "@[let (%a) =@;<1 2>%a in@ %a@]"
         Format.(pp_print_list ~pp_sep:(fun ppf () -> pp_print_string ppf ", ") Var.pp)
-          (List.map (fun (x, _) -> x.Location.wrap_content) fields)
+          (List.map ~f:(fun (x, _) -> x.Location.wrap_content) fields)
         expression expr
         expression body
   | E_proj (expr, i, _n) ->

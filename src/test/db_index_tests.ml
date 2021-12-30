@@ -6,15 +6,14 @@ open Db_index_by_constraint_identifier_tests
 open Db_index_typeclasses_constraining_tests
 
 (* TODO: move this to another file *)
-open Trace
+open Simple_utils.Trace
 open Ast_core.Types
 open Solver_types
 open Ast_core.Combinators
 open Db_index_tests_common
-module X (M : sig module Plugin_under_test : INDEXER_PLUGIN_TYPE(Solver_types.Type_variable)(Solver_types.Opaque_type_variable).S val same_state : type_variable Plugin_under_test.t -> type_variable Plugin_under_test.t -> (unit, Main_errors.all) result end) = struct
+module X (M : sig module Plugin_under_test : INDEXER_PLUGIN_TYPE(Solver_types.Type_variable)(Solver_types.Opaque_type_variable).S val same_state : raise:Main_errors.all raise -> type_variable Plugin_under_test.t -> type_variable Plugin_under_test.t -> unit end) = struct
   open Test_vars
-  type test_seq = Add_cstr of type_variable | Merge of (type_variable , type_variable) merge_keys
-  let invariant () =
+  let invariant ~raise () =
     (* TODO: make this a functor taking the module and the same_state function *)
     let open M.Plugin_under_test in
     let repr : type_variable -> type_variable = fun tv -> tv in
@@ -34,14 +33,14 @@ module X (M : sig module Plugin_under_test : INDEXER_PLUGIN_TYPE(Solver_types.Ty
         add_constraint repr state tc
       | Merge merge_keys -> merge_aliases merge_keys state
     in
-    let state_a = List.fold_left aux istate
+    let state_a = List.fold_left ~f:aux ~init:istate
         [ Add_cstr tva ; Add_cstr tvb ; Add_cstr tvc ; Merge (merge_keys tva tvb) ; ]
     in
-    let state_b = List.fold_left aux istate
+    let state_b = List.fold_left ~f:aux ~init:istate
         [ Add_cstr tva ; Add_cstr tvb ; Merge (merge_keys tva tvb) ; Add_cstr tvc ; ]
     in
-    let%bind () = M.same_state state_a state_b in
-    ok ()
+    let () = M.same_state ~raise state_a state_b in
+    ()
 end
 
 module Invariant_assignments                      = X(Assignments_tests)

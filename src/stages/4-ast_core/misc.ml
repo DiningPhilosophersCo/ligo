@@ -3,8 +3,8 @@ open Types
 module Free_variables = struct
 
   type bindings = expression_variable list
-  let var_compare = Location.compare_content ~compare:Var.compare
-  let mem : expression_variable -> bindings -> bool = List.mem ~compare:var_compare
+  let var_equal = Location.equal_content ~equal:Var.equal
+  let mem : bindings -> expression_variable -> bool = List.mem ~equal:var_equal
   let singleton : expression_variable -> bindings = fun s -> [ s ]
   let union : bindings -> bindings -> bindings = (@)
   let unions : bindings list -> bindings = List.concat
@@ -15,15 +15,15 @@ module Free_variables = struct
     match ec with
     | E_lambda l -> lambda b l
     | E_literal _ -> empty
-    | E_constant {arguments;_} -> unions @@ List.map self arguments
+    | E_constant {arguments;_} -> unions @@ List.map ~f:self arguments
     | E_variable name -> (
-        match mem name b with
+        match mem b name with
         | true -> empty
         | false -> singleton name
       )
-    | E_application {lamb;args} -> unions @@ List.map self [ lamb ; args ]
+    | E_application {lamb;args} -> unions @@ List.map ~f:self [ lamb ; args ]
     | E_constructor {element;_} -> self element
-    | E_record m -> unions @@ List.map self @@ LMap.to_list m
+    | E_record m -> unions @@ List.map ~f:self @@ LMap.to_list m
     | E_record_accessor {record;_} -> self record
     | E_record_update {record; update;_} -> union (self record) @@ self update
     | E_matching {matchee; cases;_} -> union (self matchee) (matching_expression b cases)
@@ -32,7 +32,7 @@ module Free_variables = struct
       union
         (expression b' let_result)
         (self rhs)
-    | E_type_in { type_binder=_; rhs=_; let_result} -> self let_result
+    | E_type_in { type_binder=_; rhs=_; let_result; _} -> self let_result
     | E_mod_in { module_binder=_; rhs=_; let_result} -> self let_result
     | E_mod_alias { alias=_; binders=_; result} -> self result
     | E_raw_code _ -> empty
@@ -63,19 +63,19 @@ module Free_variables = struct
       in
       expression b' body
     in
-    List.fold_left aux b cases
+    List.fold_left ~f:aux ~init:b cases
 
 end
 
 
-let assert_eq = fun a b -> if (a = b) then Some () else None
+let assert_eq = fun a b -> if Caml.(=) a b then Some () else None
 let assert_same_size = fun a b -> if (List.length a = List.length b) then Some () else None
 let rec assert_list_eq f = fun a b -> match (a,b) with
   | [], [] -> Some ()
   | [], _  -> None
   | _ , [] -> None
-  | hda::tla, hdb::tlb -> Option.(
-    f hda hdb >>= fun () ->
+  | hda::tla, hdb::tlb -> Simple_utils.Option.(
+    let* () = f hda hdb in
     assert_list_eq f tla tlb
   )
 
@@ -85,29 +85,29 @@ let layout_eq a b = match (a,b) with
   | _ -> false
 
 let rec assert_type_expression_eq (a, b: (type_expression * type_expression)) : unit option =
-  let open Option in
+  let open Simple_utils.Option in
   match (a.type_content, b.type_content) with
   | T_sum sa, T_sum sb -> (
       let sa' = LMap.to_kv_list_rev sa.fields in
       let sb' = LMap.to_kv_list_rev sb.fields in
       let aux ((ka, {associated_type=va;_}), (kb, {associated_type=vb;_})) =
-        assert_eq ka kb >>= fun _ ->
-          assert_type_expression_eq (va, vb)
+        let* _ = assert_eq ka kb in
+        assert_type_expression_eq (va, vb)
       in
-      assert_same_size sa' sb' >>= fun _ ->
-      List.fold_left (fun acc p -> match acc with | None -> None | Some () -> aux p) (Some ()) (List.combine sa' sb')
+      let* _ = assert_same_size sa' sb' in
+      List.fold_left ~f:(fun acc p -> match acc with | None -> None | Some () -> aux p) ~init:(Some ()) (List.zip_exn sa' sb')
     )
   | T_sum _, _ -> None
   | T_record ra, T_record rb
-       when Helpers.is_tuple_lmap ra.fields <> Helpers.is_tuple_lmap rb.fields -> None
+       when Bool.(Helpers.is_tuple_lmap ra.fields <> Helpers.is_tuple_lmap rb.fields) -> None
   | T_record ra, T_record rb -> (
-      let sort_lmap r' = List.sort (fun (Label a,_) (Label b,_) -> String.compare a b) r' in
+      let sort_lmap r' = List.sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) r' in
       let ra' = sort_lmap @@ LMap.to_kv_list_rev ra.fields in
       let rb' = sort_lmap @@ LMap.to_kv_list_rev rb.fields in
       let aux (ka, {associated_type=va;_}) (kb, {associated_type=vb;_}) =
         let Label ka = ka in
         let Label kb = kb in
-        assert_eq ka kb >>= fun _ ->
+        let* _ = assert_eq ka kb in
         assert_type_expression_eq (va, vb)
       in
       assert_list_eq aux ra' rb'
@@ -115,61 +115,78 @@ let rec assert_type_expression_eq (a, b: (type_expression * type_expression)) : 
     )
   | T_record _, _ -> None
   | T_arrow {type1;type2}, T_arrow {type1=type1';type2=type2'} ->
-    assert_type_expression_eq (type1, type1') >>= fun _ ->
+    let* _ = assert_type_expression_eq (type1, type1') in
     assert_type_expression_eq (type2, type2')
   | T_arrow _, _ -> None
   | T_app {type_operator=ta;arguments=aa}, T_app {type_operator=tb;arguments=ab} when Var.equal ta tb ->
     assert_list_eq (fun a b -> assert_type_expression_eq (a,b)) aa ab
   | T_app _, _ -> None
-  | T_variable x, T_variable y -> let _ = (x = y) in failwith "TODO : we must check that the two types were bound at the same location (even if they have the same name), i.e. use something like De Bruijn indices or a propper graph encoding"
+  | T_variable _x, T_variable _y -> failwith "TODO : we must check that the two types were bound at the same location (even if they have the same name), i.e. use something like De Bruijn indices or a propper graph encoding"
   | T_variable _, _ -> None
   | T_module_accessor {module_name=mna;element=ea}, T_module_accessor {module_name=mnb;element=eb} when String.equal mna mnb ->
     assert_type_expression_eq (ea, eb)
   | T_module_accessor _, _ -> None
   | T_singleton a , T_singleton b -> assert_literal_eq (a , b)
   | T_singleton _ , _ -> None
+  | T_abstraction a , T_abstraction b ->
+    assert_type_expression_eq (a.type_, b.type_) >>= fun _ ->
+    Some (assert (equal_kind a.kind b.kind))
+  | T_for_all a , T_for_all b ->
+    assert_type_expression_eq (a.type_, b.type_) >>= fun _ ->
+    Some (assert (equal_kind a.kind b.kind))
+  | T_abstraction _ , _ -> None
+  | T_for_all _ , _ -> None
 
 and type_expression_eq ab = Option.is_some @@ assert_type_expression_eq ab
 
 and assert_literal_eq (a, b : literal * literal) : unit option =
   match (a, b) with
-  | Literal_int a, Literal_int b when a = b -> Some ()
+  | Literal_int a, Literal_int b when Z.equal a b -> Some ()
   | Literal_int _, Literal_int _ -> None
   | Literal_int _, _ -> None
-  | Literal_nat a, Literal_nat b when a = b -> Some ()
+  | Literal_nat a, Literal_nat b when Z.equal a b -> Some ()
   | Literal_nat _, Literal_nat _ -> None
   | Literal_nat _, _ -> None
-  | Literal_timestamp a, Literal_timestamp b when a = b -> Some ()
+  | Literal_timestamp a, Literal_timestamp b when Z.equal a b -> Some ()
   | Literal_timestamp _, Literal_timestamp _ -> None
   | Literal_timestamp _, _ -> None
-  | Literal_mutez a, Literal_mutez b when a = b -> Some ()
+  | Literal_mutez a, Literal_mutez b when Z.equal a b -> Some ()
   | Literal_mutez _, Literal_mutez _ -> None
   | Literal_mutez _, _ -> None
-  | Literal_string a, Literal_string b when a = b -> Some ()
+  | Literal_string a, Literal_string b when Ligo_string.equal a b -> Some ()
   | Literal_string _, Literal_string _ -> None
   | Literal_string _, _ -> None
-  | Literal_bytes a, Literal_bytes b when a = b -> Some ()
+  | Literal_bytes a, Literal_bytes b when Bytes.equal a b -> Some ()
   | Literal_bytes _, Literal_bytes _ -> None
   | Literal_bytes _, _ -> None
   | Literal_unit, Literal_unit -> Some ()
   | Literal_unit, _ -> None
-  | Literal_address a, Literal_address b when a = b -> Some ()
+  | Literal_address a, Literal_address b when String.equal a b -> Some ()
   | Literal_address _, Literal_address _ -> None
   | Literal_address _, _ -> None
   | Literal_operation opa, Literal_operation opb when Bytes.equal opa opb -> Some ()
   | Literal_operation _, _ -> None
-  | Literal_signature a, Literal_signature b when a = b -> Some ()
+  | Literal_signature a, Literal_signature b when String.equal a b -> Some ()
   | Literal_signature _, Literal_signature _ -> None
   | Literal_signature _, _ -> None
-  | Literal_key a, Literal_key b when a = b -> Some ()
+  | Literal_key a, Literal_key b when String.equal a b -> Some ()
   | Literal_key _, Literal_key _ -> None
   | Literal_key _, _ -> None
-  | Literal_key_hash a, Literal_key_hash b when a = b -> Some ()
+  | Literal_key_hash a, Literal_key_hash b when String.equal a b -> Some ()
   | Literal_key_hash _, Literal_key_hash _ -> None
   | Literal_key_hash _, _ -> None
-  | Literal_chain_id a, Literal_chain_id b when a = b -> Some ()
+  | Literal_chain_id a, Literal_chain_id b when String.equal a b -> Some ()
   | Literal_chain_id _, Literal_chain_id _ -> None
   | Literal_chain_id _, _ -> None
+  | Literal_bls12_381_g1 a, Literal_bls12_381_g1 b when Bytes.equal a b -> Some ()
+  | Literal_bls12_381_g1 _, Literal_bls12_381_g1 _ -> None
+  | Literal_bls12_381_g1 _, _ -> None
+  | Literal_bls12_381_g2 a, Literal_bls12_381_g2 b when Bytes.equal a b -> Some ()
+  | Literal_bls12_381_g2 _, Literal_bls12_381_g2 _ -> None
+  | Literal_bls12_381_g2 _, _ -> None
+  | Literal_bls12_381_fr a, Literal_bls12_381_fr b when Bytes.equal a b -> Some ()
+  | Literal_bls12_381_fr _, Literal_bls12_381_fr _ -> None
+  | Literal_bls12_381_fr _, _ -> None
 
 (* TODO this was supposed to mean equality of _values_; if
    assert_value_eq (a, b) = Some (), then a and b should be values *)
@@ -177,12 +194,12 @@ let rec assert_value_eq (a, b: (expression * expression )) : unit option =
   match (a.expression_content , b.expression_content) with
   | E_literal a , E_literal b ->
     assert_literal_eq (a, b)
-  | E_constant (ca) , E_constant (cb) when ca.cons_name = cb.cons_name -> (
-      let lst = List.combine ca.arguments cb.arguments in
-      let all = List.map assert_value_eq lst in
-      if List.exists (Option.is_none) all then None else Some ()
+  | E_constant (ca) , E_constant (cb) when Caml.(=) ca.cons_name cb.cons_name -> (
+      let lst = List.zip_exn ca.arguments cb.arguments in
+      let all = List.map ~f:assert_value_eq lst in
+      if List.exists ~f:(Option.is_none) all then None else Some ()
     )
-  | E_constructor (ca), E_constructor (cb) when ca.constructor = cb.constructor -> (
+  | E_constructor (ca), E_constructor (cb) when Caml.(=) ca.constructor cb.constructor -> (
       assert_value_eq (ca.element, cb.element)
     )
   | E_module_accessor {module_name=maa;element=a}, E_module_accessor {module_name=mab;element=b} when String.equal maa mab -> (
@@ -237,13 +254,13 @@ let is_value_eq (a , b) =
   | None -> false
 
 let merge_annotation (a:type_expression option) (b:type_expression option) assert_eq_fun : type_expression option =
-  let open Option in
+  let open Simple_utils.Option in
   match a, b with
   | None, None -> None
   | Some a, None -> Some a
   | None, Some b -> Some b
   | Some a, Some b ->
-      assert_eq_fun (a, b) >>= fun _ ->
+      let* _ = assert_eq_fun (a, b) in
       match a.sugar, b.sugar with
       | _, None -> Some a
       | _, Some _ -> Some b
@@ -260,7 +277,7 @@ let get_entry (lst : module_) (name : string) : expression option =
     | Declaration_module _
     | Module_alias       _ -> None
   in
-  List.find_map aux lst
+  List.find_map ~f:aux lst
 
 let equal_variables a b : bool =
   match a.expression_content, b.expression_content with
@@ -281,8 +298,12 @@ let p_row (p_row_tag : row_tag) (p_row_args : row_lmap ) =
       p_row_args ;
     }
 
+let p_for_all (binder : type_variable) (constraints: p_constraints) (body: type_value) =
+  Reasons.wrap Forall @@
+    P_forall { binder ; constraints ; body }
+
 let p_row_ez (p_row_tag : row_tag) (p_row_args : (string * type_value) list ) =
-  let p_row_args = LMap.of_list @@ List.mapi (fun i (x,y) -> Label x,{associated_value=y; michelson_annotation = None; decl_pos = i }) p_row_args in
+  let p_row_args = LMap.of_list @@ List.mapi ~f:(fun i (x,y) -> Label x,{associated_value=y; michelson_annotation = None; decl_pos = i }) p_row_args in
   p_row p_row_tag p_row_args
 
 let p_apply tf targ =

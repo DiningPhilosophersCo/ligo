@@ -12,12 +12,12 @@ let option f o =
     | Some v -> `List [ `String "Some" ; f v ]
 
 let pair f g (x, y) = `Tuple [ f x ; g y ]
-let list f lst = `List (List.map f lst)
+let list f lst = `List (List.map ~f:f lst)
 let label_map f lmap =
-  let lst = List.sort (fun (Label a, _) (Label b, _) -> String.compare a b) (LMap.bindings lmap) in
+  let lst = List.sort ~compare:(fun (Label a, _) (Label b, _) -> String.compare a b) (LMap.bindings lmap) in
   let lst' = List.fold_left
-    (fun acc (Label k, v) -> (k , f v)::acc)
-    [] lst
+    ~f:(fun acc (Label k, v) -> (k , f v)::acc)
+    ~init:[] lst
   in
   `Assoc lst'
 
@@ -41,6 +41,8 @@ and type_content = function
   | T_app             t -> `List [ `String "t_app";      t_app type_expression t]
   | T_module_accessor t -> `List [ `String "t_module_accessor"; module_access type_expression t]
   | T_singleton       t -> `List [ `String "t_singleton" ; literal t ]
+  | T_abstraction     t -> `List [ `String "t_abstraction" ; for_all type_expression t ]
+  | T_for_all         t -> `List [ `String "t_for_all" ; for_all type_expression t ]
 
 
 and rows {fields; layout = l } =
@@ -77,7 +79,7 @@ and expression_content = function
   | E_lambda      e -> `List [ `String "E_lambda"; lambda e ]
   | E_recursive   e -> `List [ `String "E_recursive"; recursive e ]
   | E_let_in      e -> `List [ `String "E_let_in"; let_in e ]
-  | E_type_in     e -> `List [ `String "E_type_in"; type_in   expression type_expression e ]
+  | E_type_in     e -> `List [ `String "E_type_in"; type_in e ]
   | E_mod_in      e -> `List [ `String "E_mod_in"; mod_in e ]
   | E_mod_alias   e -> `List [ `String "E_mod_alias"; mod_alias expression e ]
   | E_raw_code    e -> `List [ `String "E_raw_code"; raw_code e ]
@@ -117,13 +119,40 @@ and recursive {fun_name;fun_type;lambda=l} =
     ("lambda", lambda l)
   ]
 
-and let_in {let_binder;rhs;let_result;inline} =
+and let_in {let_binder;rhs;let_result;attr} =
   `Assoc [
     ("let_binder", binder type_expression let_binder);
     ("rhs", expression rhs);
     ("let_result", expression let_result);
-    ("inline", `Bool inline);
+    ("attr", attribute attr);
   ]
+
+and type_in {type_binder;rhs;let_result} =
+  `Assoc [
+    ("type_binder", type_variable_to_yojson type_binder);
+    ("rhs", type_expression rhs);
+    ("let_result", expression let_result)
+  ]
+
+
+and attribute {inline;no_mutation;public;view} =
+  `Assoc [
+    ("inline", `Bool inline);
+    ("no_mutation", `Bool no_mutation);
+    ("public", `Bool public);
+    ("view", `Bool view);
+  ]
+
+and type_attribute ({public}: type_attribute) =
+  `Assoc [
+    ("public", `Bool public);
+  ]
+
+and module_attribute {public} =
+  `Assoc [
+    ("public", `Bool public);
+  ]
+
 
 and mod_in {module_binder;rhs;let_result} =
   `Assoc [
@@ -162,24 +191,26 @@ and record_update {record; path; update} =
   ]
 
 
-and declaration_type {type_binder;type_expr} =
+and declaration_type {type_binder;type_expr;type_attr} =
   `Assoc [
     ("type_binder", type_variable_to_yojson type_binder);
     ("type_expr", type_expression type_expr);
+    ("type_attr", type_attribute type_attr)
   ]
 
-and declaration_constant {name; binder=b;attr={inline};expr} =
+and declaration_constant {name; binder=b;attr;expr} =
   `Assoc [
     ("name", option' string name);
     ("binder",binder type_expression b);
     ("expr", expression expr);
-    ("attribute", `Bool inline);
+    ("attr", attribute attr);
   ]
 
-and declaration_module {module_binder;module_=m} =
+and declaration_module {module_binder;module_=m;module_attr} =
   `Assoc [
     ("module_binder",module_variable_to_yojson module_binder);
     ("module_", module_ m);
+    ("module_attr", module_attribute module_attr)
   ]
 
 and module_alias ({alias ; binders} : module_alias) =
@@ -270,6 +301,7 @@ let constant_tag : constant_tag -> json = function
   | C_bls12_381_g1 -> `List [`String "C_bls12_381_g1"; `Null]
   | C_bls12_381_g2 -> `List [`String "C_bls12_381_g2"; `Null]
   | C_bls12_381_fr -> `List [`String "C_bls12_381_fr"; `Null]
+  | C_never        -> `List [`String "C_never"; `Null]
 
 let row_tag = function
   | C_record  -> `List [`String "C_record"; `Null]
@@ -467,42 +499,42 @@ and type_constraint_simpl = function
 let poly_unionfind f p =
   let lst = (UnionFind.Poly2.partitions p) in
   let lst' = List.map
-      (fun l ->
-         let repr = f (UnionFind.Poly2.repr (List.hd l) p ) in
-         `List (repr :: List.map f l)) lst in
+      ~f:(fun l ->
+         let repr = f (UnionFind.Poly2.repr (List.hd_exn l) p ) in
+         `List (repr :: List.map ~f:f l)) lst in
   `Assoc ["UnionFind", `List lst']
 
 let unionfind : type_variable UnionFind.Poly2.t -> _ = poly_unionfind type_variable_to_yojson
 
 let typeVariableMap f tvmap =
-  let lst = List.sort (fun (a, _) (b, _) -> Var.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
+  let lst = List.sort ~compare:(fun (a, _) (b, _) -> Var.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
   let aux (k, v) =
     `Assoc [ Format.asprintf "%a" Var.pp k , f v ] in
-  let lst' = List.map aux lst in
+  let lst' = List.map ~f:aux lst in
   `Assoc ["typeVariableMap",  `List lst']
 let ciMap f tvmap =
-  let lst = List.sort (fun (ConstraintIdentifier.T a, _) (ConstraintIdentifier.T b, _) -> Int64.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
+  let lst = List.sort ~compare:(fun (ConstraintIdentifier.T a, _) (ConstraintIdentifier.T b, _) -> Int64.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
   let aux (ConstraintIdentifier.T k, v) =
     `Assoc [ Format.asprintf "%Li" k , f v ] in
-  let lst' = List.map aux lst in
+  let lst' = List.map ~f:aux lst in
   `Assoc ["typeVariableMap",  `List lst']
 let jmap (fk : _ -> json) (fv : _ -> json)  tvmap : json =
   let lst = RedBlackTrees.PolyMap.bindings tvmap in
   let aux (k, v) =
     `List [ fk k ; fv v ] in
-  let lst' = List.map aux lst in
+  let lst' = List.map ~f:aux lst in
   `Assoc ["typeVariableMap",  `List lst']
 let constraint_identifier_set s =
-  let lst = List.sort (fun (ConstraintIdentifier.T a) (ConstraintIdentifier.T b) -> Int64.compare a b) (RedBlackTrees.PolySet.elements s) in
+  let lst = List.sort ~compare:(fun (ConstraintIdentifier.T a) (ConstraintIdentifier.T b) -> Int64.compare a b) (RedBlackTrees.PolySet.elements s) in
   let aux (ConstraintIdentifier.T ci) =
     `String (Format.asprintf "ConstraintIdentifier %Li" ci) in
-  let lst' = List.map aux lst in
+  let lst' = List.map ~f:aux lst in
   `Assoc ["constraintIdentifierSet",  `List lst']
 let type_variable_set s =
-  let lst = List.sort Var.compare (RedBlackTrees.PolySet.elements s) in
+  let lst = List.sort ~compare:Var.compare (RedBlackTrees.PolySet.elements s) in
   let aux v =
     `String (Format.asprintf "%a" Var.pp v) in
-  let lst' = List.map aux lst in
+  let lst' = List.map ~f:aux lst in
   `Assoc ["typeVariableSet",  `List lst']
 
 let constraint_identifier (ConstraintIdentifier.T ci : constraint_identifier) : json =
