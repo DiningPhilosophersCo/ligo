@@ -13,6 +13,5 @@
   ;; LIGO
   lexing_shared
   ;; Third party
-  terminal_size
   pprint)
  (modules Errors Formatter Common ParserMainGen))

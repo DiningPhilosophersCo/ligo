@@ -1,5 +1,5 @@
 {
-  "checksum": "eb77e853322e7d49b197ca081ad10c63",
+  "checksum": "a79b92b557d014efceb24bc7efe652a5",
   "root": "ligo@link-dev:./ligo.opam",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -46,7 +46,6 @@
         "@opam/tezos-crypto@link:vendors/tezos-ligo/src/lib_crypto/tezos-crypto.opam",
         "@opam/tezos-clic@link:vendors/tezos-ligo/src/lib_clic/tezos-clic.opam",
         "@opam/tezos-base@link:vendors/tezos-ligo/src/lib_base/tezos-base.opam",
-        "@opam/terminal_size@opam:0.1.4@98f7842a",
         "@opam/ringo-lwt@opam:0.5@9319b89f",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
@@ -83,7 +82,6 @@
         "@opam/tezos-crypto@link:vendors/tezos-ligo/src/lib_crypto/tezos-crypto.opam",
         "@opam/tezos-clic@link:vendors/tezos-ligo/src/lib_clic/tezos-clic.opam",
         "@opam/tezos-base@link:vendors/tezos-ligo/src/lib_base/tezos-base.opam",
-        "@opam/terminal_size@opam:0.1.4@98f7842a",
         "@opam/ringo-lwt@opam:0.5@9319b89f",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
@@ -943,31 +941,6 @@
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9"
-      ]
-    },
-    "@opam/terminal_size@opam:0.1.4@98f7842a": {
-      "id": "@opam/terminal_size@opam:0.1.4@98f7842a",
-      "name": "@opam/terminal_size",
-      "version": "opam:0.1.4",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/fd/fdca1fee7d872c4a8e5ab003d9915b6782b272e2a3661ca877f2d78dd25371a7#sha256:fdca1fee7d872c4a8e5ab003d9915b6782b272e2a3661ca877f2d78dd25371a7",
-          "archive:https://github.com/cryptosense/terminal_size/releases/download/v0.1.4/terminal_size-v0.1.4.tbz#sha256:fdca1fee7d872c4a8e5ab003d9915b6782b272e2a3661ca877f2d78dd25371a7"
-        ],
-        "opam": {
-          "name": "terminal_size",
-          "version": "0.1.4",
-          "path": "esy.lock/opam/terminal_size.0.1.4"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/dune@opam:2.8.5@01003f12",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
     "@opam/terminal@opam:0.2.1@a14e79aa": {

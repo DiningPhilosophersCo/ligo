@@ -23,7 +23,6 @@ depends: [
   "tezos-clic"
   "qcheck"
   "linenoise"
-  "terminal_size"
   "pprint"
   "yojson"
   "ocaml-recovery-parser"

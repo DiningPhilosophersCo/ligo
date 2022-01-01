@@ -32,7 +32,6 @@
   ParserLib
   ;; Third party
   pprint
-  terminal_size
   menhirLib
   hex)
  (flags
