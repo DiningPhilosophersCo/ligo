@@ -140,7 +140,7 @@ let rec error_ppformat : display_format:string display_format ->
           let (Label o) = o in
           o :: all
       ) ~init:[] m in
-      let missing = String.concat ~sep:", " missing in
+      let missing = Base.String.concat ~sep:", " missing in
       Format.fprintf f
         "@[<hv>%a@.Pattern matching is not exhaustive.@.Cases that are missing: %s. @]"
         Snippet.pp loc
@@ -162,13 +162,13 @@ let rec error_ppformat : display_format:string display_format ->
       Format.fprintf f "@[<hv>%a@.Pattern matching over too many cases.@]"
         Snippet.pp loc;
       if List.length redundant > 0 then (
-        let redundant = String.concat ~sep:", " redundant in
+        let redundant = Base.String.concat ~sep:", " redundant in
         Format.fprintf f
           "@[<hv>@.These case(s) are duplicate:@.%s@]"
           redundant
       );
       if List.length unknown > 0 then (
-        let unknown = String.concat ~sep:", " unknown in
+        let unknown = Base.String.concat ~sep:", " unknown in
         Format.fprintf f
           "@[<hv>@.These case(s) don't belong to the variant:@.%s@]"
           unknown

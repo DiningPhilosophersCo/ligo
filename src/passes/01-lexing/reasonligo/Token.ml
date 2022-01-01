@@ -412,7 +412,7 @@ module T =
     ]
 
     let keywords =
-      let add map (key, value) = SMap.add_exn ~key ~data:value map in
+      let add map (key, value) = SMap.add key value map in
       let apply map mk_kwd =
         add map (to_lexeme (mk_kwd Region.ghost), mk_kwd)
       in List.fold_left ~f:apply ~init:SMap.empty keywords
@@ -420,9 +420,8 @@ module T =
     type kwd_err = Invalid_keyword
 
     let mk_kwd ident region =
-      match SMap.find keywords ident with
-        Some mk_kwd -> Ok (mk_kwd region)
-      |        None -> Error Invalid_keyword
+      try Result.ok @@ SMap.find ident keywords with
+      | _ -> Error Invalid_keyword
 
     (* Strings *)
 
@@ -444,7 +443,7 @@ module T =
     let mk_int lexeme region =
       let z =
         Str.(global_replace (regexp "_") "" lexeme) |> Z.of_string
-      in if   Z.equal z Z.zero && String.(<>) lexeme "0"
+      in if   Z.equal z Z.zero && Base.String.(<>) lexeme "0"
          then Error Non_canonical_zero
          else Ok (Int (wrap (lexeme, z) region))
 
@@ -454,14 +453,14 @@ module T =
     | Non_canonical_zero_nat
 
     let mk_nat lexeme region =
-      match String.index lexeme 'n' with
+      match String.index_opt lexeme 'n' with
         None -> Error Invalid_natural
       | Some _ ->
           let z =
             Str.(global_replace (regexp "_") "" lexeme) |>
               Str.(global_replace (regexp "n") "") |>
               Z.of_string in
-          if   Z.equal z Z.zero && String.(<>) lexeme "0n"
+          if   Z.equal z Z.zero && Base.String.(<>) lexeme "0n"
           then Error Non_canonical_zero_nat
           else Ok (Nat (wrap (lexeme, z) region))
 
@@ -473,7 +472,7 @@ module T =
       let z = Str.(global_replace (regexp "_") "" lexeme) |>
                 Str.(global_replace (regexp "mutez") "") |>
                 Z.of_string in
-      if   Z.equal z Z.zero && String.(<>) lexeme "0mutez"
+      if   Z.equal z Z.zero && Base.String.(<>) lexeme "0mutez"
       then Error Non_canonical_zero_tez
       else Ok (Mutez (wrap (lexeme, z) region))
 
@@ -531,9 +530,8 @@ module T =
     (* Identifiers *)
 
     let mk_ident value region =
-      match SMap.find keywords value with
-        Some mk_kwd -> mk_kwd region
-      |        None -> Ident (wrap value region)
+      try let mk_kwd = SMap.find value keywords in mk_kwd region with
+      | _ -> Ident (wrap value region)
 
     (* Constructors/Modules *)
 

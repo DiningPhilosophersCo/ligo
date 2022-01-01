@@ -30,7 +30,9 @@
  (name lexing_reasonligo)
  (public_name ligo.lexing.reasonligo)
  (modules Token Self_tokens Style)
+ (flags (:standard -open Simple_utils))
  (libraries
+  simple-utils
   ;; LIGO
   lexing_shared
   menhir_reasonligo_tokens

@@ -108,8 +108,8 @@ let collect_attributes str =
     try (
       let r = Str.search_forward attribute_regexp str 0 in
       let s = Str.matched_group 0 str in
-      let s = String.sub s ~pos:1 ~len:(String.length s - 1) in
-      let next = (String.sub str ~pos:(r + String.length s) ~len:(String.length str - (r + + String.length s))) in
+      let s = Base.String.sub s ~pos:1 ~len:(String.length s - 1) in
+      let next = (Base.String.sub str ~pos:(r + String.length s) ~len:(String.length str - (r + + String.length s))) in
       inner (s :: result) next
     )
     with

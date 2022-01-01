@@ -3,6 +3,7 @@
  (public_name ligo.ast_sugar)
  (instrumentation
   (backend bisect_ppx))
- (libraries simple-utils stage_common)
+ (libraries simple-utils stage_common base)
+ (flags (:standard -open Simple_utils))
  (preprocess
   (pps ppx_map)))

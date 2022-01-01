@@ -5,7 +5,9 @@
  (public_name ligo.preprocessing)
  (instrumentation
   (backend bisect_ppx))
+ (flags (:standard -open Base -open Stdio))
  (libraries
+   stdio
   ;; Vendors
   Preprocessor
   simple-utils

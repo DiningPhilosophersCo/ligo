@@ -4,6 +4,7 @@
  (instrumentation
   (backend bisect_ppx))
  (modules_without_implementation syntax)
- (libraries simple-utils ast_imperative tezos-crypto tezos-base main_warnings)
+ (libraries base simple-utils ast_imperative tezos-crypto tezos-base main_warnings)
+  (flags (:standard -open Base))
  (preprocess
   (pps ppx_poly_constructor)))

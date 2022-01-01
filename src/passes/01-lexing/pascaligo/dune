@@ -30,7 +30,9 @@
  (name lexing_pascaligo)
  (public_name ligo.lexing.pascaligo)
  (modules Token Self_tokens Style)
+ (flags (:standard -open Simple_utils))
  (libraries
+   simple-utils
   ;; LIGO
   lexing_shared
   menhir_pascaligo_tokens

@@ -64,7 +64,7 @@ let print_nsepseq :
         sprintf "%s: %s\n" (compact state sep_reg#region) sep in
       Buffer.add_string state#buffer sep_line;
       print state item
-    in print state head; List.iter ~f:print_aux tail
+    in print state head; Base.List.iter ~f:print_aux tail
 
 let print_option : state -> (state -> 'a -> unit ) -> 'a option -> unit =
   fun state print -> function

@@ -3,6 +3,7 @@
  (public_name ligo.ast_impretative)
  (instrumentation
   (backend bisect_ppx))
- (libraries simple-utils stage_common)
+ (libraries base simple-utils stage_common)
+ (flags (:standard -open Simple_utils -open Base))
  (preprocess
   (pps ppx_map)))

@@ -11,5 +11,6 @@
     data-encoding
     simple-utils
     tezos-utils
+    base
   )
 )

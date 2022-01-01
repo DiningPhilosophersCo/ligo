@@ -18,7 +18,10 @@
   preprocessing_shared
   ;; Third party
   zarith
+  base
+  stdio
   str)
  (modules Errors Formatter Token Common Wrap Lexer Self_tokens LexerMainGen
    UnlexerGen)
+ (flags (:standard -open Simple_utils -open Base -open Stdio))
  (modules_without_implementation Token Self_tokens))

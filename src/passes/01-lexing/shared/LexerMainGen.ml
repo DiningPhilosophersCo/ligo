@@ -23,11 +23,11 @@ module Make (File        : FILE)
 
     let print_in_red Region.{value=msg; region} =
       let header = region#to_string ~file:true ~offsets:true `Point
-      in Printf.eprintf "\027[31mError %s:\n%s\027[0m\n%!" header msg
+      in Stdlib.Printf.eprintf "\027[31mError %s:\n%s\027[0m\n%!" header msg
 
     let cli_error msg =
       let msg = Printf.sprintf "Command-line error: %s\n" msg
-      in Printf.eprintf "\027[31m%s\027[0m%!" msg
+      in Stdlib.Printf.eprintf "\027[31m%s\027[0m%!" msg
 
     let print_and_quit msg = print_string msg; Out_channel.flush stdout; exit 0
 

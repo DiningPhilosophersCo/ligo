@@ -70,7 +70,7 @@ module Make
 
     (* All exits *)
 
-    let print_in_red msg = Printf.eprintf "\027[31m%s\027[0m%!" msg
+    let print_in_red msg = Stdlib.Printf.eprintf "\027[31m%s\027[0m%!" msg
 
     let red_exit msg = print_in_red msg; exit 1
 
@@ -118,10 +118,10 @@ module Make
     let show_tree (tree : Parser.tree) : unit =
       if CLI.pretty then
         let doc = Pretty.print tree in
-        let width =
-          match Terminal_size.get_columns () with
-            None -> 60
-          | Some c -> c in
+        let width = 60 in
+          (* match Terminal_size.get_columns () with *)
+          (*   None -> 60 *)
+          (* | Some c -> c in *)
         begin
             PPrint.ToChannel.pretty 1.0 width stdout doc;
             Out_channel.newline stdout
@@ -135,13 +135,13 @@ module Make
         if CLI.cst then
             begin
               Printer.pp_cst state tree;
-              Printf.printf "%s%!" (Buffer.contents buffer)
+              Stdlib.Printf.printf "%s%!" (Buffer.contents buffer)
             end
         else
           if CLI.cst_tokens then
             begin
               Printer.print_tokens state tree;
-              Printf.printf "%s%!" (Buffer.contents buffer);
+              Stdlib.Printf.printf "%s%!" (Buffer.contents buffer);
             end
           else ();
          Out_channel.flush stdout
@@ -154,7 +154,7 @@ module Make
     let wrap_recovery result =
       let tree, messages = MainParser.extract_recovery_results (result) in
       List.iter
-          ~f:(fun msg -> show_error_message msg; Printf.eprintf "\n")
+          ~f:(fun msg -> show_error_message msg; Stdlib.Printf.eprintf "\n")
           (List.rev messages);
       Option.iter ~f:show_tree tree
 
@@ -172,7 +172,7 @@ module Make
           Stdlib.Error _ -> ()
         | Stdlib.Ok (buffer, _deps) ->
             if Preprocessor_CLI.show_pp then
-              Printf.printf "%s%!" (Buffer.contents buffer)
+              Stdlib.Printf.printf "%s%!" (Buffer.contents buffer)
             else ();
             let string = Buffer.contents buffer in
             let lexbuf = Lexing.from_string string in

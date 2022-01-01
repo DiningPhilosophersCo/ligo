@@ -3,4 +3,4 @@
  (public_name ligo.self_ast_core)
  (instrumentation
   (backend bisect_ppx))
- (libraries simple-utils ast_core))
+ (libraries base simple-utils ast_core) (flags (:standard -open Base)))

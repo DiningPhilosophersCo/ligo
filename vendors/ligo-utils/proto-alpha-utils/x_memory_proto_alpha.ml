@@ -1,4 +1,4 @@
-module List      = Core.List
+module List      = Base.List
 module Michelson = Tezos_utils.Michelson
 
 include Memory_proto_alpha

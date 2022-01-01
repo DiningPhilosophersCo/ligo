@@ -5,7 +5,9 @@
  (public_name ligo.parsing)
  (instrumentation
   (backend bisect_ppx))
+ (flags (:standard -open Simple_utils))
  (libraries
+   base
   ;; Vendors
   simple-utils
   ;; LIGO

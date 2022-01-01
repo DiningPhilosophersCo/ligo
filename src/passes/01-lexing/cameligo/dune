@@ -30,7 +30,9 @@
  (name lexing_cameligo)
  (public_name ligo.lexing.cameligo)
  (modules Token Self_tokens Style)
+ (flags (:standard -open Simple_utils))
  (libraries
+  simple-utils
   ;; LIGO
   lexing_shared
   menhir_cameligo_tokens

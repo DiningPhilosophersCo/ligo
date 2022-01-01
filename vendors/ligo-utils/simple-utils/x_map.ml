@@ -49,6 +49,9 @@ module Make(Ord : Caml.Map.OrderedType) : S with type key = Ord.t = struct
       acc, add k v map
     in
     fold aux map (init,empty)
+
+  let add_exn = add
+
 end
 
 module String = Make(String)

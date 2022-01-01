@@ -145,7 +145,7 @@ module MakeParser
       let tree =
         let string = Buffer.contents buffer in
         if CLI.Preprocessor_CLI.show_pp then
-          Printf.printf "%s\n%!" string;
+          Stdlib.Printf.printf "%s\n%!" string;
         let lexbuf = Lexing.from_string string in
         let     () = LexerLib.Core.reset ~file:file_path lexbuf in
         let     () = MainLexer.clear () in
@@ -173,7 +173,7 @@ module MakeParser
       let tree =
         let string = Buffer.contents buffer in
         if CLI.Preprocessor_CLI.show_pp then
-          Printf.printf "%s\n%!" string;
+          Stdlib.Printf.printf "%s\n%!" string;
         let lexbuf = Lexing.from_string string in
         let     () = MainLexer.clear () in
         let parser = MainParser.incr_from_lexbuf in
@@ -330,10 +330,10 @@ module MakePretty (CST    : CST)
 
     let set () =
       let buffer = Buffer.create 131
-      and width  =
-        match Terminal_size.get_columns () with
-          None -> 60
-        | Some c -> c
+      and width  = 60 
+        (* match Terminal_size.get_columns () with *)
+        (*   None -> 60 *)
+        (* | Some c -> c *)
       in width, buffer
 
     let pretty_print cst =

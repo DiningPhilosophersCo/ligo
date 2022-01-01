@@ -4,7 +4,10 @@
  (name preprocessing_shared)
  (public_name ligo.preprocessing.shared)
  (libraries
+   ;; third party
+   stdio
   ;; Vendors
   Preprocessor)
+ (flags (:standard -open Stdio))
  (modules Errors Common Comments File PreprocMainGen)
  (modules_without_implementation Comments File))

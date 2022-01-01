@@ -3,4 +3,5 @@
  (public_name ligo.typesystem)
  (instrumentation
   (backend bisect_ppx))
+ (flags (:standard -open Simple_utils))
  (libraries simple-utils ast_typed mini_c))

@@ -30,7 +30,9 @@
  (name lexing_jsligo)
  (public_name ligo.lexing.jsligo)
  (modules Token Self_tokens Style)
+ (flags (:standard -open Simple_utils))
  (libraries
+   simple-utils
   ;; LIGO
   lexing_shared
   menhir_jsligo_tokens
