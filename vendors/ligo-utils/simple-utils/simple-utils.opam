@@ -14,7 +14,6 @@ depends      : ["dune"
                 "base"
                 "yojson"
                 "core"
-                "base"
                 "ppx_deriving"
                 "ppx_deriving_yojson"]
 build        : [["dune" "build" "-p" name]]

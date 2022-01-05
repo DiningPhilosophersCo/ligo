@@ -1,5 +1,5 @@
 {
-  "checksum": "e057fa2d5721cde68ce8a3b060da08bd",
+  "checksum": "be4ef970fceeb8d09e8bba0b2a7dd2dd",
   "root": "ligo@link-dev:./ligo.opam",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {

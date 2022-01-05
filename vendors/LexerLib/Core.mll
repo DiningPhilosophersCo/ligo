@@ -285,7 +285,7 @@ let mk_state ~config ~window ~pos ~decoder ~supply : 'token state =
 (* Pretty-printing a lexical unit *)
 
 let output_unit config out_channel lex_unit =
-  let output    str = Stdlib.Printf.fprintf out_channel "%s%!" str in
+  let output    str = Printf.fprintf out_channel "%s%!" str in
   let output_nl str = output (str ^ "\n")
   and offsets = config#offsets
   and mode    = config#mode in

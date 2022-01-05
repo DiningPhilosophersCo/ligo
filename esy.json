@@ -362,7 +362,6 @@
       "@opam/tezos-proxy": "link:./vendors/tezos-ligo/src/lib_proxy/tezos-proxy.opam",
       "@opam/tezos-context": "link:./vendors/tezos-ligo/src/lib_context/tezos-context.opam",
       "@opam/tezos-hacl-glue-unix": "link:./vendors/tezos-ligo/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
-      "@opam/ligo-core": "link:./vendors/ligo-utils/ligo-core/ligo-core.opam",
       "@opam/tezos-mockup-registration": "link:./vendors/tezos-ligo/src/lib_mockup/tezos-mockup-registration.opam",
       "@opam/tezos-p2p": "link:./vendors/tezos-ligo/src/lib_p2p/tezos-p2p.opam",
       "@opam/tezos-mockup": "link:./vendors/tezos-ligo/src/lib_mockup/tezos-mockup.opam",

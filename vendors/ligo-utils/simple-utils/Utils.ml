@@ -165,7 +165,7 @@ let trace text = function
 
 (* Printing a string in red to standard error *)
 
-let highlight msg = Stdlib.Printf.eprintf "\027[31m%s\027[0m%!" msg
+let highlight msg = Printf.eprintf "\027[31m%s\027[0m%!" msg
 
 (* When failing to parse a specifed JSON format *)
 let error_yojson_format format =
