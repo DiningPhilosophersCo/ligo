@@ -1,7 +1,9 @@
+module U = Unix
+open Core
 (* used to show code snippets in error messages *)
 
 let print_code ppf (l:Region.t) (input_line: unit -> string) =
-  let dumb =String.equal (Unix.getenv "TERM") "dumb" in
+  let dumb =String.equal (U.getenv "TERM") "dumb" in
   let start = l#start#line in
   let start_column = l#start#offset `Byte in
   let stop = l#stop#line in

@@ -11,5 +11,5 @@
    result
    unix
    str)
-  (flags (:standard -open Base -open Ligo_core))
+  (flags (:standard -open Base))
 )
