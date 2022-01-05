@@ -8,7 +8,7 @@ include Stage_common.PP
 (* TODO: move to common *)
 let lmap_sep value sep ppf m =
   let lst = LMap.to_kv_list m in
-  let lst = List.sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) lst in
+  let lst = List.sort ~compare:(fun (Label a,_) (Label b,_) -> Base.String.compare a b) lst in
   let new_pp ppf (k, {associated_type;_}) = fprintf ppf "@[<h>%a -> %a@]" label k value associated_type in
   fprintf ppf "%a" (list_sep new_pp sep) lst
 
@@ -135,7 +135,7 @@ and option_mut ppf mut =
 
 and attributes ppf attributes =
   let attr =
-    List.map ~f:(fun attr -> "[@@" ^ attr ^ "]") attributes |> String.concat
+    List.map ~f:(fun attr -> "[@@" ^ attr ^ "]") attributes |> Base.String.concat
   in fprintf ppf "%s" attr
 
 let declaration ppf (d : declaration) = declaration expression type_expression ppf d

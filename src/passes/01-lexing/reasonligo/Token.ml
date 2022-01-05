@@ -420,7 +420,7 @@ module T =
     type kwd_err = Invalid_keyword
 
     let mk_kwd ident region =
-      try Result.ok @@ SMap.find ident keywords with
+      try Result.ok @@ SMap.find ident keywords region with
       | _ -> Error Invalid_keyword
 
     (* Strings *)
