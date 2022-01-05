@@ -6,7 +6,7 @@
   (libraries
     ;; Third party
    base
-   ligo-core
+   core
    yojson
    result
    unix
