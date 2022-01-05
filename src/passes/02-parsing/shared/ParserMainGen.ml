@@ -118,10 +118,10 @@ module Make
     let show_tree (tree : Parser.tree) : unit =
       if CLI.pretty then
         let doc = Pretty.print tree in
-        let width =
-          match Terminal_size.get_columns () with
-            None -> 60
-          | Some c -> c in
+        let width = 60 in
+          (* match Terminal_size.get_columns () with *)
+          (*   None -> 60 *)
+          (* | Some c -> c in *)
         begin
             PPrint.ToChannel.pretty 1.0 width stdout doc;
             Out_channel.newline stdout

@@ -330,10 +330,10 @@ module MakePretty (CST    : CST)
 
     let set () =
       let buffer = Buffer.create 131
-      and width  =
-        match Terminal_size.get_columns () with
-          None -> 60
-        | Some c -> c
+      and width  = 60
+        (* match Terminal_size.get_columns () with *)
+        (*   None -> 60 *)
+        (* | Some c -> c *)
       in width, buffer
 
     let pretty_print cst =
