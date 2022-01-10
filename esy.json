@@ -38,6 +38,9 @@
       "esy-libev": "*",
       "@esy-ocaml/libffi": "*"
     },
+    "devDependencies": {
+      "@opam/ocaml-lsp-server": "*"
+    },
     "resolutions": {
       "@opam/mtime": {
 	"version": "opam:1.3.0",
@@ -45,7 +48,6 @@
 	  "install": "esy-installer ./mtime.install"
 	}
       },
-      "@opam/core": "DiningPhilosophersCo/core:core.opam#76566e146d809550652d426ef77be9df4cbf0f4b",
       "@opam/bls12-381": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
       "@opam/bls12-381-unix": "ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
       "@opam/bls12-381-gen": "opam:0.4.4",
