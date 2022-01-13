@@ -36,6 +36,8 @@
       "@opam/hacl-star-raw": "*",
       "@opam/tezos-rust-libs": "*",
       "esy-libev": "*",
+      "@opam/tezos-011-PtHangz2-test-helpers": "*",
+      "@opam/tezos-client-011-PtHangz2": "*",
       "@esy-ocaml/libffi": "*"
     },
     "devDependencies": {
@@ -43,14 +45,16 @@
     },
     "resolutions": {
       "@opam/mtime": {
-	"version": "opam:1.3.0",
-	"override": {
-	  "install": "esy-installer ./mtime.install"
-	}
+        "version": "opam:1.3.0",
+        "override": {
+          "install": "esy-installer ./mtime.install"
+        }
       },
+      "@opam/tezos-test-helpers": "link:./tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam",
       "@opam/bls12-381": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
       "@opam/bls12-381-unix": "ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
       "@opam/bls12-381-gen": "opam:0.4.4",
+      "@opam/tezos-protocol-plugin-011-PtHangz2": "./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam",
       "@opam/secp256k1-internal": "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494",
       "@opam/getopt": "ulrikstrid/ocaml-getopt:getopt.opam#645ab74",
       "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#7a759aed307f986d43006c50b8ced677e18b5a6d",
@@ -71,9 +75,9 @@
           }
         }
       },
-      "@opam/tezos-lwt-result-stdlib": "link:./vendors/tezos-ligo/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+      "@opam/tezos-lwt-result-stdlib": "link:./tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
       "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
-        "source": "link:./vendors/tezos-ligo/src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.opam",
         "override": {
           "build": [
             [
@@ -185,16 +189,7 @@
           }
         }
       },
-      "@opam/tezos-base": "link:./vendors/tezos-ligo/src/lib_base/tezos-base.opam",
-      "@opam/tezos-protocol-compiler": {
-        "source": "link:./vendors/tezos-ligo/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
-        "override": {
-          "dependencies": {
-            "@opam/tezos-hacl-glue": "*",
-            "@opam/bls12-381-unix": "*"
-          }
-        }
-      },
+      "@opam/tezos-base": "link:./tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
       "@opam/tezos-rust-libs": "opam:1.1",
       "@opam/simple-utils": "link:./vendors/ligo-utils/simple-utils/simple-utils.opam",
       "@opam/tezos-utils": "link:./vendors/ligo-utils/tezos-utils/tezos-utils.opam",
@@ -218,20 +213,20 @@
       "esy-hidapi": "esy-packages/esy-hidapi:esy.json#e21f930d6474e460fa5bb955a26505f6c3500c7a",
       "libtool": "ManasJayanth/esy-libtool:esy.json#d6725b52f8d021539e92d182d29979951e706836",
       "@opam/tezos-error-monad": {
-        "source": "link:./vendors/tezos-ligo/src/lib_error_monad/tezos-error-monad.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
         "override": {
           "dependencies": {
             "@opam/tezos-lwt-result-stdlib": "*"
           }
         }
       },
-      "@opam/tezos-shell-services": "link:./vendors/tezos-ligo/src/lib_shell_services/tezos-shell-services.opam",
-      "@opam/tezos-client-base": "link:./vendors/tezos-ligo/src/lib_client_base/tezos-client-base.opam",
-      "@opam/tezos-client-base-unix": "link:./vendors/tezos-ligo/src/lib_client_base_unix/tezos-client-base-unix.opam",
-      "@opam/tezos-p2p-services": "link:./vendors/tezos-ligo/src/lib_p2p_services/tezos-p2p-services.opam",
-      "@opam/tezos-version": "link:./vendors/tezos-ligo/src/lib_version/tezos-version.opam",
+      "@opam/tezos-shell-services": "link:./tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
+      "@opam/tezos-client-base": "link:./tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
+      "@opam/tezos-client-base-unix": "link:./tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam",
+      "@opam/tezos-p2p-services": "link:./tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
+      "@opam/tezos-version": "link:./tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
       "@opam/tezos-sapling": {
-        "source": "link:./vendors/tezos-ligo/src/lib_sapling/tezos-sapling.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
         "override": {
           "buildEnvOverride": {
             "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
@@ -245,16 +240,17 @@
           }
         }
       },
-      "@opam/tezos-micheline": "link:./vendors/tezos-ligo/src/lib_micheline/tezos-micheline.opam",
-      "@opam/tezos-stdlib": "link:./vendors/tezos-ligo/src/lib_stdlib/tezos-stdlib.opam",
+      "@opam/tezos-micheline": "link:./tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
+      "@opam/linenoise": "DiningPhilosophersCo/ocaml-linenoise:linenoise.opam#1ba074f9bedbaa46280146d834b49064e4722695",
+      "@opam/tezos-stdlib": "link:./tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
       "@opam/tezos-stdlib-unix": {
-        "source": "link:./vendors/tezos-ligo/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
         "override": {
           "dependencies": {}
         }
       },
       "@opam/tezos-clic": {
-        "source": "link:./vendors/tezos-ligo/src/lib_clic/tezos-clic.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
         "override": {
           "dependencies": {
             "@opam/tezos-lwt-result-stdlib": "*"
@@ -262,7 +258,7 @@
         }
       },
       "@opam/tezos-crypto": {
-        "source": "link:./vendors/tezos-ligo/src/lib_crypto/tezos-crypto.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
         "override": {
           "dependencies": {
             "@opam/bls12-381-unix": "*",
@@ -271,19 +267,20 @@
         }
       },
       "@opam/tezos-protocol-compiler": {
-        "source": "link:./vendors/tezos-ligo/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
         "override": {
           "build": [
             "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' dune",
             "dune build -j 4 -p tezos-protocol-compiler"
           ],
           "dependencies": {
+            "@opam/tezos-hacl-glue": "*",
             "@opam/bls12-381-unix": "*"
           }
         }
       },
       "@opam/tezos-protocol-008-PtEdo2Zk": {
-        "source": "link:./vendors/tezos-ligo/src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.opam",
         "override": {
           "build": [
             ["sed", "-i.back", "-e", "s/-nostdlib//g", "dune.inc"],
@@ -292,7 +289,7 @@
         }
       },
       "@opam/tezos-protocol-008-PtEdo2Zk-parameters": {
-        "source": "link:./vendors/tezos-ligo/src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.opam",
         "override": {
           "dependencies": {
             "@esy-ocaml/libffi": "*",
@@ -318,7 +315,7 @@
         }
       },
       "@opam/tezos-event-logging": {
-        "source": "link:./vendors/tezos-ligo/src/lib_event_logging/tezos-event-logging.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
         "override": {
           "dependencies": {
             "@opam/tezos-error-monad": "*",
@@ -326,10 +323,10 @@
           }
         }
       },
-      "@opam/tezos-rpc": "link:./vendors/tezos-ligo/src/lib_rpc/tezos-rpc.opam",
-      "@opam/tezos-rpc-http": "link:./vendors/tezos-ligo/src/lib_rpc_http/tezos-rpc-http.opam",
+      "@opam/tezos-rpc": "link:./tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
+      "@opam/tezos-rpc-http": "link:./tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
       "@opam/tezos-protocol-011-PtHangz2": {
-        "source": "link:./vendors/tezos-ligo/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
         "override": {
           "build": [
             [
@@ -344,7 +341,7 @@
         }
       },
       "@opam/tezos-protocol-011-PtHangzH": {
-        "source": "link:./vendors/tezos-ligo/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
         "override": {
           "build": [
             [
@@ -358,30 +355,55 @@
           ]
         }
       },
-      "@opam/tezos-protocol-011-PtHangz2-parameters": {
-        "source": "link:./vendors/tezos-ligo/src/proto_011_PtHangz2/lib_parameters/tezos-protocol-011-PtHangz2-parameters.opam",
-        "override": { "dependencies": { "@opam/tezos-hacl-glue-unix": "*" } }
+      "@opam/PtHangz2-parameters": {
+        "source": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*",
+            "@opam/tezos-hacl-glue-unix": "*"
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+          },
+          "build": [
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
+              "dune",
+              "build",
+              "-p",
+              "PtHangz2-parameters",
+
+              "-j",
+              "4"
+            ]
+          ]
+        }
       },
-      "@opam/tezos-client-011-PtHangzH": "link:./vendors/tezos-ligo/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
-      "@opam/tezos-hacl-glue": "link:./vendors/tezos-ligo/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
-      "@opam/tezos-protocol-environment-packer": "link:./vendors/tezos-ligo/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
-      "@opam/tezos-protocol-environment": "link:./vendors/tezos-ligo/src/lib_protocol_environment/tezos-protocol-environment.opam",
-      "@opam/tezos-protocol-environment-sigs": "link:./vendors/tezos-ligo/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
-      "@opam/tezos-protocol-environment-structs": "link:./vendors/tezos-ligo/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
-      "@opam/tezos-proxy": "link:./vendors/tezos-ligo/src/lib_proxy/tezos-proxy.opam",
-      "@opam/tezos-context": "link:./vendors/tezos-ligo/src/lib_context/tezos-context.opam",
-      "@opam/tezos-hacl-glue-unix": "link:./vendors/tezos-ligo/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
-      "@opam/tezos-mockup-registration": "link:./vendors/tezos-ligo/src/lib_mockup/tezos-mockup-registration.opam",
-      "@opam/tezos-p2p": "link:./vendors/tezos-ligo/src/lib_p2p/tezos-p2p.opam",
-      "@opam/tezos-mockup": "link:./vendors/tezos-ligo/src/lib_mockup/tezos-mockup.opam",
-      "@opam/tezos-mockup-commands": "link:./vendors/tezos-ligo/src/lib_mockup/tezos-mockup-commands.opam",
-      "@opam/tezos-client-commands": "link:./vendors/tezos-ligo/src/lib_client_commands/tezos-client-commands.opam",
-      "@opam/tezos-signer-backends": "link:./vendors/tezos-ligo/src/lib_signer_backends/tezos-signer-backends.opam",
-      "@opam/tezos-signer-services": "link:./vendors/tezos-ligo/src/lib_signer_services/tezos-signer-services.opam",
-      "@opam/tezos-mockup-proxy": "link:./vendors/tezos-ligo/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
-      "@opam/tezos-workers": "link:./vendors/tezos-ligo/src/lib_workers/tezos-workers.opam",
-      "@opam/tezos-rpc-http-client-unix": "link:./vendors/tezos-ligo/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
-      "@opam/tezos-rpc-http-client": "link:./vendors/tezos-ligo/src/lib_rpc_http/tezos-rpc-http-client.opam",
+      "@opam/tezos-client-011-PtHangzH": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
+      "@opam/tezos-client-011-PtHangz2": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
+      "@opam/tezos-011-PtHangz2-test-helpers": "link:./tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam",
+      "@opam/tezos-hacl-glue": "link:./tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
+      "@opam/tezos-protocol-environment-packer": "link:./tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
+      "@opam/tezos-protocol-environment": "link:./tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
+      "@opam/tezos-protocol-environment-sigs": "link:./tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
+      "@opam/tezos-protocol-environment-structs": "link:./tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
+      "@opam/tezos-proxy": "link:./tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
+      "@opam/tezos-context": "link:./tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
+      "@opam/tezos-hacl-glue-unix": "link:./tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
+      "@opam/tezos-mockup-registration": "link:./tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
+      "@opam/tezos-p2p": "link:./tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam",
+      "@opam/tezos-mockup": "link:./tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam",
+      "@opam/tezos-mockup-commands": "link:./tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam",
+      "@opam/tezos-client-commands": "link:./tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
+      "@opam/tezos-signer-backends": "link:./tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
+      "@opam/tezos-signer-services": "link:./tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam",
+      "@opam/tezos-mockup-proxy": "link:./tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
+      "@opam/tezos-workers": "link:./tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam",
+      "@opam/tezos-rpc-http-client-unix": "link:./tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
+      "@opam/tezos-rpc-http-client": "link:./tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
       "@opam/conf-gmp-powm-sec": {
         "source": "no-source:",
         "override": {
