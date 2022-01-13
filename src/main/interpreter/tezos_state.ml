@@ -407,7 +407,7 @@ let init_ctxt ~raise ?(loc=Location.generated) ?(calltrace=[]) ?(initial_balance
     match initial_balances with
     | [] -> () (* if empty list: will be defaulted with coherent values*)
     | baker::_ -> (
-      let max = Tezos_protocol_011_PtHangz2_parameters.Default_parameters.constants_test.tokens_per_roll in
+      let max = PtHangz2_parameters.Default_parameters.constants_test.tokens_per_roll in
       if (Tez.(<) (Alpha_context.Tez.of_mutez_exn baker) max) then raise.raise (Errors.not_enough_initial_accounts loc max) else ()
     )
   in
