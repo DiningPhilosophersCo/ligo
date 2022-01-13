@@ -13,3 +13,4 @@
      Core))))
 
 (vendored_dirs vendors)
+(data_only_dirs tezos-ligo-to-be-deleted _esy esy.lock node_modules flow-typed scripts test-e2e site)
