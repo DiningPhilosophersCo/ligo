@@ -33,4 +33,5 @@
   (backend bisect_ppx))
  (libraries simple-utils cmdliner ligo cli)
  (modules runligo)
+ (flags -cclib -lole32 -cclib -luserenv)
  (package ligo))
