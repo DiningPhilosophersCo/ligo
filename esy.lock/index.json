@@ -1,5 +1,5 @@
 {
-  "checksum": "8a857b3f0ad888b348c27f5003e88bd0",
+  "checksum": "3b93c0a1efbffadf9d15180c3e263012",
   "root": "ligo@link-dev:./ligo.opam",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -42,12 +42,12 @@
         "esy-libev@archive:http://dist.schmorp.de/libev/Attic/libev-4.27.tar.gz#sha1:b67aff18f6f1ffec4422e188c98d9fe458c5ed0b@d202330d",
         "@opam/yojson@opam:1.7.0@69d87312",
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
-        "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
-        "@opam/tezos-client-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/tezos-011-PtHangz2-test-helpers@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam",
+        "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
+        "@opam/tezos-client-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-011-PtHangz2-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo-lwt@opam:0.5@9319b89f",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
@@ -80,10 +80,10 @@
       ],
       "devDependencies": [
         "@opam/yojson@opam:1.7.0@69d87312",
-        "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo-lwt@opam:0.5@9319b89f",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
@@ -736,61 +736,64 @@
         "@opam/dune@opam:2.8.5@01003f12", "@opam/base@opam:v0.14.2@04880a76"
       ]
     },
-    "@opam/tezos-workers@link:tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam": {
+    "@opam/tezos-workers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-workers@link:tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam",
+        "@opam/tezos-workers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-workers",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_workers",
-        "manifest": "tezos-workers.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a", "@opam/dune@opam:2.8.5@01003f12",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam": {
+    "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
+        "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-version",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_version",
-        "manifest": "tezos-version.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-test-helpers@link:tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam": {
+    "@opam/tezos-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-test-helpers@link:tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam",
+        "@opam/tezos-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-test-helpers",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_test",
-        "manifest": "tezos-test-helpers.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -809,23 +812,24 @@
         "@opam/alcotest@opam:1.5.0@c3a8eb69"
       ]
     },
-    "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam": {
+    "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a": {
       "id":
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
       "name": "@opam/tezos-stdlib-unix",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_stdlib_unix",
-        "manifest": "tezos-stdlib-unix.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [ { "dependencies": {} } ],
       "dependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/re@opam:1.10.3@0585c65d", "@opam/ptime@opam:0.8.6@5df936b0",
         "@opam/mtime@opam:1.3.0@94690749", "@opam/lwt@opam:5.4.2@f5e79982",
         "@opam/ipaddr@opam:5.2.0@6ac621fb", "@opam/fmt@opam:0.9.0@87213963",
@@ -836,10 +840,10 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/re@opam:1.10.3@0585c65d", "@opam/ptime@opam:0.8.6@5df936b0",
         "@opam/mtime@opam:1.3.0@94690749", "@opam/lwt@opam:5.4.2@f5e79982",
         "@opam/ipaddr@opam:5.2.0@6ac621fb", "@opam/fmt@opam:0.9.0@87213963",
@@ -849,16 +853,17 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam": {
+    "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-stdlib",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_stdlib",
-        "manifest": "tezos-stdlib.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -874,101 +879,105 @@
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-signer-services@link:tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam": {
+    "@opam/tezos-signer-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-signer-services@link:tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam",
+        "@opam/tezos-signer-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-signer-services",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_signer_services",
-        "manifest": "tezos-signer-services.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam": {
+    "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-signer-backends",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_signer_backends",
-        "manifest": "tezos-signer-backends.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-services@link:tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc-http-client-unix@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ledgerwallet-tezos@opam:0.1.0@a3ddc3b4",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-services@link:tezos-ligo-to-be-deleted/src/lib_signer_services/tezos-signer-services.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc-http-client-unix@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ledgerwallet-tezos@opam:0.1.0@a3ddc3b4",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam": {
+    "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-shell-services",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_shell_services",
-        "manifest": "tezos-shell-services.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-workers@link:tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam",
-        "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-workers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-workers@link:tezos-ligo-to-be-deleted/src/lib_workers/tezos-workers.opam",
-        "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-workers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam": {
+    "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7": {
       "id":
-        "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
+        "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7",
       "name": "@opam/tezos-sapling",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_sapling",
-        "manifest": "tezos-sapling.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         {
@@ -985,10 +994,10 @@
         }
       ],
       "dependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
         "@opam/integers@opam:0.5.1@8fb996f8",
         "@opam/hex@opam:1.4.0@41725494", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
@@ -998,10 +1007,10 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/tezos-rust-libs@opam:1.1@02945c1d",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
         "@opam/integers@opam:0.5.1@8fb996f8",
         "@opam/hex@opam:1.4.0@41725494",
         "@opam/data-encoding@opam:0.4@edfce09b",
@@ -1032,232 +1041,241 @@
       ],
       "devDependencies": [ "@opam/conf-rust@no-source:@3165ff25" ]
     },
-    "@opam/tezos-rpc-http-client-unix@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam": {
+    "@opam/tezos-rpc-http-client-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-rpc-http-client-unix@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
+        "@opam/tezos-rpc-http-client-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-rpc-http-client-unix",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client-unix.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_rpc_http",
-        "manifest": "tezos-rpc-http-client-unix.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/cohttp-lwt-unix@opam:4.0.0@7bdd7707",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/cohttp-lwt-unix@opam:4.0.0@7bdd7707"
       ]
     },
-    "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam": {
+    "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-rpc-http-client",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_rpc_http",
-        "manifest": "tezos-rpc-http-client.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-client@opam:0.6.1@baf7fd36",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-client@opam:0.6.1@baf7fd36",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam": {
+    "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-rpc-http",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_rpc_http",
-        "manifest": "tezos-rpc-http.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-directory@opam:0.6.1@0656b073",
         "@opam/resto-cohttp@opam:0.6.1@2e35fe36",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-directory@opam:0.6.1@0656b073",
         "@opam/resto-cohttp@opam:0.6.1@2e35fe36",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam": {
+    "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-rpc",
-      "version": "link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
+      "version":
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_rpc",
-        "manifest": "tezos-rpc.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/resto-directory@opam:0.6.1@0656b073",
         "@opam/resto@opam:0.6.1@c223914e", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/resto-directory@opam:0.6.1@0656b073",
         "@opam/resto@opam:0.6.1@c223914e", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b"
       ]
     },
-    "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam": {
+    "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
+        "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-proxy",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
-      "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_proxy",
-        "manifest": "tezos-proxy.opam"
-      },
-      "overrides": [],
-      "dependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/ringo-lwt@opam:0.5@9319b89f",
-        "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/ringo-lwt@opam:0.5@9319b89f", "@opam/dune@opam:2.8.5@01003f12"
-      ]
-    },
-    "@opam/tezos-protocol-plugin-011-PtHangz2@path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam@d41d8cd9": {
-      "id":
-        "@opam/tezos-protocol-plugin-011-PtHangz2@path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam@d41d8cd9",
-      "name": "@opam/tezos-protocol-plugin-011-PtHangz2",
-      "version":
-        "path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
         "type": "install",
         "source": [
-          "path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam"
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/ringo-lwt@opam:0.5@9319b89f",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/dune@opam:2.8.5@01003f12"
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/ringo-lwt@opam:0.5@9319b89f", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-protocol-environment-structs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam": {
+    "@opam/tezos-protocol-plugin-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-protocol-environment-structs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
-      "name": "@opam/tezos-protocol-environment-structs",
+        "@opam/tezos-protocol-plugin-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+      "name": "@opam/tezos-protocol-plugin-011-PtHangz2",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_protocol_environment",
-        "manifest": "tezos-protocol-environment-structs.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/dune@opam:2.8.5@01003f12"
+      ]
+    },
+    "@opam/tezos-protocol-environment-structs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
+      "id":
+        "@opam/tezos-protocol-environment-structs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+      "name": "@opam/tezos-protocol-environment-structs",
+      "version":
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
+      "source": {
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@opam/bls12-381-legacy@opam:0.4.4@319aa0c7",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@opam/bls12-381-legacy@opam:0.4.4@319aa0c7"
       ]
     },
-    "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam": {
+    "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
+        "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-protocol-environment-sigs",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_protocol_environment",
-        "manifest": "tezos-protocol-environment-sigs.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
+        "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
+        "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam": {
+    "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-protocol-environment-packer@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
+        "@opam/tezos-protocol-environment-packer@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-protocol-environment-packer",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-packer.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_protocol_environment",
-        "manifest": "tezos-protocol-environment-packer.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1265,25 +1283,26 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.8.5@01003f12" ]
     },
-    "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam": {
+    "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-protocol-environment",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_protocol_environment",
-        "manifest": "tezos-protocol-environment.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
-        "@opam/tezos-protocol-environment-structs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
-        "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7",
+        "@opam/tezos-protocol-environment-structs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/bls12-381-legacy@opam:0.4.4@319aa0c7",
         "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9",
@@ -1291,26 +1310,27 @@
       ],
       "devDependencies": [
         "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
-        "@opam/tezos-protocol-environment-structs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-structs.opam",
-        "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7",
+        "@opam/tezos-protocol-environment-structs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/bls12-381-legacy@opam:0.4.4@319aa0c7",
         "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9"
       ]
     },
-    "@opam/tezos-protocol-compiler@link:tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam": {
+    "@opam/tezos-protocol-compiler@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7@04001d74": {
       "id":
-        "@opam/tezos-protocol-compiler@link:tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
+        "@opam/tezos-protocol-compiler@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7@04001d74",
       "name": "@opam/tezos-protocol-compiler",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_protocol_compiler",
-        "manifest": "tezos-protocol-compiler.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         {
@@ -1326,12 +1346,12 @@
       ],
       "dependencies": [
         "ocaml@4.12.0@d41d8cd9",
-        "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/re@opam:1.10.3@0585c65d",
         "@opam/ocp-ocamlres@opam:0.4@df29645c",
         "@opam/dune@opam:2.8.5@01003f12",
@@ -1341,28 +1361,54 @@
       ],
       "devDependencies": [
         "ocaml@4.12.0@d41d8cd9",
-        "@opam/tezos-version@link:tezos-ligo-to-be-deleted/src/lib_version/tezos-version.opam",
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-protocol-environment-sigs@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment-sigs.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-version@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-protocol-environment-sigs@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/re@opam:1.10.3@0585c65d",
         "@opam/ocp-ocamlres@opam:0.4@df29645c",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam": {
+    "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17": {
+      "id": "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17",
+      "name": "@opam/tezos-protocol-011-PtHangz2-parameters",
+      "version": "opam:11.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/15/15e3e923f542d79f3aefe51a1f2c2a183b41a50caf8a1235566b3f44ff1c0aed#sha256:15e3e923f542d79f3aefe51a1f2c2a183b41a50caf8a1235566b3f44ff1c0aed",
+          "archive:https://gitlab.com/tezos/tezos/-/archive/v11.0/tezos-v11.0.tar.bz2#sha256:15e3e923f542d79f3aefe51a1f2c2a183b41a50caf8a1235566b3f44ff1c0aed"
+        ],
+        "opam": {
+          "name": "tezos-protocol-011-PtHangz2-parameters",
+          "version": "11.0",
+          "path": "esy.lock/opam/tezos-protocol-011-PtHangz2-parameters.11.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/dune@opam:2.8.5@01003f12"
+      ]
+    },
+    "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce": {
       "id":
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
       "name": "@opam/tezos-protocol-011-PtHangz2",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path":
-          "tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol",
-        "manifest": "tezos-protocol-011-PtHangz2.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         {
@@ -1381,50 +1427,53 @@
         }
       ],
       "dependencies": [
-        "@opam/tezos-protocol-compiler@link:tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
+        "@opam/tezos-protocol-compiler@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7@04001d74",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-protocol-compiler@link:tezos-ligo-to-be-deleted/src/lib_protocol_compiler/tezos-protocol-compiler.opam",
+        "@opam/tezos-protocol-compiler@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#709a4461846af6ad19838346f7f9edb96b9719d7@04001d74",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam": {
+    "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-p2p-services",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_p2p_services",
-        "manifest": "tezos-p2p-services.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-p2p@link:tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam": {
+    "@opam/tezos-p2p@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-p2p@link:tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam",
+        "@opam/tezos-p2p@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-p2p",
-      "version": "link:tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam",
+      "version":
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_p2p",
-        "manifest": "tezos-p2p.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/lwt-watcher@opam:0.1@058fd005",
         "@opam/lwt-canceler@opam:0.3@64a4b548",
@@ -1432,181 +1481,187 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a",
         "@opam/lwt-watcher@opam:0.1@058fd005",
         "@opam/lwt-canceler@opam:0.3@64a4b548",
         "@opam/lwt@opam:5.4.2@f5e79982", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam": {
+    "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-mockup-registration",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_mockup",
-        "manifest": "tezos-mockup-registration.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam": {
+    "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
+        "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-mockup-proxy",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_mockup_proxy",
-        "manifest": "tezos-mockup-proxy.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-mockup-commands@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam": {
+    "@opam/tezos-mockup-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-mockup-commands@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam",
+        "@opam/tezos-mockup-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-mockup-commands",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_mockup",
-        "manifest": "tezos-mockup-commands.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam",
-        "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam",
-        "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-mockup@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam": {
+    "@opam/tezos-mockup@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-mockup@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam",
+        "@opam/tezos-mockup@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-mockup",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_mockup",
-        "manifest": "tezos-mockup.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-p2p@link:tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-p2p-services@link:tezos-ligo-to-be-deleted/src/lib_p2p_services/tezos-p2p-services.opam",
-        "@opam/tezos-p2p@link:tezos-ligo-to-be-deleted/src/lib_p2p/tezos-p2p.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup-proxy@link:tezos-ligo-to-be-deleted/src/lib_mockup_proxy/tezos-mockup-proxy.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-p2p@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/resto-cohttp-self-serving-client@opam:0.6.1@c4e15c83",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam": {
+    "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
+        "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-micheline",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_micheline",
-        "manifest": "tezos-micheline.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
         "@opam/zarith@opam:1.12@232cc7f2", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "@opam/zarith@opam:1.12@232cc7f2", "@opam/uutf@opam:1.0.2@4440868f",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b"
       ]
     },
-    "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam": {
+    "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-lwt-result-stdlib",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib",
-        "manifest": "tezos-lwt-result-stdlib.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1618,41 +1673,43 @@
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-hacl-glue-unix@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam": {
+    "@opam/tezos-hacl-glue-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-hacl-glue-unix@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
+        "@opam/tezos-hacl-glue-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-hacl-glue-unix",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix",
-        "manifest": "tezos-hacl-glue-unix.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/hacl-star-raw@opam:0.4.1@933a887a",
         "@opam/hacl-star@opam:0.4.1@2547016e",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/hacl-star-raw@opam:0.4.1@933a887a",
         "@opam/hacl-star@opam:0.4.1@2547016e",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam": {
+    "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-hacl-glue",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual",
-        "manifest": "tezos-hacl-glue.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
@@ -1660,16 +1717,17 @@
       ],
       "devDependencies": [ "@opam/dune@opam:2.8.5@01003f12" ]
     },
-    "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam": {
+    "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a": {
       "id":
-        "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
+        "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a",
       "name": "@opam/tezos-event-logging",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_event_logging",
-        "manifest": "tezos-event-logging.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         {
@@ -1680,41 +1738,42 @@
         }
       ],
       "dependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/lwt_log@opam:1.1.1@fc97477f",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/lwt_log@opam:1.1.1@fc97477f",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b"
       ]
     },
-    "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam": {
+    "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda": {
       "id":
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
       "name": "@opam/tezos-error-monad",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_error_monad",
-        "manifest": "tezos-error-monad.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         { "dependencies": { "@opam/tezos-lwt-result-stdlib": "*" } }
       ],
       "dependencies": [
         "ocaml@4.12.0@d41d8cd9",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/lwt-canceler@opam:0.3@64a4b548",
         "@opam/lwt@opam:5.4.2@f5e79982", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b",
@@ -1722,23 +1781,24 @@
       ],
       "devDependencies": [
         "ocaml@4.12.0@d41d8cd9",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/lwt-canceler@opam:0.3@64a4b548",
         "@opam/lwt@opam:5.4.2@f5e79982", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b"
       ]
     },
-    "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam": {
+    "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd": {
       "id":
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
       "name": "@opam/tezos-crypto",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_crypto",
-        "manifest": "tezos-crypto.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         {
@@ -1750,11 +1810,11 @@
       ],
       "dependencies": [
         "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a", "@opam/lwt@opam:5.4.2@f5e79982",
         "@opam/dune@opam:2.8.5@01003f12",
@@ -1764,241 +1824,249 @@
       ],
       "devDependencies": [
         "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-hacl-glue@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/virtual/tezos-hacl-glue.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-hacl-glue@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/secp256k1-internal@git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494@d41d8cd9",
         "@opam/ringo@opam:0.5@2f28117a", "@opam/lwt@opam:5.4.2@f5e79982",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/data-encoding@opam:0.4@edfce09b"
       ]
     },
-    "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam": {
+    "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-context",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_context",
-        "manifest": "tezos-context.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/irmin-pack@opam:2.8.0@e392b7d0",
         "@opam/irmin@opam:2.8.0@f6ac26f6", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/bigstringaf@opam:0.8.0@6a362afb",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/irmin-pack@opam:2.8.0@e392b7d0",
         "@opam/irmin@opam:2.8.0@f6ac26f6", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/bigstringaf@opam:0.8.0@6a362afb"
       ]
     },
-    "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam": {
+    "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
+        "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-client-commands",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_client_commands",
-        "manifest": "tezos-client-commands.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-client-base-unix@link:tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam": {
+    "@opam/tezos-client-base-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-client-base-unix@link:tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam",
+        "@opam/tezos-client-base-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-client-base-unix",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_client_base_unix",
-        "manifest": "tezos-client-base-unix.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup-commands@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam",
-        "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/lwt-exit@opam:1.0@7669b970", "@opam/dune@opam:2.8.5@01003f12",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-rpc-http-client@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http-client.opam",
-        "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-mockup-commands@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-commands.opam",
-        "@opam/tezos-client-commands@link:tezos-ligo-to-be-deleted/src/lib_client_commands/tezos-client-commands.opam",
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc-http-client@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-mockup-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-commands@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/lwt-exit@opam:1.0@7669b970", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam": {
+    "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-client-base@link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
+        "@opam/tezos-client-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-client-base",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/lib_client_base/tezos-client-base.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_client_base",
-        "manifest": "tezos-client-base.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-sapling@link:tezos-ligo-to-be-deleted/src/lib_sapling/tezos-sapling.opam",
-        "@opam/tezos-rpc-http@link:tezos-ligo-to-be-deleted/src/lib_rpc_http/tezos-rpc-http.opam",
-        "@opam/tezos-context@link:tezos-ligo-to-be-deleted/src/lib_context/tezos-context.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-sapling@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0925dfd7",
+        "@opam/tezos-rpc-http@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-context@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/cmdliner@opam:1.0.4@93208aac"
       ]
     },
-    "@opam/tezos-client-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam": {
+    "@opam/tezos-client-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-client-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
+        "@opam/tezos-client-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-client-011-PtHangz2",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client",
-        "manifest": "tezos-client-011-PtHangz2.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
-        "@opam/tezos-protocol-plugin-011-PtHangz2@path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam@d41d8cd9",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-client-base-unix@link:tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-plugin-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ppx_inline_test@opam:v0.14.1@8b68b6f7",
-        "@opam/dune@opam:2.8.5@01003f12",
-        "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+        "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-signer-backends@link:tezos-ligo-to-be-deleted/src/lib_signer_backends/tezos-signer-backends.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-proxy@link:tezos-ligo-to-be-deleted/src/lib_proxy/tezos-proxy.opam",
-        "@opam/tezos-protocol-plugin-011-PtHangz2@path:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam@d41d8cd9",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-mockup-registration@link:tezos-ligo-to-be-deleted/src/lib_mockup/tezos-mockup-registration.opam",
-        "@opam/tezos-client-base-unix@link:tezos-ligo-to-be-deleted/src/lib_client_base_unix/tezos-client-base-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-signer-backends@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-proxy@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-plugin-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-mockup-registration@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-client-base-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/ppx_inline_test@opam:v0.14.1@8b68b6f7",
-        "@opam/dune@opam:2.8.5@01003f12",
-        "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam"
+        "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam": {
+    "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda": {
       "id":
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
       "name": "@opam/tezos-clic",
-      "version": "link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
+      "version":
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_clic",
-        "manifest": "tezos-clic.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [
         { "dependencies": { "@opam/tezos-lwt-result-stdlib": "*" } }
       ],
       "dependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/re@opam:1.10.3@0585c65d", "@opam/dune@opam:2.8.5@01003f12",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-lwt-result-stdlib@link:tezos-ligo-to-be-deleted/src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-lwt-result-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/re@opam:1.10.3@0585c65d", "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
-    "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam": {
+    "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-base",
-      "version": "link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+      "version":
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path": "tezos-ligo-to-be-deleted/src/lib_base",
-        "manifest": "tezos-base.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
-        "@opam/tezos-hacl-glue-unix@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
-        "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-hacl-glue-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/ptime@opam:0.8.6@5df936b0",
         "@opam/ipaddr@opam:5.2.0@6ac621fb",
         "@opam/ezjsonm@opam:1.3.0@7e3d4a08",
@@ -2008,14 +2076,14 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-stdlib@link:tezos-ligo-to-be-deleted/src/lib_stdlib/tezos-stdlib.opam",
-        "@opam/tezos-rpc@link:tezos-ligo-to-be-deleted/src/lib_rpc/tezos-rpc.opam",
-        "@opam/tezos-micheline@link:tezos-ligo-to-be-deleted/src/lib_micheline/tezos-micheline.opam",
-        "@opam/tezos-hacl-glue-unix@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
-        "@opam/tezos-event-logging@link:tezos-ligo-to-be-deleted/src/lib_event_logging/tezos-event-logging.opam",
-        "@opam/tezos-error-monad@link:tezos-ligo-to-be-deleted/src/lib_error_monad/tezos-error-monad.opam",
-        "@opam/tezos-crypto@link:tezos-ligo-to-be-deleted/src/lib_crypto/tezos-crypto.opam",
-        "@opam/tezos-clic@link:tezos-ligo-to-be-deleted/src/lib_clic/tezos-clic.opam",
+        "@opam/tezos-stdlib@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-rpc@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-micheline@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-hacl-glue-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-event-logging@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0ab68e7a",
+        "@opam/tezos-error-monad@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
+        "@opam/tezos-crypto@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d14833dd",
+        "@opam/tezos-clic@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#709a4461846af6ad19838346f7f9edb96b9719d7@0fb68dda",
         "@opam/ptime@opam:0.8.6@5df936b0",
         "@opam/ipaddr@opam:5.2.0@6ac621fb",
         "@opam/ezjsonm@opam:1.3.0@7e3d4a08",
@@ -2024,45 +2092,45 @@
         "@opam/bls12-381-unix@github:ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9"
       ]
     },
-    "@opam/tezos-011-PtHangz2-test-helpers@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam": {
+    "@opam/tezos-011-PtHangz2-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9": {
       "id":
-        "@opam/tezos-011-PtHangz2-test-helpers@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam",
+        "@opam/tezos-011-PtHangz2-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
       "name": "@opam/tezos-011-PtHangz2-test-helpers",
       "version":
-        "link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam",
+        "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7",
       "source": {
-        "type": "link",
-        "path":
-          "tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/test/helpers",
-        "manifest": "tezos-011-PtHangz2-test-helpers.opam"
+        "type": "install",
+        "source": [
+          "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7"
+        ]
       },
       "overrides": [],
       "dependencies": [
-        "@opam/tezos-test-helpers@link:tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam",
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-client-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-client-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
         "@opam/dune@opam:2.8.5@01003f12",
         "@opam/alcotest-lwt@opam:1.5.0@f1f00af0",
-        "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/tezos-test-helpers@link:tezos-ligo-to-be-deleted/src/lib_test/tezos-test-helpers.opam",
-        "@opam/tezos-stdlib-unix@link:tezos-ligo-to-be-deleted/src/lib_stdlib_unix/tezos-stdlib-unix.opam",
-        "@opam/tezos-shell-services@link:tezos-ligo-to-be-deleted/src/lib_shell_services/tezos-shell-services.opam",
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-client-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
+        "@opam/tezos-test-helpers@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-stdlib-unix@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#709a4461846af6ad19838346f7f9edb96b9719d7@afa1477a",
+        "@opam/tezos-shell-services@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-environment@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-protocol-011-PtHangz2-parameters@opam:11.0@710b8f17",
+        "@opam/tezos-protocol-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@c2e119ce",
+        "@opam/tezos-client-011-PtHangz2@git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
+        "@opam/tezos-base@git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#709a4461846af6ad19838346f7f9edb96b9719d7@d41d8cd9",
         "@opam/qcheck-alcotest@opam:0.18@92fc95b9",
         "@opam/dune@opam:2.8.5@01003f12",
-        "@opam/alcotest-lwt@opam:1.5.0@f1f00af0",
-        "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam"
+        "@opam/alcotest-lwt@opam:1.5.0@f1f00af0"
       ]
     },
     "@opam/terminal@opam:0.2.1@a14e79aa": {
@@ -7597,56 +7665,6 @@
         "@opam/fmt@opam:0.9.0@87213963", "@opam/dune@opam:2.8.5@01003f12",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@opam/astring@opam:0.8.5@1300cee8"
-      ]
-    },
-    "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam": {
-      "id":
-        "@opam/PtHangz2-parameters@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam",
-      "name": "@opam/PtHangz2-parameters",
-      "version":
-        "link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam",
-      "source": {
-        "type": "link",
-        "path":
-          "tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_parameters",
-        "manifest": "PtHangz2-parameters.opam"
-      },
-      "overrides": [
-        {
-          "dependencies": {
-            "@esy-ocaml/libffi": "*",
-            "@opam/hacl-star-raw": "*",
-            "@opam/tezos-hacl-glue-unix": "*"
-          },
-          "buildEnv": {
-            "DYLD_LIBRARY_PATH":
-              "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
-            "LD_LIBRARY_PATH":
-              "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
-          },
-          "build": [
-            [
-              "env",
-              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
-              "dune", "build", "-p", "PtHangz2-parameters", "-j", "4"
-            ]
-          ]
-        }
-      ],
-      "dependencies": [
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-hacl-glue-unix@link:tezos-ligo-to-be-deleted/src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/hacl-star-raw@opam:0.4.1@933a887a",
-        "@opam/dune@opam:2.8.5@01003f12", "@esy-ocaml/substs@0.0.1@d41d8cd9",
-        "@esy-ocaml/libffi@archive:https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz#sha1:8df6cb570c8d6596a67d1c0773bf00650154f7aa@069bcd80"
-      ],
-      "devDependencies": [
-        "@opam/tezos-protocol-environment@link:tezos-ligo-to-be-deleted/src/lib_protocol_environment/tezos-protocol-environment.opam",
-        "@opam/tezos-protocol-011-PtHangz2@link:tezos-ligo-to-be-deleted/src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam",
-        "@opam/tezos-base@link:tezos-ligo-to-be-deleted/src/lib_base/tezos-base.opam",
-        "@opam/dune@opam:2.8.5@01003f12"
       ]
     },
     "@esy-ocaml/substs@0.0.1@d41d8cd9": {
