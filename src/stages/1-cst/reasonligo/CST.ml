@@ -9,6 +9,7 @@
 module Directive = LexerLib.Directive
 module Utils     = Simple_utils.Utils
 module Region    = Simple_utils.Region
+module Token     = Lexing_reasonligo.Token
 
 open Utils
 type 'a reg = 'a Region.reg
@@ -17,82 +18,91 @@ type 'a reg = 'a Region.reg
 
 type lexeme = string
 
+type 'payload wrap = 'payload Token.wrap 
+
 (* Keywords of Reason *)
 
-type kwd_and    = Region.t
-type kwd_else   = Region.t
-type kwd_false  = Region.t
-type kwd_fun    = Region.t
-type kwd_rec    = Region.t
-type kwd_if     = Region.t
-type kwd_let    = Region.t
-type kwd_switch = Region.t
-type kwd_mod    = Region.t
-type kwd_not    = Region.t
-type kwd_of     = Region.t
-type kwd_or     = Region.t
-type kwd_then   = Region.t
-type kwd_true   = Region.t
-type kwd_type   = Region.t
-type kwd_module    = Region.t
+type kwd_and    = lexeme wrap
+type kwd_else   = lexeme wrap
+type kwd_false  = lexeme wrap
+type kwd_fun    = lexeme wrap
+type kwd_rec    = lexeme wrap
+type kwd_if     = lexeme wrap
+type kwd_let    = lexeme wrap
+type kwd_switch = lexeme wrap
+type kwd_mod    = lexeme wrap
+type kwd_land   = lexeme wrap
+type kwd_lor    = lexeme wrap
+type kwd_lxor   = lexeme wrap
+type kwd_lsl    = lexeme wrap
+type kwd_lsr    = lexeme wrap
+type kwd_not    = lexeme wrap
+type kwd_of     = lexeme wrap
+type kwd_or     = lexeme wrap
+type kwd_then   = lexeme wrap
+type kwd_true   = lexeme wrap
+type kwd_type   = lexeme wrap
+type kwd_module    = lexeme wrap
 
 (* Data constructors *)
 
-type c_None  = Region.t
-type c_Some  = Region.t
+type c_None  = lexeme wrap
+type c_Some  = lexeme wrap
 
 (* Symbols *)
 
-type arrow    = Region.t  (* "=>"  *)
-type cat      = Region.t  (* "++"  *)
-type dot      = Region.t  (* "."   *)
-type ellipsis = Region.t  (* "..." *)
-type equal    = Region.t  (* "="   *)
+type arrow    = lexeme wrap  (* "=>"  *)
+type cat      = lexeme wrap  (* "++"  *)
+type dot      = lexeme wrap  (* "."   *)
+type ellipsis = lexeme wrap  (* "..." *)
+type equal    = lexeme wrap  (* "="   *)
 
 (* Arithmetic operators *)
 
-type minus    = Region.t  (* "-" *)
-type plus     = Region.t  (* "+" *)
-type slash    = Region.t  (* "/" *)
-type times    = Region.t  (* "*" *)
+type minus    = lexeme wrap  (* "-" *)
+type plus     = lexeme wrap  (* "+" *)
+type slash    = lexeme wrap  (* "/" *)
+type times    = lexeme wrap  (* "*" *)
 
 (* Boolean operators *)
 
-type bool_or  = Region.t  (* "||" *)
-type bool_and = Region.t  (* "&&" *)
+type bool_or  = lexeme wrap  (* "||" *)
+type bool_and = lexeme wrap  (* "&&" *)
 
 (* Comparisons *)
 
-type equal_cmp = Region.t  (* "=="  *)
-type neq       = Region.t  (* "!=" *)
-type lt        = Region.t  (* "<"  *)
-type gt        = Region.t  (* ">"  *)
-type leq       = Region.t  (* "<=" *)
-type geq       = Region.t  (* ">=" *)
+type equal_cmp = lexeme wrap  (* "=="  *)
+type neq       = lexeme wrap  (* "!=" *)
+type lt        = lexeme wrap  (* "<"  *)
+type gt        = lexeme wrap  (* ">"  *)
+type leq       = lexeme wrap  (* "<=" *)
+type geq       = lexeme wrap  (* ">=" *)
 
 (* Compounds *)
 
-type lpar     = Region.t  (* "(" *)
-type rpar     = Region.t  (* ")" *)
-type lbracket = Region.t  (* "[" *)
-type rbracket = Region.t  (* "]" *)
-type lbrace   = Region.t  (* "{" *)
-type rbrace   = Region.t  (* "}" *)
+type lpar     = lexeme wrap  (* "(" *)
+type rpar     = lexeme wrap  (* ")" *)
+type lbracket = lexeme wrap  (* "[" *)
+type rbracket = lexeme wrap  (* "]" *)
+type lbrace   = lexeme wrap  (* "{" *)
+type rbrace   = lexeme wrap  (* "}" *)
 
 (* Separators *)
 
-type comma = Region.t  (* "," *)
-type semi  = Region.t  (* ";" *)
-type vbar  = Region.t  (* "|" *)
-type colon = Region.t  (* ":" *)
+type comma = lexeme wrap  (* "," *)
+type semi  = lexeme wrap  (* ";" *)
+type vbar  = lexeme wrap  (* "|" *)
+type colon = lexeme wrap  (* ":" *)
+
+type quote = lexeme wrap  (* "'" *)
 
 (* Wildcard *)
 
-type wild = Region.t  (* "_" *)
+type wild = lexeme wrap  (* "_" *)
 
 (* Virtual tokens *)
 
-type eof = Region.t
+type eof = lexeme wrap
 
 (* Literals *)
 
@@ -107,7 +117,7 @@ type attribute   = string reg
 
 (* Parentheses *)
 
-type 'a braced = {
+type 'a braces = {
   lbrace : lbrace;
   inside : 'a;
   rbrace : rbrace
@@ -156,8 +166,16 @@ and let_binding = {
 and type_decl = {
   kwd_type   : kwd_type;
   name       : type_name;
+  params     : type_vars option;
   eq         : equal;
   type_expr  : type_expr
+}
+
+and type_vars = (type_var reg, comma) nsepseq par reg
+
+and type_var = {
+  quote : quote;
+  name  : variable
 }
 
 and module_decl = {
@@ -180,14 +198,14 @@ and type_expr =
   TProd   of cartesian
 | TSum    of sum_type reg
 | TRecord of field_decl reg ne_injection reg
-| TApp    of (type_constr * type_tuple) reg
+| TApp    of (type_constr * type_args) reg
 | TFun    of (type_expr * arrow * type_expr) reg
 | TPar    of type_expr par reg
 | TVar    of variable
-| TWild   of wild
 | TString of lexeme reg
 | TInt    of (lexeme * Z.t) reg
 | TModA   of type_expr module_access reg
+| TArg    of type_var reg
 
 and cartesian = (type_expr, comma) nsepseq par reg
 
@@ -199,7 +217,7 @@ and sum_type = {
 
 and variant = {
   constr     : constr;
-  arg        : (kwd_of * type_expr) option;
+  args       : type_expr par reg option;
   attributes : attributes
 }
 
@@ -210,12 +228,12 @@ and field_decl = {
   attributes : attributes
 }
 
-and type_tuple = (type_expr, comma) nsepseq par reg
+and type_args = (type_expr, comma) nsepseq par reg
 
 and pattern =
-  PConstr   of constr_pattern
+  PConstr   of (constr * pattern option) reg
 | PUnit     of the_unit reg
-| PVar      of variable
+| PVar      of var_pattern reg
 | PInt      of (lexeme * Z.t) reg
 | PNat      of (lexeme * Z.t) reg
 | PBytes    of (lexeme * Hex.t) reg
@@ -227,25 +245,23 @@ and pattern =
 | PRecord   of field_pattern reg ne_injection reg
 | PTyped    of typed_pattern reg
 
-and constr_pattern =
-  PNone      of c_None
-| PSomeApp   of (c_Some * pattern) reg
-| PFalse    of kwd_false
-| PTrue     of kwd_true
-| PConstrApp of (constr * pattern option) reg
+and var_pattern = {
+  variable   : variable;
+  attributes : attribute list
+}
 
 and list_pattern =
   PListComp of pattern injection reg
 | PCons     of cons_pattern reg
 
-and cons_pattern =
-  { lbracket : lbracket;
-    lpattern : pattern;
-    comma    : comma;
-    ellipsis : ellipsis;
-    rpattern : pattern;
-    rbracket : rbracket;
-  }
+and cons_pattern = {
+  lbracket : lbracket;
+  lpattern : pattern;
+  comma    : comma;
+  ellipsis : ellipsis;
+  rpattern : pattern;
+  rbracket : rbracket;
+}
 
 and typed_pattern = {
   pattern   : pattern;
@@ -267,7 +283,7 @@ and expr =
 | EArith    of arith_expr
 | EString   of string_expr
 | EList     of list_expr
-| EConstr   of constr_expr
+| EConstr   of (constr * expr option) reg
 | ERecord   of record reg
 | EProj     of projection reg
 | EModA     of expr module_access reg
@@ -305,14 +321,13 @@ and 'a ne_injection = {
   attributes  : attributes
 }
 
-and compound =
-| Braces   of lbrace * rbrace
-| Brackets of lbracket * rbracket
+and compound = [
+  `Braces   of lbrace * rbrace
+| `Brackets of lbracket * rbracket]
 
 and list_expr =
   ECons     of cons_expr reg
 | EListComp of expr injection reg
-(*| Append of (expr * append * expr) reg*)
 
 and cons_expr =
   { lbracket : lbracket;
@@ -328,17 +343,17 @@ and string_expr =
 | String   of string reg
 | Verbatim of string reg
 
-and constr_expr =
-  ENone      of c_None
-| ESomeApp   of (c_Some * expr) reg
-| EConstrApp of (constr * expr option) reg
-
 and arith_expr =
   Add   of plus bin_op reg
 | Sub   of minus bin_op reg
 | Mult  of times bin_op reg
 | Div   of slash bin_op reg
 | Mod   of kwd_mod bin_op reg
+| Land  of kwd_land bin_op reg
+| Lor   of kwd_lor bin_op reg
+| Lxor  of kwd_lxor bin_op reg
+| Lsl   of kwd_lsl bin_op reg
+| Lsr   of kwd_lsr bin_op reg
 | Neg   of minus un_op reg
 | Int   of (string * Z.t) reg
 | Nat   of (string * Z.t) reg
@@ -349,11 +364,9 @@ and logic_expr =
 | CompExpr of comp_expr
 
 and bool_expr =
-  Or    of kwd_or bin_op reg
-| And   of kwd_and bin_op reg
-| Not   of kwd_not un_op reg
-| True  of kwd_true
-| False of kwd_false
+  Or  of kwd_or bin_op reg
+| And of kwd_and bin_op reg
+| Not of kwd_not un_op reg
 
 and 'a bin_op = {
   op   : 'a;
@@ -419,10 +432,10 @@ and path =
 
 and 'a case = {
   kwd_switch : kwd_switch;
-  expr      : expr;
-  lbrace    : lbrace;
-  cases     : ('a case_clause reg, vbar) nsepseq reg;
-  rbrace : rbrace
+  expr       : expr;
+  lbrace     : lbrace;
+  cases      : ('a case_clause reg, vbar) nsepseq reg;
+  rbrace     : rbrace
 }
 
 and 'a case_clause = {
@@ -460,18 +473,25 @@ and mod_alias = {
 }
 
 and fun_expr = {
-  binders    : pattern;
-  lhs_type   : (colon * type_expr) option;
-  arrow      : arrow;
-  body       : expr;
+  binders     : pattern;
+  lhs_type    : (colon * type_expr) option;
+  arrow       : arrow;
+  body        : expr;
+  attributes  : attributes
 }
 
 and cond_expr = {
   kwd_if   : kwd_if;
-  test     : expr;
-  ifso     : (expr * semi option) braced;
-  ifnot    : (kwd_else * (expr * semi option) braced) option;
+  test     : test_expr;
+  ifso     : branch;
+  ifnot    : (kwd_else * branch) option;
 }
+
+and test_expr = [
+  `Braces of expr braces reg
+| `Parens of expr par reg]
+
+and branch = (expr * semi option) braces reg
 
 (* Code injection.  Note how the field [language] wraps a region in
    another: the outermost region covers the header "[%<language>" and
@@ -504,21 +524,16 @@ let type_expr_to_region = function
 | TString {region; _}
 | TInt    {region; _}
 | TVar    {region; _}
-| TWild    region
 | TModA   {region; _}
+| TArg    {region; _}
  -> region
 
 let list_pattern_to_region = function
   PListComp {region; _} | PCons {region; _} -> region
 
-let constr_pattern_to_region = function
-  PNone region | PSomeApp {region;_}
-| PTrue region | PFalse region
-| PConstrApp {region;_} -> region
-
 let pattern_to_region = function
 | PList p -> list_pattern_to_region p
-| PConstr c -> constr_pattern_to_region c
+| PConstr {region;_}
 | PUnit {region;_}
 | PTuple {region;_} | PVar {region;_}
 | PInt {region;_}
@@ -530,7 +545,6 @@ let pattern_to_region = function
 
 let bool_expr_to_region = function
   Or {region;_} | And {region;_}
-| True region | False region
 | Not {region;_} -> region
 
 let comp_expr_to_region = function
@@ -545,6 +559,8 @@ let logic_expr_to_region = function
 let arith_expr_to_region = function
   Add {region;_} | Sub {region;_} | Mult {region;_}
 | Div {region;_} | Mod {region;_} | Neg {region;_}
+| Land {region;_} | Lor {region;_} | Lxor {region;_} 
+| Lsl {region;_} | Lsr {region;_}
 | Int {region;_} | Mutez {region; _}
 | Nat {region; _} -> region
 
@@ -555,17 +571,12 @@ let list_expr_to_region = function
   ECons {region; _} | EListComp {region; _}
 (* | Append {region; _}*) -> region
 
-and constr_expr_to_region = function
-  ENone region
-| EConstrApp {region; _}
-| ESomeApp   {region; _} -> region
-
 let expr_to_region = function
   ELogic e -> logic_expr_to_region e
 | EArith e -> arith_expr_to_region e
 | EString e -> string_expr_to_region e
 | EList e -> list_expr_to_region e
-| EConstr e -> constr_expr_to_region e
+| EConstr {region;_}
 | EAnnot {region;_ } | ELetIn {region;_}   | EFun {region;_}
 | ETypeIn {region;_ }| EModIn {region;_}   | EModAlias {region;_}
 | ECond {region;_}   | ETuple {region;_}   | ECase {region;_}

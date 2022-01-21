@@ -1,14 +1,14 @@
 [@@@coverage exclude_file]
 open Types
 open Format
-open PP_helpers
+open Simple_utils.PP_helpers
 
 include Stage_common.PP
 
 (* TODO: move to common *)
 let lmap_sep value sep ppf m =
   let lst = LMap.to_kv_list m in
-  let lst = List.sort (fun (Label a,_) (Label b,_) -> String.compare a b) lst in
+  let lst = List.sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) lst in
   let new_pp ppf (k, {associated_type;_}) = fprintf ppf "@[<h>%a -> %a@]" label k value associated_type in
   fprintf ppf "%a" (list_sep new_pp sep) lst
 
@@ -16,7 +16,7 @@ let lmap_sep_d x = lmap_sep x (tag " ,@ ")
 
 let record_sep_t value sep ppf (m : 'a label_map) =
   let lst = LMap.to_kv_list m in
-  let lst = List.sort_uniq (fun (Label a,_) (Label b,_) -> String.compare a b) lst in
+  let lst = List.dedup_and_sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) lst in
   let new_pp ppf (k, {associated_type;_}) = fprintf ppf "@[<h>%a -> %a@]" label k value associated_type in
   fprintf ppf "%a" (list_sep new_pp sep) lst
 
@@ -40,6 +40,8 @@ let rec type_content : formatter -> type_expression -> unit =
   | T_app            app -> type_app      type_expression ppf app
   | T_module_accessor ma -> module_access type_expression ppf ma
   | T_singleton       x  -> literal       ppf             x
+  | T_abstraction     x  -> abstraction   type_expression ppf x
+  | T_for_all         x  -> for_all       type_expression ppf x
 
 and type_expression ppf (te : type_expression) : unit =
   fprintf ppf "%a" type_content te
@@ -74,7 +76,7 @@ and expression_content ppf (ec : expression_content) =
   | E_lambda {binder; output_type; result} ->
       fprintf ppf "lambda (%a) : %a return %a"
         option_type_name binder
-        (PP_helpers.option type_expression) output_type
+        (Simple_utils.PP_helpers.option type_expression) output_type
         expression result
   | E_recursive { fun_name; fun_type; lambda} ->
       fprintf ppf "rec (%a:%a => %a )"
@@ -117,7 +119,7 @@ and accessor ppf a =
     | Access_record s -> fprintf ppf "%s" s
     | Access_map e    -> fprintf ppf "%a" expression e
 
-and option_type_name ppf {var;ascr}=
+and option_type_name ppf {var;ascr;attributes=_}=
   match ascr with
   | None ->
       fprintf ppf "%a" expression_variable var
@@ -133,7 +135,7 @@ and option_mut ppf mut =
 
 and attributes ppf attributes =
   let attr =
-    List.map (fun attr -> "[@@" ^ attr ^ "]") attributes |> String.concat ""
+    List.map ~f:(fun attr -> "[@@" ^ attr ^ "]") attributes |> String.concat
   in fprintf ppf "%s" attr
 
 let declaration ppf (d : declaration) = declaration expression type_expression ppf d

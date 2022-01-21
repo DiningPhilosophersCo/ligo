@@ -1,4 +1,5 @@
 open Solver_types
+open Simple_utils
 
 module M = functor
   (Type_variable : sig type t end)
@@ -7,7 +8,6 @@ struct
   open Type_variable_abstraction
   open Type_variable_abstraction.Types
   open UnionFind
-  open Trace
 
   type 'typeVariable t = ('typeVariable, c_typeclass_simpl MultiSet.t) ReprMap.t
   type ('type_variable, 'a) state = < typeclasses_using_as_unbound_var : 'type_variable t ; .. > as 'a
@@ -23,13 +23,13 @@ struct
     ReprMap.monotonic_update repr_tv add_to_set state
 
   let p_variable_cells c = List.filter_map
-      (function { Location.wrap_content = P_variable v } -> Some v | _ -> None)
-      (List.flatten c.tc)
+      ~f:(function { location = _ ;wrap_content = P_variable v } -> Some v | _ -> None)
+      (List.concat c.tc)
 
   let register_typeclasses_using_as_unbound_var : _ -> c_typeclass_simpl -> _ t -> _ t = fun repr c state ->
     List.fold_left
-      (fun state tv -> repr_map_add_to_set ~cmp:Compare.c_typeclass_simpl (repr tv) c state)
-      state
+      ~f:(fun state tv -> repr_map_add_to_set ~cmp:Compare.c_typeclass_simpl (repr tv) c state)
+      ~init:state
       (p_variable_cells c)
 
   let add_constraint ?debug repr state new_constraint =
@@ -38,28 +38,28 @@ struct
     | SC_Typeclass c -> register_typeclasses_using_as_unbound_var repr c state
     | _ -> state
 
-  let remove_constraint printer repr state constraint_to_remove =
-    Format.eprintf "remove_constraint for typeclassesConstraining.... \n%!";
+  let remove_constraint ~raise:_ printer repr state constraint_to_remove =
+    if Ast_core.Debug.debug_new_typer then Format.eprintf "remove_constraint for typeclassesConstraining.... \n%!";
     match constraint_to_remove with
     | Type_variable_abstraction.Types.SC_Typeclass constraint_to_remove ->
       let aux' = function
           Some set -> MultiSet.remove constraint_to_remove set
         | None -> 
-          Format.eprintf "ERROR: No set linked to tv"; (* TODO: should probably fail at this point. *)
+          if Ast_core.Debug.debug_new_typer then Format.eprintf "ERROR: No set linked to tv"; (* TODO: should probably fail at this point. *)
           MultiSet.create ~cmp:Type_variable_abstraction.Compare.c_typeclass_simpl in
       let aux typeclasses_constrained_by tv =
-        Format.eprintf "In aux with tv : %a and repr tv : %a\n%!" Type_variable_abstraction.PP.type_variable tv printer @@ repr tv;
+        if Ast_core.Debug.debug_new_typer then Format.eprintf "In aux with tv : %a and repr tv : %a\n%!" Type_variable_abstraction.PP.type_variable tv printer @@ repr tv;
         ReprMap.monotonic_update (repr tv) aux' typeclasses_constrained_by in
       let state =
         List.fold_left
-          aux
-          state
+          ~f:aux
+          ~init:state
           (p_variable_cells constraint_to_remove) in
-      Format.eprintf "  ok\n%!";
-      ok state
+          if Ast_core.Debug.debug_new_typer then Format.eprintf "  ok\n%!";
+      state
     | _ -> 
-      Format.eprintf "  ok\n%!";
-      ok state
+      if Ast_core.Debug.debug_new_typer then Format.eprintf "  ok\n%!";
+      state
 
   let merge_aliases : 'old 'new_ . ?debug:(Format.formatter -> 'new_ t -> unit) -> ('old, 'new_) merge_keys -> 'old t -> 'new_ t =
     fun ?debug:_ merge_keys state -> 
@@ -81,7 +81,7 @@ struct
 
   module type STATE = sig val typeclasses_using_as_unbound_var : Type_variable.t t end
   let get tv (module State : STATE) =
-    Option.unopt ~default:(MultiSet.create ~cmp:Type_variable_abstraction.Compare.c_typeclass_simpl)
+    Option.value ~default:(MultiSet.create ~cmp:Type_variable_abstraction.Compare.c_typeclass_simpl)
     @@ ReprMap.find_opt tv State.typeclasses_using_as_unbound_var
 
   let get_list tv state =

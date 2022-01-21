@@ -19,7 +19,6 @@ import { DoneLoadingAction, UpdateLoadingAction } from '../loading';
 import { ChangeContractAction, ChangeOutputAction } from '../result';
 import { CommandType } from '../types';
 import { CancellableAction } from './cancellable';
-import { networkType } from '../deploy';
 
 export class DeployAction extends CancellableAction {
   async deployOnServerSide(dispatch: Dispatch, getState: () => AppState) {
@@ -42,20 +41,12 @@ export class DeployAction extends CancellableAction {
     beaconWallet: any,
     launchNetwork: string
   ): Promise<void> => {
-    if (launchNetwork === NetworkType.EDONET) {
+    if (launchNetwork === NetworkType.HANGZHOUNET) {
       await beaconWallet.requestPermissions({
         network: {
-          type: NetworkType.EDONET,
-          name: 'Edonet',
-          rpcUrl: `https://api.tez.ie/rpc/edonet`,
-        },
-      });
-    } else if (launchNetwork === NetworkType.CUSTOM) {
-      await beaconWallet.requestPermissions({
-        network: {
-          type: NetworkType.CUSTOM,
-          name: 'Florencenet',
-          rpcUrl: `https://api.tez.ie/rpc/florencenet`,
+          type: NetworkType.HANGZHOUNET,
+          name: 'Hangzhounet',
+          rpcUrl: `https://hangzhounet.api.tez.ie`,
         },
       });
     } else if (launchNetwork === NetworkType.MAINNET) {
@@ -63,7 +54,7 @@ export class DeployAction extends CancellableAction {
         network: {
           type: NetworkType.MAINNET,
           name: 'Mainnet',
-          rpcUrl: `https://api.tez.ie/rpc/mainnet`,
+          rpcUrl: `https://mainnet.api.tez.ie`,
         },
       });
     }
@@ -89,14 +80,14 @@ export class DeployAction extends CancellableAction {
       MichelsonFormat.Json
     );
 
-    let networkURL = 'https://api.tez.ie/rpc/edonet';
-    let network = { type: NetworkType.EDONET };
+    let networkURL = 'https://hangzhounet.api.tez.ie';
+    let network = { type: NetworkType.HANGZHOUNET };
 
-    if (deployState.network === 'florencenet') {
-      networkURL = 'https://api.tez.ie/rpc/florencenet';
-      network = { type: NetworkType.CUSTOM };
+    if (deployState.network === 'hangzhounet') {
+      networkURL = 'https://hangzhounet.api.tez.ie';
+      network = { type: NetworkType.HANGZHOUNET };
     } else if (deployState.network === NetworkType.MAINNET) {
-      networkURL = 'https://api.tez.ie/rpc/mainnet';
+      networkURL = 'https://mainnet.api.tez.ie';
       network = { type: NetworkType.MAINNET };
     }
 

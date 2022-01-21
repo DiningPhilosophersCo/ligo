@@ -6,8 +6,8 @@ module Location = Location
 
 module List = X_list
 module Pair = X_pair
+module Triple = X_triple
 module Option = X_option
-module Int = X_int
 module Map = X_map
 module Ligo_string = X_string
 
@@ -17,7 +17,6 @@ module Var = Var
 module Display = Display
 module Runned_result = Runned_result
 module Snippet = Snippet
-module Yojson_helpers = Yojson_helpers
 
 (* Originally by Christian Rinderknecht *)
 

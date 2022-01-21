@@ -2,11 +2,11 @@ open Test_helpers
 open Main_errors
 
 open Ast_core.Combinators
-module Core = Typesystem.Core
+module Core = Typesystem.Types
 open Ast_core.Types
 open Ast_core.Reasons
 (* open Typesystem.Solver_types *)
-open Trace
+open Simple_utils.Trace
 (* open Typer_common.Errors *)
 module Map = RedBlackTrees.PolyMap
 module Set = RedBlackTrees.PolySet
@@ -22,7 +22,7 @@ let (m,n,o,p,x,y,z) = let v name = Var.fresh ~name () in v "m", v "n", v "o", v 
 let test_restrict
     (name : string)
     (* Restriction function under test *)
-    (restrict : (type_variable -> type_variable) -> constructor_or_row -> c_typeclass_simpl -> (c_typeclass_simpl, _) result)
+    (restrict : raise:'a raise -> (type_variable -> type_variable) -> constructor_or_row -> c_typeclass_simpl -> c_typeclass_simpl)
     (* New info: a variable assignment constraint: *)
     tv (_eq : string) c_tag tv_list
     (* Initial typeclass constraint: *)
@@ -31,17 +31,18 @@ let test_restrict
     (_intermediate : bool list)
     (* Expected restricted typeclass:: *)
     expected_args (_in : string) expected_tc =
-  test name @@ fun () ->
+  test name @@ fun ~raise () ->
   let repr = (fun v -> v) in
-    trace inference_tracer @@
+    trace ~raise inference_tracer @@
+    fun ~raise ->
     let info = `Constructor { reason_constr_simpl = "unit test" ; original_id = None; id_constructor_simpl = ConstraintIdentifier.T 42L ; tv ; c_tag ; tv_list } in
     let tc = make_c_typeclass_simpl ~bound:[] ~constraints:[] () 42 None args tc in
     let expected =  make_c_typeclass_simpl ~bound:[] ~constraints:[] () 42 None expected_args expected_tc in
     (* TODO: use an error not an assert *)
     (* Format.printf "\n\nActual: %a\n\n" Ast_typed.PP_generic.c_typeclass_simpl (restrict info tc);
      * Format.printf "\n\nExpected %a\n\n" Ast_typed.PP_generic.c_typeclass_simpl expected; *)
-    let%bind restricted = restrict repr info tc in
-    Assert.assert_true (Typer_common.Errors.different_typeclasses expected restricted) (Ast_core.Compare.c_typeclass_simpl_compare_all_fields restricted expected = 0)
+    let restricted = restrict ~raise repr info tc in
+    Assert.assert_true ~raise (Typer_common.Errors.different_typeclasses expected restricted) (Ast_core.Compare.c_typeclass_simpl_compare_all_fields restricted expected = 0)
 
 
 let tests1 restrict = [
@@ -52,7 +53,7 @@ let tests1 restrict = [
     (* Initial typeclass constraint: *)
     [x;y;z] "∈" [[int ; unit ; unit] ; [nat ; int ; int] ; [nat ; int ; string] ; ]
     (* Intermediate step (not tested): *)
-    (**)        [ false              ;  true             ;  true                ; ]
+    (* *)        [ false              ;  true             ;  true                ; ]
     (* Expected restricted typeclass: *)
     [x;y;z] "∈" [                      [nat ; int ; int] ; [nat ; int ; string] ; ]
 );
@@ -63,7 +64,7 @@ let tests1 restrict = [
     (* Initial typeclass constraint: *)
     [x;y]   "∈" [[int  ; unit] ; [map(nat,nat)   ; int] ; [map(nat,string)   ; int] ; ]
     (* Intermediate step (not tested): *)
-    (**)        [ false        ;  true                  ; true                      ; ]
+    (* *)        [ false        ;  true                  ; true                      ; ]
     (* Expected restricted typeclass constraint: *)
     [x;y]   "∈" [                [map(nat,nat)   ; int] ; [map(nat,string)   ; int] ; ]
 )  ;
@@ -74,7 +75,7 @@ let tests1 restrict = [
     (* Initial typeclass constraint: *)
     [x;y;z] "∈" [[int ; unit ; unit] ; [nat ; int ; int] ; [nat ; int ; string] ; ]
     (* Intermediate step (not tested): *)
-    (**)        [false               ; true              ; true                 ; ]
+    (* *)        [false               ; true              ; true                 ; ]
     (* Expected restricted typeclass: *)
     [x;y;z] "∈" [                      [nat ; int ; int] ; [nat ; int ; string] ; ]
 )  ;    
@@ -82,20 +83,21 @@ let tests1 restrict = [
 
 let test_deduce_and_clean
     name
-    (deduce_and_clean : (type_variable -> type_variable) -> c_typeclass_simpl -> (_, _) result)
+    (deduce_and_clean : raise:'a raise -> (type_variable -> type_variable) -> c_typeclass_simpl -> _)
     repr
     args (_in : string) tc
     (expected_inferred  : (type_variable * constant_tag * type_variable list) list)
     expected_args (_in : string) expected_tc =
-  test name @@ fun () ->
-    trace inference_tracer @@
+  test name @@ fun ~raise () ->
+    trace ~raise inference_tracer @@
+      fun ~raise ->
       let input_tc = make_c_typeclass_simpl ~bound:[] ~constraints:[] () 42 None args tc in
       let expected_tc = make_c_typeclass_simpl ~bound:[] ~constraints:[] () 42 None expected_args expected_tc in
       let expected_inferred = List.map
-          (fun (tv , c_tag , tv_list) -> `Constructor {reason_constr_simpl = "unit test" ; original_id = None; id_constructor_simpl = ConstraintIdentifier.T 42L ; tv ; c_tag ; tv_list})
+          ~f:(fun (tv , c_tag , tv_list) -> `Constructor {reason_constr_simpl = "unit test" ; original_id = None; id_constructor_simpl = ConstraintIdentifier.T 42L ; tv ; c_tag ; tv_list})
           expected_inferred in
-      let%bind actual = deduce_and_clean repr input_tc in
-      Heuristic_tc_fundep_tests_compare_cleaned.compare_and_check_vars_deduce_and_clean_result { deduced = expected_inferred ; cleaned = expected_tc ; changed = true } actual
+      let actual = deduce_and_clean ~raise repr input_tc in
+      Heuristic_tc_fundep_tests_compare_cleaned.compare_and_check_vars_deduce_and_clean_result ~raise { deduced = expected_inferred ; cleaned = expected_tc ; changed = true } actual
 
 let inferred v (_eq : string) c args = v, c, args
 let tests2 deduce_and_clean =
@@ -175,8 +177,8 @@ let tests2 deduce_and_clean =
 ]
 
 let main = test_suite "Typer: fundep heuriscic"
-  @@ List.flatten
+  @@ List.concat
     [
-      tests1 Inference.Heuristic_tc_fundep.restrict ;
-      tests2 Inference.Heuristic_tc_fundep.deduce_and_clean ;
+      tests1 @@ Inference.Heuristic_tc_fundep.restrict ;
+      tests2 @@ Inference.Heuristic_tc_fundep.deduce_and_clean ;
     ]

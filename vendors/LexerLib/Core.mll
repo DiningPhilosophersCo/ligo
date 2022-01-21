@@ -9,6 +9,7 @@ module Region = Simple_utils.Region
 module Pos    = Simple_utils.Pos
 module FQueue = Simple_utils.FQueue
 module Utils  = Simple_utils.Utils
+module Array  = Caml.Array
 
 (* Rolling back one lexeme _within the current semantic action_ *)
 
@@ -571,22 +572,19 @@ rule scan client state = parse
 
   (* Strings *)
 | '\''
-| '"' as lexeme {   
-  if client#support_string_delimiter lexeme then (
+| '"' as lexeme {
+  if client#support_string_delimiter lexeme then
     let {region; state; _} = state#sync lexbuf in
     let thread             = mk_thread region in
     scan_string lexeme thread state lexbuf |> client#mk_string
-  )
-  else (
-    rollback lexbuf; client#callback state lexbuf
-  )
+  else (rollback lexbuf; client#callback state lexbuf)
 }
 
   (* Comment *)
 
 | block_comment_openings as lexeme {
     match state#config#block with
-      Some block when block#opening = lexeme ->
+      Some block when String.equal block#opening lexeme ->
         let {region; state; _} = state#sync lexbuf in
         let thread             = mk_thread region in
         let thread             = thread#push_string lexeme in
@@ -597,7 +595,7 @@ rule scan client state = parse
 
 | line_comments as lexeme {
     match state#config#line with
-      Some line when line = lexeme ->
+      Some line when String.equal line lexeme ->
         let {region; state; _} = state#sync lexbuf in
         let thread             = mk_thread region in
         let thread             = thread#push_string lexeme in
@@ -617,8 +615,7 @@ rule scan client state = parse
 
 | eof { client#mk_eof state lexbuf }
 
-| _ { 
-  rollback lexbuf;
+| _ { rollback lexbuf;
       client#callback state lexbuf (* May raise exceptions *) }
 
 (* Finishing a linemarker *)
@@ -638,7 +635,7 @@ and eol region line file flag state = parse
 
 and scan_block block thread state = parse
   block_comment_openings as lexeme {
-    if   block#opening = lexeme
+    if   String.equal block#opening lexeme
     then let opening            = thread#opening in
          let {region; state; _} = state#sync lexbuf in
          let thread             = thread#push_string lexeme in
@@ -653,7 +650,7 @@ and scan_block block thread state = parse
          end }
 
 | block_comment_closings as lexeme {
-    if   block#closing = lexeme
+    if   String.equal block#closing lexeme
     then thread#push_string lexeme, (state#sync lexbuf).state
     else begin
            rollback lexbuf;
@@ -712,19 +709,19 @@ and scan_string delimiter thread state = parse
 | ['\t' '\r' '\b']
          { let {region; _} = state#sync lexbuf
            in fail region Invalid_character_in_string }
-| '"'    { 
-  if delimiter = '"' then
+| '"'    {
+  if Char.(=) delimiter '"' then
     let {state; _} = state#sync lexbuf
         in thread, state
-  else 
+  else
     let {state; _} = state#sync lexbuf in
            scan_string delimiter (thread#push_char '"') state lexbuf
   }
 | '\''   {
-  if delimiter = '\'' then
+  if Char.(=) delimiter '\'' then
     let {state; _} = state#sync lexbuf
         in thread, state
-  else 
+  else
     let {state; _} = state#sync lexbuf in
            scan_string delimiter (thread#push_char '\'') state lexbuf
 

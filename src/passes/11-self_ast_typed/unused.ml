@@ -1,6 +1,4 @@
-open Errors
 open Ast_typed
-open Trace
 
 type contract_pass_data = Contract_passes.contract_pass_data
 
@@ -16,7 +14,7 @@ module V = struct
   let compare x y = Var.compare (Location.unwrap x) (Location.unwrap y)
 end
 
-module M = Map.Make(V)
+module M = Simple_utils.Map.Make(V)
 
 (* A map recording if a variable is being used * a list of unused variables. *)
 type defuse = bool M.t * V.t list
@@ -39,17 +37,17 @@ let defuse_neutral =
   (M.empty,[])
 
 let defuse_unions defuse =
-  List.fold_left defuse_union (defuse,[])
+  List.fold_left ~f:defuse_union ~init:(defuse,[])
 
 let replace_opt k x m =
-  Stdlib.Option.fold ~none:(M.remove k m) ~some:(fun x -> M.add k x m) x
+  Option.value_map ~default:(M.remove k m) ~f:(fun x -> M.add k x m) x
 
 let add_if_not_generated ?forbidden x xs b =
   let v = Location.unwrap x in
   let sv = Format.asprintf "%a" Var.pp v in
   if not b && not (Var.is_generated v)
-     && (String.get sv 0) <> '_'
-     && Stdlib.Option.fold ~none:true ~some:(fun x -> x <> sv) forbidden
+     && Char.(<>) (String.get sv 0) '_'
+     && Option.value_map ~default:true ~f:(String.(<>) sv) forbidden
   then x::xs else xs
 
 let remove_defined_var_after defuse binder f expr =
@@ -72,7 +70,7 @@ let rec defuse_of_expr defuse expr : defuse =
   | E_constructor {element;_} ->
      defuse_of_expr defuse element
   | E_constant {arguments;_} ->
-     defuse_unions defuse (List.map (defuse_of_expr defuse) arguments)
+     defuse_unions defuse (List.map ~f:(defuse_of_expr defuse) arguments)
   | E_variable v ->
      M.add v true defuse,[]
   | E_application {lamb;args} ->
@@ -106,6 +104,8 @@ let rec defuse_of_expr defuse expr : defuse =
      defuse_of_expr defuse result
   | E_module_accessor _ ->
      defuse, []
+  | E_type_inst {forall;_} ->
+     defuse_of_expr defuse forall
 
 and defuse_of_lambda defuse {binder; result} =
   remove_defined_var_after defuse binder defuse_of_expr result
@@ -117,39 +117,39 @@ and defuse_of_cases defuse = function
 and defuse_of_variant defuse {cases;_} =
   defuse_unions defuse @@
     List.map
-      (fun ({pattern;body;_}: matching_content_case) ->
+      ~f:(fun ({pattern;body;_}: matching_content_case) ->
         remove_defined_var_after defuse pattern defuse_of_expr body)
       cases
 
 and defuse_of_record defuse {body;fields;_} =
-  let vars = LMap.to_list fields |> List.map fst in
-  let map = List.fold_left (fun m v -> M.add v false m) defuse vars in
-  let vars' = List.map (fun v -> (v, M.find_opt v defuse)) vars in
+  let vars = LMap.to_list fields |> List.map ~f:fst in
+  let map = List.fold_left ~f:(fun m v -> M.add v false m) ~init:defuse vars in
+  let vars' = List.map ~f:(fun v -> (v, M.find_opt v defuse)) vars in
   let defuse,unused = defuse_of_expr map body in
-  let unused = List.fold_left (fun m v -> add_if_not_generated v m (M.find v defuse)) unused vars in
-  let defuse = List.fold_left (fun m (v, v') -> replace_opt v v' m) defuse vars' in
+  let unused = List.fold_left ~f:(fun m v -> add_if_not_generated v m (M.find v defuse)) ~init:unused vars in
+  let defuse = List.fold_left ~f:(fun m (v, v') -> replace_opt v v' m) ~init:defuse vars' in
   (defuse, unused)
 
-let rec unused_map_module : module_fully_typed -> (module_fully_typed, self_ast_typed_error) result = function (Module_Fully_Typed p) ->
-  let self = unused_map_module in
-  let update_annotations annots c =
-    List.fold_right (fun a r -> update_annotation a r) annots c in
-  let aux = fun (x : declaration) ->
-    match x with
+let rec unused_map_module ~add_warning : module_ -> module_ = function m ->
+  let self = unused_map_module ~add_warning in
+  let update_annotations annots =
+    List.iter ~f:add_warning annots in
+  let aux = fun (x : declaration Location.wrap) ->
+    match Location.unwrap x with
     | Declaration_constant {expr ; _} -> (
       let defuse,_ = defuse_neutral in
       let _,unused = defuse_of_expr defuse expr in
       let warn_var v =
         `Self_ast_typed_warning_unused
           (Location.get_location v, Format.asprintf "%a" Var.pp (Location.unwrap v)) in
-      update_annotations (List.map warn_var unused) @@
-        ok @@ ()
+      let () = update_annotations @@ List.map ~f:warn_var unused in
+      ()
     )
-    | Declaration_type _ -> ok @@ ()
-    | Declaration_module {module_} ->
-      let%bind _ = self module_ in
-      ok @@ ()
-    | Module_alias _ -> ok @@ ()
+    | Declaration_type _ -> ()
+    | Declaration_module {module_; module_binder=_;module_attr=_} ->
+      let _ = self module_ in
+      ()
+    | Module_alias _ -> ()
   in
-  let%bind _ = bind_map_list (bind_map_location aux) p in
-  ok @@ (Module_Fully_Typed p)
+  let () = List.iter ~f:aux m in
+  m

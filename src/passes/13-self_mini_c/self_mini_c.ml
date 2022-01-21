@@ -1,21 +1,16 @@
 module Errors = Errors
 open Errors
 open Mini_c
-open Trace
+open Simple_utils.Trace
 
-let get_t_function e = trace_option not_a_function @@ Mini_c.get_t_function e
-let get_function e = trace_option not_a_function @@ Mini_c.get_function e
-let aggregate_entry p f = trace_option could_not_aggregate_entry @@ Mini_c.aggregate_entry p f
-let get_entry l n = trace_option could_not_aggregate_entry @@ Mini_c.get_entry l n
+let get_t_function ~raise e = trace_option ~raise not_a_function @@ Mini_c.get_t_function e
+let get_function ~raise e = trace_option ~raise not_a_function @@ Mini_c.get_function e
+let aggregate_entry ~raise p f = trace_option ~raise could_not_aggregate_entry @@ Mini_c.aggregate_entry p f
+let get_entry ~raise l n = trace_option ~raise could_not_aggregate_entry @@ Mini_c.get_entry l n
 
 (* TODO hack to specialize map_expression to identity monad *)
-let map_expression :
-  (expression -> expression) -> (expression -> expression) =
-  fun f e ->
-  match to_stdlib_result @@ Helpers.map_expression (fun e -> ok (f e)) e with
-  | Ok (e, _) -> e
-  | Error _ -> assert false (* impossible *)
-
+let map_expression = Helpers.map_expression
+let fold_map_expression = Helpers.fold_map_expression
 
 (* Conservative purity test: ok to treat pure things as impure, must
    not treat impure things as pure. *)
@@ -24,7 +19,7 @@ let map_expression :
    assuming arguments are pure *)
 let is_pure_constant : constant' -> bool =
   function
-  | C_UNIT
+  | C_UNIT | C_NEVER
   | C_CAR | C_CDR | C_PAIR
   | C_NIL | C_CONS
   | C_NEG | C_OR | C_AND | C_XOR | C_NOT
@@ -51,8 +46,6 @@ let is_pure_constant : constant' -> bool =
   | C_MAP_GET_AND_UPDATE | C_BIG_MAP_GET_AND_UPDATE
   | C_LIST_HEAD_OPT
   | C_LIST_TAIL_OPT
-  | C_CONVERT_TO_LEFT_COMB | C_CONVERT_TO_RIGHT_COMB
-  | C_CONVERT_FROM_LEFT_COMB | C_CONVERT_FROM_RIGHT_COMB
   | C_TICKET
   | C_READ_TICKET
   | C_SPLIT_TICKET
@@ -60,14 +53,21 @@ let is_pure_constant : constant' -> bool =
   | C_PAIRING_CHECK
   | C_SAPLING_EMPTY_STATE
   | C_SAPLING_VERIFY_UPDATE
+  | C_OPEN_CHEST
     -> true
   (* unfortunately impure: *)
   | C_BALANCE | C_AMOUNT | C_NOW | C_SOURCE | C_SENDER | C_CHAIN_ID
   | C_ADD | C_SUB |C_MUL|C_DIV|C_MOD | C_LSL | C_LSR
   | C_LEVEL | C_VOTING_POWER | C_TOTAL_VOTING_POWER | C_POLYMORPHIC_ADD
   (* impure: *)
+  | C_UNOPT
+  | C_UNOPT_WITH_ERROR
   | C_ASSERTION
+  | C_ASSERTION_WITH_ERROR
   | C_ASSERT_SOME
+  | C_ASSERT_SOME_WITH_ERROR
+  | C_ASSERT_NONE
+  | C_ASSERT_NONE_WITH_ERROR
   | C_ASSERT_INFERRED
   | C_MAP_FIND
   | C_FOLD_WHILE
@@ -99,29 +99,52 @@ let is_pure_constant : constant' -> bool =
   | C_BIG_MAP_LITERAL
   | C_HASH
   | C_CONTRACT
+  | C_CONTRACT_WITH_ERROR
   | C_CONTRACT_OPT
   | C_CONTRACT_ENTRYPOINT
   | C_CONTRACT_ENTRYPOINT_OPT
   | C_SELF
   | C_SELF_ADDRESS
   | C_IMPLICIT_ACCOUNT
+  | C_VIEW
   (* Test - ligo interpreter, should never end up here *)
   | C_TEST_ORIGINATE
   | C_TEST_GET_STORAGE
+  | C_TEST_GET_STORAGE_OF_ADDRESS
   | C_TEST_GET_BALANCE
   | C_TEST_SET_NOW
   | C_TEST_SET_SOURCE
   | C_TEST_SET_BAKER
-  | C_TEST_EXTERNAL_CALL
-  | C_TEST_EXTERNAL_CALL_EXN
+  | C_TEST_EXTERNAL_CALL_TO_CONTRACT
+  | C_TEST_EXTERNAL_CALL_TO_CONTRACT_EXN
+  | C_TEST_EXTERNAL_CALL_TO_ADDRESS
+  | C_TEST_EXTERNAL_CALL_TO_ADDRESS_EXN
   | C_TEST_MICHELSON_EQUAL
   | C_TEST_GET_NTH_BS
   | C_TEST_LOG
-  | C_TEST_COMPILE_EXPRESSION
-  | C_TEST_COMPILE_EXPRESSION_SUBST
   | C_TEST_STATE_RESET
+  | C_TEST_BOOTSTRAP_CONTRACT
+  | C_TEST_NTH_BOOTSTRAP_CONTRACT
   | C_TEST_LAST_ORIGINATIONS
   | C_TEST_COMPILE_META_VALUE
+  | C_TEST_MUTATE_COUNT
+  | C_TEST_MUTATE_VALUE
+  | C_TEST_MUTATION_TEST
+  | C_TEST_MUTATION_TEST_ALL
+  | C_TEST_SAVE_MUTATION
+  | C_TEST_RUN
+  | C_TEST_EVAL
+  | C_TEST_COMPILE_CONTRACT
+  | C_TEST_TO_CONTRACT
+  | C_TEST_TO_ENTRYPOINT
+  | C_TEST_TO_TYPED_ADDRESS
+  | C_TEST_RANDOM
+  | C_TEST_NTH_BOOTSTRAP_TYPED_ADDRESS
+  | C_TEST_ORIGINATE_FROM_FILE
+  | C_TEST_SET_BIG_MAP
+  | C_TEST_CAST_ADDRESS
+  | C_TEST_CREATE_CHEST
+  | C_TEST_CREATE_CHEST_KEY
     -> false
 
 let rec is_pure : expression -> bool = fun e ->
@@ -136,22 +159,22 @@ let rec is_pure : expression -> bool = fun e ->
   | E_if_none (cond, bt, (_, bf))
   | E_if_cons (cond, bt, (_, bf))
   | E_if_left (cond, (_, bt), (_, bf))
-    -> List.for_all is_pure [ cond ; bt ; bf ]
+    -> List.for_all ~f:is_pure [ cond ; bt ; bf ]
 
   | E_let_in (e1, _, (_, e2))
-    -> List.for_all is_pure [ e1 ; e2 ]
+    -> List.for_all ~f:is_pure [ e1 ; e2 ]
 
   | E_tuple exprs
-    -> List.for_all is_pure exprs
+    -> List.for_all ~f:is_pure exprs
   | E_let_tuple (e1, (_, e2))
-    -> List.for_all is_pure [ e1 ; e2 ]
+    -> List.for_all ~f:is_pure [ e1 ; e2 ]
   | E_proj (e, _i, _n)
     -> is_pure e
   | E_update (expr, _i, update, _n)
-    -> List.for_all is_pure [ expr ; update ]
+    -> List.for_all ~f:is_pure [ expr ; update ]
 
   | E_constant (c)
-    -> is_pure_constant c.cons_name && List.for_all is_pure c.arguments
+    -> is_pure_constant c.cons_name && List.for_all ~f:is_pure c.arguments
 
   (* I'm not sure about these. Maybe can be tested better? *)
   | E_application _
@@ -163,7 +186,7 @@ let rec is_pure : expression -> bool = fun e ->
 let occurs_in : expression_variable -> expression -> bool =
   fun x e ->
   let fvs = Free_variables.expression [] e in
-  Free_variables.mem x fvs
+  Free_variables.mem fvs x
 
 let occurs_count : expression_variable -> expression -> int =
   fun x e ->
@@ -198,22 +221,21 @@ let should_inline : expression_variable -> expression -> expression -> bool =
   fun x e1 e2 ->
   occurs_count x e2 <= 1 || is_variable e1
 
-let inline_let : bool ref -> expression -> expression =
-  fun changed e ->
+let inline_let : bool ref -> unit -> expression -> bool * unit * expression =
+  fun changed () e ->
   match e.content with
   | E_let_in (e1, should_inline_here, ((x, _a), e2)) ->
     if is_pure e1 && (should_inline_here || should_inline x e1 e2)
     then
       let e2' = Subst.subst_expression ~body:e2 ~x:x ~expr:e1 in
-      (changed := true ; e2')
+      (changed := true ; (false, (), e2'))
     else
-      e
-  | _ -> e
+      (true, (), e)
+  | _ -> (true, (), e)
 
 let inline_lets : bool ref -> expression -> expression =
-  fun changed ->
-  map_expression (inline_let changed)
-
+  fun changed e ->
+  snd @@ fold_map_expression (inline_let changed) () e
 
 (* Let "beta" mean transforming the code:
 
@@ -228,15 +250,15 @@ let inline_lets : bool ref -> expression -> expression =
    - Nothing?
 *)
 
-let beta : bool ref -> expression -> expression =
+let beta ~raise:_ : bool ref -> expression -> expression =
   fun changed e ->
   match e.content with
-  | E_application ({ content = E_closure { binder = x ; body = e1 } ; type_expression = {type_content = T_function (xtv, tv);_ }}, e2) ->
+  | E_application ({ content = E_closure { binder = x ; body = e1 } ; type_expression = {type_content = T_function (xtv, tv);_ }; location = _}, e2) ->
     (changed := true ;
      Expression.make (E_let_in (e2, false,((x, xtv), e1))) tv)
 
   (* also do CAR (PAIR x y) ↦ x, or CDR (PAIR x y) ↦ y, only if x and y are pure *)
-  | E_constant {cons_name = C_CAR| C_CDR as const; arguments = [ { content = E_constant {cons_name = C_PAIR; arguments = [ e1 ; e2 ]} ; type_expression = _ } ]} ->
+  | E_constant {cons_name = C_CAR| C_CDR as const; arguments = [ { content = E_constant {cons_name = C_PAIR; arguments = [ e1 ; e2 ]} ; type_expression = _ ; location = _} ]} ->
     if is_pure e1 && is_pure e2
     then (changed := true ;
           match const with
@@ -247,8 +269,34 @@ let beta : bool ref -> expression -> expression =
 
   (* (e0, e1, ...).(i) ↦ ei  (only if all ei are pure) *)
   | E_proj ({ content = E_tuple es; _ }, i, _n) ->
-    if List.for_all is_pure es
-    then List.nth es i
+    if List.for_all ~f:is_pure es
+    then (changed := true;
+          List.nth_exn es i)
+    else e
+
+  (** This case shows up in the compilation of modules:
+      (let x = e1 in e2).(i) ↦ (let x = e1 in e2.(i)) *)
+  | E_proj ({ content = E_let_in (e1, inline, ((x, a), e2));type_expression = _; location=_ } as e_let_in, i, n) ->
+    changed := true;
+    { e_let_in with content = E_let_in (e1, inline, ((x, a), ({ e with content = E_proj (e2, i, n) }))) }
+
+  (** This case shows up in the compilation of modules:
+      (let x = (let y = e1 in e2) in e3) ↦ (let y = e1 in let x = e2 in e3) *)
+  | E_let_in ({ content = E_let_in (e1, inline2, ((y, b), e2)); _ }, inline1, ((x, a), e3)) ->
+    let y' = Location.wrap (Var.fresh_like (Location.unwrap y)) in
+    let e2 = Subst.replace e2 y y' in
+    changed := true;
+    {e with content = E_let_in (e1, inline2, ((y', b), {e with content = E_let_in (e2, inline1, ((x, a), e3))}))}
+
+  (** This case shows up in the compilation of modules:
+      (let x = e1 in e2)@e3 ↦ let x = e1 in e2@e3  (only if e2 and e3 are pure??) *)
+  | E_application ({ content = E_let_in (e1, inline, ((x, a), e2)); _ }, e3) ->
+    if is_pure e2 && is_pure e3
+    then
+      let x' = Location.wrap (Var.fresh_like (Location.unwrap x)) in
+      let e2 = Subst.replace e2 x x' in
+      changed := true;
+      {e with content = E_let_in (e1, inline, ((x', a), {e with content = E_application (e2, e3)}))}
     else e
 
   (* let (x0, x1, ...) = (e0, e1, ...) in body ↦
@@ -256,23 +304,24 @@ let beta : bool ref -> expression -> expression =
      (here, purity of the ei does not matter)
      *)
   | E_let_tuple ({ content = E_tuple es; _ }, (vars, body)) ->
+    changed := true;
     List.fold_left
-      (fun body (e, (v, t)) ->
+      ~f:(fun body (e, (v, t)) ->
          { content = E_let_in (e, false, ((v, t), body));
            location = Location.generated;
            type_expression = body.type_expression })
-      body (List.combine es vars)
+      ~init:body (List.zip_exn es vars)
   | _ -> e
 
-let betas : bool ref -> expression -> expression =
+let betas ~raise : bool ref -> expression -> expression =
   fun changed ->
-  map_expression (beta changed)
+  map_expression ~raise (beta changed)
 
-let eta : bool ref -> expression -> expression =
+let eta ~raise:_ : bool ref -> expression -> expression =
   fun changed e ->
   match e.content with
-  | E_constant {cons_name = C_PAIR; arguments = [ { content = E_constant {cons_name = C_CAR; arguments = [ e1 ]} ; type_expression = _ } ;
-                                                  { content = E_constant {cons_name = C_CDR; arguments = [ e2 ]} ; type_expression = _ }]} ->
+  | E_constant {cons_name = C_PAIR; arguments = [ { content = E_constant {cons_name = C_CAR; arguments = [ e1 ]} ; type_expression = _ ; location = _} ;
+                                                  { content = E_constant {cons_name = C_CDR; arguments = [ e2 ]} ; type_expression = _ ; location = _}]} ->
     (match (e1.content, e2.content) with
      | E_variable x1, E_variable x2 ->
        if Var.equal x1.wrap_content x2.wrap_content
@@ -286,7 +335,7 @@ let eta : bool ref -> expression -> expression =
     let count = List.length es in
     let projs =
       List.mapi
-        (fun i e ->
+        ~f:(fun i e ->
            match e.content with
            | E_proj (e', j, n) ->
              if i = j && n = count
@@ -297,37 +346,37 @@ let eta : bool ref -> expression -> expression =
              else None
            | _ -> None)
         es in
-    (match Option.bind_list projs with
+    (match Option.all projs with
      | None -> e
      | Some vars ->
        match vars with
        | var :: _ ->
-         if List.for_all (Var.equal var) vars
+         if List.for_all ~f:(Var.equal var) vars
          then { e with content = E_variable (Location.wrap var) }
          else e
        | _ -> e)
   | _ -> e
 
-let etas : bool ref -> expression -> expression =
+let etas ~raise : bool ref -> expression -> expression =
   fun changed ->
-  map_expression (eta changed)
+  map_expression ~raise (eta changed)
 
-let contract_check =
+let contract_check ~raise init =
   let all = [Michelson_restrictions.self_in_lambdas] in
-  let all_e = List.map Helpers.map_sub_level_expression all in
-  bind_chain all_e
+  let all_e = List.map ~f:(Helpers.map_sub_level_expression ~raise) all in
+  List.fold ~f:(|>) all_e ~init
 
-let rec all_expression : expression -> expression =
+let rec all_expression ~raise : expression -> expression =
   fun e ->
   let changed = ref false in
   let e = inline_lets changed e in
-  let e = betas changed e in
-  let e = etas changed e in
+  let e = betas ~raise changed e in
+  let e = etas ~raise changed e in
   if !changed
-  then all_expression e
+  then all_expression ~raise e
   else e
 
-let all_expression e =
-  let e = Uncurry.uncurry_expression e in
-  let e = all_expression e in
+let all_expression ~raise e =
+  let e = Uncurry.uncurry_expression ~raise e in
+  let e = all_expression ~raise e in
   e

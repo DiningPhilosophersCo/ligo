@@ -1,19 +1,20 @@
 [@@@coverage exclude_file]
+module Int64 = Caml.Int64
 open Types
 open Format
-open PP_helpers
+open Simple_utils.PP_helpers
 include Stage_common.PP
 
 type 'a pretty_printer = Format.formatter -> 'a -> unit
 
 let lmap_sep value sep ppf m =
-  let lst = List.sort (fun (Label a,_) (Label b,_) -> String.compare a b) m in
+  let lst = List.sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) m in
   let new_pp ppf (k, v) = fprintf ppf "@[<h>%a -> %a@]" label k value v in
   fprintf ppf "%a" (list_sep new_pp sep) lst
 
 let record_sep value sep ppf (m : 'a label_map) =
   let lst = LMap.to_kv_list m in
-  let lst = List.sort_uniq (fun (Label a,_) (Label b,_) -> String.compare a b) lst in
+  let lst = List.dedup_and_sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) lst in
   let new_pp ppf (k, v) = fprintf ppf "@[<h>%a -> %a@]" label k value v in
   fprintf ppf "%a" (list_sep new_pp sep) lst
 
@@ -35,7 +36,7 @@ let list_sep_d_short x = list_sep x (tag " , ")
 let list_sep_d x = list_sep x (tag " ,@ ")
 let kv_short value_pp ~assoc ppf (k, v) = fprintf ppf "%a%s%a" label k assoc value_pp v
 let lmap_sep_short x ~sep ~assoc ppf m =
-  let lst = List.sort (fun (Label a,_) (Label b,_) -> String.compare a b) m in
+  let lst = List.sort ~compare:(fun (Label a,_) (Label b,_) -> String.compare a b) m in
   list_sep (kv_short x ~assoc) (tag sep) ppf lst
 let lmap_sep_d x = lmap_sep x (tag " ,@ ")
 
@@ -57,7 +58,7 @@ let rec constraint_identifier_unicode (ci : Int64.t) =
     | a when Int64.equal a 9L -> "₉"
     | _ -> failwith (Format.asprintf "internal error: couldn't pretty-print int64: %Li (is it a negative number?)" ci)
   in
-  if ci = 0L then "" else (constraint_identifier_unicode (Int64.div ci 10L)) ^ digit
+  if Int64.equal ci 0L then "" else (constraint_identifier_unicode (Int64.div ci 10L)) ^ digit
 
 let constraint_identifier_short ppf x =
   if Int64.equal x 0L
@@ -70,7 +71,11 @@ let list_sep_d_par f ppf lst =
   | _ -> fprintf ppf " (%a)" (list_sep_d f) lst
 
 let rec type_expression ppf (te : type_expression) : unit =
-  fprintf ppf "%a" type_content te.type_content
+  (* TODO: we should have a way to hook custom pretty-printers for some types and/or track the "origin" of types as they flow through the constraint solver. This is a temporary quick fix *)
+  if Option.is_some (Combinators.get_t_bool te) then
+    fprintf ppf "%a" type_variable Stage_common.Constant.v_bool
+  else
+    fprintf ppf "%a" type_content te.type_content
 and type_content : formatter -> type_content -> unit =
   fun ppf te ->
   match te with
@@ -81,6 +86,8 @@ and type_content : formatter -> type_content -> unit =
   | T_app              a -> type_app type_expression ppf a
   | T_module_accessor ma -> module_access type_expression ppf ma
   | T_singleton       x  -> literal       ppf             x
+  | T_abstraction     x  -> abstraction   type_expression ppf x
+  | T_for_all         x  -> for_all       type_expression ppf x
 
 and row : formatter -> row_element -> unit =
   fun ppf { associated_type ; michelson_annotation=_ ; decl_pos=_ } ->
@@ -107,11 +114,15 @@ and expression_content ppf (ec : expression_content) =
   | E_lambda    l -> lambda expression type_expression ppf l
   | E_recursive r -> recursive expression type_expression ppf r
   | E_matching x -> fprintf ppf "%a" (match_exp expression type_expression) x
-  | E_let_in { let_binder ;rhs ; let_result; inline } ->
-    fprintf ppf "@[let %a =@;<1 2>%a%a in@ %a@]" (binder type_expression) let_binder expression rhs option_inline inline expression let_result
-  | E_type_in   ti -> type_in expression type_expression ppf ti
+  | E_let_in { let_binder ;rhs ; let_result; attr = { inline ; no_mutation ; view; _ }} ->
+    fprintf ppf "@[let %a =@;<1 2>%a%a%a%a in@ %a@]" (binder type_expression) let_binder expression rhs option_inline inline option_no_mutation no_mutation option_view view expression let_result
+  | E_type_in   {type_binder; rhs; let_result} -> 
+    fprintf ppf "@[let %a =@;<1 2>%a in@ %a@]"
+      type_variable type_binder
+      type_expression rhs
+      expression let_result
   | E_mod_in {module_binder; rhs; let_result;} ->
-    fprintf ppf "@[let %a =@;<1 2>%a in@ %a@]" module_variable module_binder module_ rhs expression let_result
+    fprintf ppf "@[let module %a = struct@; @[<v>%a@] end in@ %a@]" module_variable module_binder module_ rhs expression let_result
   | E_mod_alias ma -> mod_alias expression ppf ma
   | E_raw_code r -> raw_code expression ppf r
   | E_ascription a -> ascription expression type_expression ppf a
@@ -119,46 +130,54 @@ and expression_content ppf (ec : expression_content) =
 
 and declaration ppf (d : declaration) =
   match d with
-  | Declaration_type     dt -> declaration_type                type_expression ppf dt
-  | Declaration_constant {name = _ ; binder=b ; attr ; expr} ->
-      fprintf ppf "@[<2>const %a =@ %a%a@]"
+  | Declaration_type     {type_binder;type_expr;type_attr={public}} -> 
+    fprintf ppf "@[<2>type %a =@ %a%a@]" type_variable type_binder type_expression type_expr option_public public
+  | Declaration_constant {name = _ ; binder=b ; attr = { inline ; no_mutation ; view ; public } ; expr} ->
+      fprintf ppf "@[<2>const %a =@ %a%a%a%a%a@]"
         (binder type_expression) b
         expression expr
-        option_inline attr.inline
-  | Declaration_module {module_binder;module_=m} ->
-      fprintf ppf "@[<2>module %a =@ %a@]"
+        option_inline inline
+        option_no_mutation no_mutation
+        option_view view
+        option_public public
+  | Declaration_module {module_binder;module_=m;module_attr={public}} ->
+      fprintf ppf "module %a = struct @; @[%a@]@;end %a"
         module_variable module_binder
         module_ m
+        option_public public
   | Module_alias {alias;binders} ->
-    fprintf ppf "@[<2>module %a =@ %a@]" module_variable alias (list_sep_d module_variable) @@ List.Ne.to_list binders
+    fprintf ppf "module %a =@ %a" module_variable alias (list_sep_d module_variable) @@ List.Ne.to_list binders
 
 
-and module_ ppf (p : module_) = list_sep_d (declaration) ppf (List.map Location.unwrap p)
+and module_ ppf (p : module_) =
+  fprintf ppf "@[<v>%a@]"
+    (list_sep declaration (tag "@;"))
+    (List.map ~f:Location.unwrap p)
 
 let module_with_unification_vars ppf (Module_With_Unification_Vars p : module_with_unification_vars) =
   fprintf ppf "@[<v>%a@]"
     (list_sep declaration (tag "@;"))
-    (List.map Location.unwrap p)
+    (List.map ~f:Location.unwrap p)
 
 let typeVariableMap = fun f ppf tvmap   ->
-      let lst = List.sort (fun (a, _) (b, _) -> Var.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
+      let lst = List.sort ~compare:(fun (a, _) (b, _) -> Var.compare a b) (RedBlackTrees.PolyMap.bindings tvmap) in
       let aux ppf (k, v) =
         fprintf ppf "(Var %a, %a)" Var.pp k f v in
       fprintf ppf "typeVariableMap [@[<hv 2>@ %a @]@ ]" (list_sep aux (fun ppf () -> fprintf ppf " ;@ ")) lst
 
 let typeVariableSet = fun ppf s   ->
-      let lst = List.sort (fun (a) (b) -> Var.compare a b) (RedBlackTrees.PolySet.elements s) in
+      let lst = List.sort ~compare:(fun (a) (b) -> Var.compare a b) (RedBlackTrees.PolySet.elements s) in
       let aux ppf (k) =
         fprintf ppf "(Var %a)" Var.pp k in
       fprintf ppf "typeVariableSet [@[<hv 2>@ %a @]@ ]" (list_sep aux (fun ppf () -> fprintf ppf " ;@ ")) lst
 let constraint_identifier_set = fun ppf s   ->
-      let lst = List.sort (fun (ConstraintIdentifier.T a) (ConstraintIdentifier.T b) -> Int64.compare a b) (RedBlackTrees.PolySet.elements s) in
+      let lst = List.sort ~compare:(fun (ConstraintIdentifier.T a) (ConstraintIdentifier.T b) -> Int64.compare a b) (RedBlackTrees.PolySet.elements s) in
       let aux ppf (ConstraintIdentifier.T k) =
         fprintf ppf "(ConstraintIdentifier %Li)" k in
       fprintf ppf "constraint_identifier_set [@[<hv 2>@ %a @]@ ]" (list_sep aux (fun ppf () -> fprintf ppf " ;@ ")) lst
 
 let identifierMap = fun f ppf idmap ->
-      let lst = List.sort (fun (ConstraintIdentifier.T a, _) (ConstraintIdentifier.T b, _) -> Int64.compare a b) (RedBlackTrees.PolyMap.bindings idmap) in
+      let lst = List.sort ~compare:(fun (ConstraintIdentifier.T a, _) (ConstraintIdentifier.T b, _) -> Int64.compare a b) (RedBlackTrees.PolyMap.bindings idmap) in
       let aux ppf (ConstraintIdentifier.T k, v) =
         fprintf ppf "(ConstraintIdentifier %Li, %a)" k f v in
       fprintf ppf "typeVariableMap [@[<hv 2>@ %a @]@ ]" (list_sep aux (fun ppf () -> fprintf ppf " ;@ ")) lst
@@ -171,7 +190,7 @@ let biMap = fun fk fv ppf idmap ->
 let poly_unionfind = (fun f ppf p   ->
   let lst = (UnionFind.Poly2.partitions p) in
   let aux1 ppf l = fprintf ppf "[@[<hv 2> (*%a*) %a @]@ ]"
-                  f (UnionFind.Poly2.repr (List.hd l) p)
+                  f (UnionFind.Poly2.repr (List.hd_exn l) p)
                   (list_sep (f) (fun ppf () -> fprintf ppf " ;@ ")) l in
   let aux2 = list_sep aux1 (fun ppf () -> fprintf ppf " ;@ ") in
   fprintf ppf "UnionFind [@[<hv 2>@ %a @]@ ]" aux2 lst)
@@ -200,6 +219,7 @@ let constant_tag ppf c_tag = match c_tag with
   | C_bls12_381_g1 -> fprintf ppf "C_bls12_381_g1"
   | C_bls12_381_g2 -> fprintf ppf "C_bls12_381_g2"
   | C_bls12_381_fr -> fprintf ppf "C_bls12_381_fr"
+  | C_never -> fprintf ppf "C_never"
 
 let row_tag ppf = function
     C_record -> fprintf ppf "C_record"

@@ -1,37 +1,27 @@
-open Trace
 open Test_helpers
 open Ast_imperative
 
 
 
-let get_program =
-  let s = ref None in
-  fun () -> match !s with
-    | Some s -> ok s
-    | None -> (
-      let options = Compiler_options.make () in
-      let%bind program = Ligo_compile.Utils.type_file ~options "./contracts/id.mligo" "cameligo" (Contract "main") in
-      s := Some program ;
-      ok program
-    )
+let get_program = get_program "./contracts/id.mligo" (Contract "main")
 
-let compile_main () =
-  let%bind typed_prg,_   = get_program () in
-  let%bind mini_c_prg      = Ligo_compile.Of_typed.compile typed_prg in
-  let%bind michelson_prg   = Ligo_compile.Of_mini_c.aggregate_and_compile_contract ~options mini_c_prg "main" in
-  let%bind _contract =
+let compile_main ~raise ~add_warning () =
+  let typed_prg     = get_program ~raise ~add_warning () in
+  let mini_c_prg    = Ligo_compile.Of_typed.compile ~raise typed_prg in
+  let michelson_prg = Ligo_compile.Of_mini_c.aggregate_and_compile_contract ~raise ~options mini_c_prg "main" in
+  let _contract =
     (* fails if the given entry point is not a valid contract *)
-    Ligo_compile.Of_michelson.build_contract michelson_prg in
-  ok ()
+    Ligo_compile.Of_michelson.build_contract ~raise michelson_prg in
+  ()
 
 let (first_owner , first_contract) =
   let open Proto_alpha_utils.Memory_proto_alpha in
-  let id = List.nth dummy_environment.identities 0 in
+  let id = List.nth_exn (test_environment ()).identities 0 in
   let kt = id.implicit_contract in
   Protocol.Alpha_context.Contract.to_b58check kt , kt
 
-let buy_id () =
-  let%bind (program,env) = get_program () in
+let buy_id ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -44,9 +34,10 @@ let buy_id () =
                              ("skip_price", e_mutez 1000000) ; ]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
-      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ()
+      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -63,13 +54,13 @@ let buy_id () =
                                  ("name_price", e_mutez 1000000) ;
                                  ("skip_price", e_mutez 1000000) ; ]
   in
-  let%bind () = expect_eq ~options (program,env) "buy" 
+  let () = expect_eq ~raise ~options program "buy" 
       (e_pair param storage) 
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
-let buy_id_sender_addr () =
-  let%bind (program,env) = get_program () in
+let buy_id_sender_addr ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -82,9 +73,10 @@ let buy_id_sender_addr () =
                              ("skip_price", e_mutez 1000000) ; ]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
-      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ()
+      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -100,14 +92,14 @@ let buy_id_sender_addr () =
                                  ("name_price", e_mutez 1000000) ;
                                  ("skip_price", e_mutez 1000000) ; ]
   in
-  let%bind () = expect_eq ~options (program,env) "buy" 
+  let () = expect_eq ~raise ~options program "buy" 
       (e_pair param storage) 
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
 (* Test that contract fails if we attempt to buy an ID for the wrong amount *)
-let buy_id_wrong_amount () =
-  let%bind (program,env) = get_program () in
+let buy_id_wrong_amount ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -120,19 +112,20 @@ let buy_id_wrong_amount () =
                              ("skip_price", e_mutez 1000000) ; ]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
-      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.fifty_cents) ()
+      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.fifty_cents) ())
   in
   let param = e_record_ez [("profile", owner_website) ;
                            ("initial_controller", (e_some (e_address new_addr)))] in
-  let%bind () = expect_string_failwith ~options (program,env) "buy" 
+  let () = expect_string_failwith ~raise ~options program "buy" 
       (e_pair param storage)
       "Incorrect amount paid."
-  in ok ()
+  in ()
 
-let update_details_owner () =
-  let%bind (program,env) = get_program () in
+let update_details_owner ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -140,10 +133,11 @@ let update_details_owner () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -171,13 +165,13 @@ let update_details_owner () =
   let param = e_record_ez [("id", e_int 1) ;
                        ("new_profile", e_some details) ;
                        ("new_controller", e_some (e_address new_addr))] in
-  let%bind () = expect_eq ~options (program,env) "update_details"
+  let () = expect_eq ~raise ~options program "update_details"
       (e_pair param storage)
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
-let update_details_controller () =
-  let%bind (program,env) = get_program () in
+let update_details_controller ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -185,10 +179,11 @@ let update_details_controller () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address owner_addr) ;
@@ -216,14 +211,14 @@ let update_details_controller () =
   let param = e_record_ez [("id", e_int 1) ;
                            ("new_profile", e_some details) ;
                            ("new_controller", e_some (e_address owner_addr))] in
-  let%bind () = expect_eq ~options (program,env) "update_details"
+  let () = expect_eq ~raise ~options program "update_details"
       (e_pair param storage)
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
 (* Test that contract fails when we attempt to update details of nonexistent ID *)
-let update_details_nonexistent () = 
-  let%bind (program,env) = get_program () in
+let update_details_nonexistent ~raise ~add_warning () = 
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -231,10 +226,11 @@ let update_details_nonexistent () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -252,14 +248,14 @@ let update_details_nonexistent () =
   let param = e_record_ez [("id", e_int 2) ;
                            ("new_profile", e_some details) ;
                            ("new_controller", e_some (e_address owner_addr))] in
-  let%bind () = expect_string_failwith ~options (program,env) "update_details"
+  let () = expect_string_failwith ~raise ~options program "update_details"
       (e_pair param storage)
       "This ID does not exist."
-  in ok ()
+  in ()
 
 (* Test that contract fails when we attempt to update details from wrong addr *)
-let update_details_wrong_addr () =
-  let%bind (program,env) = get_program () in
+let update_details_wrong_addr ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -267,9 +263,10 @@ let update_details_wrong_addr () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -287,14 +284,14 @@ let update_details_wrong_addr () =
   let param = e_record_ez [("id", e_int 0) ;
                            ("new_profile", e_some details) ;
                            ("new_controller", e_some (e_address owner_addr))] in
-  let%bind () = expect_string_failwith ~options (program,env) "update_details"
+  let () = expect_string_failwith ~raise ~options program "update_details"
       (e_pair param storage)
       "You are not the owner or controller of this ID."
-  in ok ()
+  in ()
 
 (* Test that giving none on both profile and controller address is a no-op *)
-let update_details_unchanged () =
-  let%bind (program,env) = get_program () in
+let update_details_unchanged ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -302,10 +299,11 @@ let update_details_unchanged () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -322,13 +320,13 @@ let update_details_unchanged () =
   let param = e_record_ez [("id", e_int 1) ;
                            ("new_profile", e_typed_none (t_bytes ())) ;
                            ("new_controller", e_typed_none (t_address ()))] in
-  let%bind () = expect_eq ~options (program,env) "update_details"
+  let () = expect_eq ~raise ~options program "update_details"
       (e_pair param storage)
       (e_pair (e_list []) storage)
-  in ok ()
+  in ()
 
-let update_owner () =
-  let%bind (program,env) = get_program () in
+let update_owner ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -336,10 +334,11 @@ let update_owner () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -365,14 +364,14 @@ let update_owner () =
   in
   let param = e_record_ez [("id", e_int 1) ;
                            ("new_owner", e_address owner_addr)] in
-  let%bind () = expect_eq ~options (program,env) "update_owner"
+  let () = expect_eq ~raise ~options program "update_owner"
       (e_pair param storage)
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
 (* Test that contract fails when we attempt to update owner of nonexistent ID *)
-let update_owner_nonexistent () =
-  let%bind (program,env) = get_program () in
+let update_owner_nonexistent ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -380,10 +379,11 @@ let update_owner_nonexistent () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -399,14 +399,14 @@ let update_owner_nonexistent () =
   in
   let param = e_record_ez [("id", e_int 2);
                            ("new_owner", e_address new_addr)] in
-  let%bind () = expect_string_failwith ~options (program,env) "update_owner"
+  let () = expect_string_failwith ~raise ~options program "update_owner"
       (e_pair param storage)
       "This ID does not exist."
-  in ok ()
+  in ()
 
 (* Test that contract fails when we attempt to update owner from non-owner addr *)
-let update_owner_wrong_addr () =
-  let%bind (program,env) = get_program () in
+let update_owner_wrong_addr ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -414,10 +414,11 @@ let update_owner_wrong_addr () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
       ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.zero)
-      ()
+      ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -433,13 +434,13 @@ let update_owner_wrong_addr () =
   in
   let param = e_record_ez [("id", e_int 0);
                            ("new_owner", e_address new_addr)] in
-  let%bind () = expect_string_failwith ~options (program,env) "update_owner"
+  let () = expect_string_failwith ~raise ~options program "update_owner"
       (e_pair param storage)
       "You are not the owner of this ID."
-  in ok ()
+  in ()
 
-let skip () =
-  let%bind (program,env) = get_program () in
+let skip ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -447,9 +448,10 @@ let skip () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
-      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ()
+      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.one) ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -470,14 +472,14 @@ let skip () =
                              ("name_price", e_mutez 1000000) ;
                              ("skip_price", e_mutez 1000000) ; ]
   in
-  let%bind () = expect_eq ~options (program,env) "skip"
+  let () = expect_eq ~raise ~options program "skip"
       (e_pair (e_unit ()) storage)
       (e_pair (e_list []) new_storage)
-  in ok ()
+  in ()
 
 (* Test that contract fails if we try to skip without paying the right amount *)
-let skip_wrong_amount () =
-  let%bind (program,env) = get_program () in
+let skip_wrong_amount ~raise ~add_warning () =
+  let program = get_program ~raise ~add_warning () in
   let owner_addr = addr 5 in
   let owner_website = e_bytes_string "ligolang.org" in
   let id_details_1 = e_record_ez [("owner", e_address owner_addr) ;
@@ -485,9 +487,10 @@ let skip_wrong_amount () =
                                   ("profile", owner_website)]
   in
   let new_addr = first_owner in
-  let options = Proto_alpha_utils.Memory_proto_alpha.make_options
+  let options = Proto_alpha_utils.Memory_proto_alpha.(make_options
+      ~env:(test_environment ())
       ~sender:first_contract
-      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.fifty_cents) ()
+      ~amount:(Memory_proto_alpha.Protocol.Alpha_context.Tez.fifty_cents) ())
   in
   let new_website = e_bytes_string "ligolang.org" in
   let id_details_2 = e_record_ez [("owner", e_address new_addr) ;
@@ -501,23 +504,23 @@ let skip_wrong_amount () =
                              ("name_price", e_mutez 1000000) ;
                              ("skip_price", e_mutez 1000000) ; ]
   in
-  let%bind () = expect_string_failwith ~options (program,env) "skip"
+  let () = expect_string_failwith ~raise ~options program "skip"
       (e_pair (e_unit ()) storage)
       "Incorrect amount paid."
-  in ok ()
+  in ()
 
 let main = test_suite "ID Layer (CameLIGO)" [
-    test "buy"    buy_id ;
-    test "buy (sender addr)" buy_id_sender_addr ;
-    test "buy (wrong amount)" buy_id_wrong_amount ;
-    test "update_details (owner)" update_details_owner ;
-    test "update_details (controller)" update_details_controller ;
-    test "update_details_nonexistent" update_details_nonexistent ;
-    test "update_details_wrong_addr" update_details_wrong_addr ;
-    test "update_details_unchanged" update_details_unchanged ;
-    test "update_owner" update_owner ;
-    test "update_owner_nonexistent" update_owner_nonexistent ;
-    test "update_owner_wrong_addr" update_owner_wrong_addr ;
-    test "skip" skip ;
-    test "skip (wrong amount)" skip_wrong_amount ;
+    test_w "buy"                         (buy_id ) ;
+    test_w "buy (sender addr)"           (buy_id_sender_addr) ;
+    test_w "buy (wrong amount)"          (buy_id_wrong_amount) ;
+    test_w "update_details (owner)"      (update_details_owner) ;
+    test_w "update_details (controller)" (update_details_controller) ;
+    test_w "update_details_nonexistent"  (update_details_nonexistent) ;
+    test_w "update_details_wrong_addr"   (update_details_wrong_addr) ;
+    test_w "update_details_unchanged"    (update_details_unchanged) ;
+    test_w "update_owner"                (update_owner) ;
+    test_w "update_owner_nonexistent"    (update_owner_nonexistent) ;
+    test_w "update_owner_wrong_addr"     (update_owner_wrong_addr) ;
+    test_w "skip"                        (skip) ;
+    test_w "skip (wrong amount)"         (skip_wrong_amount) ;
 ]

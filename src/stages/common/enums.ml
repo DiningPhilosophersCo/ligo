@@ -1,11 +1,11 @@
-type z = Z.t
-type ligo_string = Simple_utils.Ligo_string.t
+type z = Z.t [@@deriving ord]
+type ligo_string = Simple_utils.Ligo_string.t [@@deriving yojson, ord]
 
 let [@warning "-32"] z_to_yojson x = `String (Z.to_string x)
 let [@warning "-32"] z_of_yojson x =
   try match x with
     | `String s -> Ok (Z.of_string s)
-    | _ -> Utils.error_yojson_format "JSON string"
+    | _ -> Simple_utils.Utils.error_yojson_format "JSON string"
   with
   | Invalid_argument _ ->
     Error "Invalid formatting.
@@ -31,26 +31,54 @@ type literal =
   | Literal_key_hash of string
   | Literal_chain_id of string
   | Literal_operation of bytes
-[@@deriving ord]
+  | Literal_bls12_381_g1 of bytes
+  | Literal_bls12_381_g2 of bytes
+  | Literal_bls12_381_fr of bytes
+[@@deriving yojson, ord]
+
+let literal_to_enum = function
+  | Literal_unit        ->  1
+  | Literal_int _       ->  2
+  | Literal_nat _       ->  3
+  | Literal_timestamp _ ->  4
+  | Literal_mutez _     ->  5
+  | Literal_string _    ->  6
+  | Literal_bytes _     ->  7
+  | Literal_address _   ->  8
+  | Literal_signature _ ->  9
+  | Literal_key _       -> 10
+  | Literal_key_hash _  -> 11
+  | Literal_chain_id _  -> 12
+  | Literal_operation _ -> 13
+  | Literal_bls12_381_g1 _ -> 14
+  | Literal_bls12_381_g2 _ -> 15
+  | Literal_bls12_381_fr _ -> 16
 
 type constant' =
   | C_INT
   | C_UNIT
+  | C_NEVER
   | C_NIL
   | C_NOW
   | C_IS_NAT
   | C_SOME
   | C_NONE
+  | C_UNOPT
+  | C_UNOPT_WITH_ERROR
   | C_ASSERTION
+  | C_ASSERTION_WITH_ERROR
   | C_ASSERT_SOME
+  | C_ASSERT_SOME_WITH_ERROR
+  | C_ASSERT_NONE
+  | C_ASSERT_NONE_WITH_ERROR
   | C_ASSERT_INFERRED
   | C_FAILWITH
   | C_UPDATE
   (* Loops *)
   | C_ITER
   | C_FOLD_WHILE
-  | C_FOLD_CONTINUE
-  | C_FOLD_STOP
+  | C_FOLD_CONTINUE [@print "CONTINUE"]
+  | C_FOLD_STOP [@print "STOP"]
   | C_LOOP_LEFT
   | C_LOOP_CONTINUE
   | C_LOOP_STOP
@@ -148,6 +176,7 @@ type constant' =
   | C_CALL
   | C_CONTRACT
   | C_CONTRACT_OPT
+  | C_CONTRACT_WITH_ERROR
   | C_CONTRACT_ENTRYPOINT
   | C_CONTRACT_ENTRYPOINT_OPT
   | C_AMOUNT
@@ -160,27 +189,46 @@ type constant' =
   | C_IMPLICIT_ACCOUNT
   | C_SET_DELEGATE
   | C_CREATE_CONTRACT
-  | C_CONVERT_TO_LEFT_COMB
-  | C_CONVERT_TO_RIGHT_COMB
-  | C_CONVERT_FROM_LEFT_COMB
-  | C_CONVERT_FROM_RIGHT_COMB
+  | C_OPEN_CHEST
+  | C_VIEW
   (* Tests - ligo interpreter only *)
-  | C_TEST_ORIGINATE
-  | C_TEST_GET_STORAGE
-  | C_TEST_GET_BALANCE
-  | C_TEST_SET_NOW
-  | C_TEST_SET_SOURCE
-  | C_TEST_SET_BAKER
-  | C_TEST_EXTERNAL_CALL
-  | C_TEST_EXTERNAL_CALL_EXN
-  | C_TEST_MICHELSON_EQUAL
-  | C_TEST_GET_NTH_BS
-  | C_TEST_LOG
-  | C_TEST_COMPILE_EXPRESSION
-  | C_TEST_COMPILE_EXPRESSION_SUBST
-  | C_TEST_STATE_RESET
-  | C_TEST_LAST_ORIGINATIONS
-  | C_TEST_COMPILE_META_VALUE
+  | C_TEST_ORIGINATE [@only_interpreter]
+  | C_TEST_GET_STORAGE [@only_interpreter]
+  | C_TEST_GET_STORAGE_OF_ADDRESS [@only_interpreter]
+  | C_TEST_GET_BALANCE [@only_interpreter]
+  | C_TEST_SET_NOW [@only_interpreter]
+  | C_TEST_SET_SOURCE [@only_interpreter]
+  | C_TEST_SET_BAKER [@only_interpreter]
+  | C_TEST_EXTERNAL_CALL_TO_CONTRACT [@only_interpreter]
+  | C_TEST_EXTERNAL_CALL_TO_CONTRACT_EXN [@only_interpreter]
+  | C_TEST_EXTERNAL_CALL_TO_ADDRESS [@only_interpreter]
+  | C_TEST_EXTERNAL_CALL_TO_ADDRESS_EXN [@only_interpreter]
+  | C_TEST_MICHELSON_EQUAL [@only_interpreter]
+  | C_TEST_GET_NTH_BS [@only_interpreter]
+  | C_TEST_LOG [@only_interpreter]
+  | C_TEST_STATE_RESET [@only_interpreter]
+  | C_TEST_BOOTSTRAP_CONTRACT [@only_interpreter]
+  | C_TEST_NTH_BOOTSTRAP_CONTRACT [@only_interpreter]
+  | C_TEST_LAST_ORIGINATIONS [@only_interpreter]
+  | C_TEST_COMPILE_META_VALUE [@only_interpreter]
+  | C_TEST_MUTATE_COUNT [@only_interpreter]
+  | C_TEST_MUTATE_VALUE [@only_interpreter]
+  | C_TEST_MUTATION_TEST [@only_interpreter]
+  | C_TEST_MUTATION_TEST_ALL [@only_interpreter]
+  | C_TEST_SAVE_MUTATION [@only_interpreter]
+  | C_TEST_RUN [@only_interpreter]
+  | C_TEST_EVAL [@only_interpreter]
+  | C_TEST_COMPILE_CONTRACT [@only_interpreter]
+  | C_TEST_TO_CONTRACT [@only_interpreter]
+  | C_TEST_TO_ENTRYPOINT [@only_interpreter]
+  | C_TEST_ORIGINATE_FROM_FILE [@only_interpreter]
+  | C_TEST_TO_TYPED_ADDRESS [@only_interpreter]
+  | C_TEST_NTH_BOOTSTRAP_TYPED_ADDRESS [@only_interpreter]
+  | C_TEST_SET_BIG_MAP [@only_interpreter]
+  | C_TEST_CAST_ADDRESS [@only_interpreter]
+  | C_TEST_CREATE_CHEST [@only_interpreter]
+  | C_TEST_CREATE_CHEST_KEY [@only_interpreter]
+  | C_TEST_RANDOM [@only_interpreter]
   (* New with EDO*)
   | C_SHA3
   | C_KECCAK
@@ -195,7 +243,8 @@ type constant' =
   | C_SAPLING_VERIFY_UPDATE
   | C_SAPLING_EMPTY_STATE
   (* JsLIGO *)
-  | C_POLYMORPHIC_ADD
+  | C_POLYMORPHIC_ADD [@print "C_POLYMORPHIC_ADD"]
+[@@deriving enum, yojson, print_constant, only_interpreter_tags ]
 
 type deprecated = {
   name : string ;

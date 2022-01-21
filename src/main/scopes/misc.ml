@@ -1,29 +1,29 @@
 open Types
-open Trace
 
-type tenv = Ast_typed.environment
+type tenv = Environment.t
 
 let var_equal : Ast_typed.expression_variable -> Ast_typed.expression_variable -> bool = fun v1 v2 ->
   Var.equal v1.wrap_content v2.wrap_content
 
 let extract_variable_types :
-  bindings_map -> Ast_typed.module_fully_typed -> bindings_map =
-  fun prev prg ->
+  bindings_map -> Ast_typed.declaration -> bindings_map =
+  fun prev decl ->
     let add env b =
       let aux : Ast_typed.expression_variable *  Ast_typed.type_expression -> Ast_typed.expression_variable * Ast_typed.type_expression = fun (v,t) ->
         let t' = match t.orig_var with Some t' -> { t with type_content = T_variable t'} | None -> (* let () = Format.printf "\nYAA\n NONE : %a" Ast_typed.PP.type_expression t in *) t in
         (v,t')
       in
-      let b' = List.map aux b in
-      ok @@ Bindings_map.add_bindings b' env
+      let b' = List.map ~f:aux b in
+      Bindings_map.add_bindings b' env
     in
-    let aux : bindings_map -> Ast_typed.expression -> (bindings_map, _) result = fun env exp ->
+    let aux : bindings_map -> Ast_typed.expression -> bindings_map = fun env exp ->
       let return = add env in
       match exp.expression_content with
       | E_literal _ | E_application _ | E_raw_code _ | E_constructor _
       | E_type_in _ | E_mod_in _ | E_mod_alias _
       | E_record _ | E_record_accessor _ | E_record_update _ | E_constant _ -> return []
       | E_module_accessor _ -> return []
+      | E_type_inst _ -> return [] (* TODO *)
       | E_variable v -> return [(v,exp.type_expression)]
       | E_lambda { binder ; _ } ->
         let in_t = match exp.type_expression.type_content with
@@ -49,16 +49,16 @@ let extract_variable_types :
                   let proj_t = (Ast_core.LMap.find constructor variant_t.content).associated_type in
                   (pattern,proj_t)
               in
-              return (List.map aux cases)
+              return (List.map ~f:aux cases)
             | None -> (
               match Ast_typed.get_t_option matchee.type_expression with
                 | Some proj_t ->
-                  let x = List.find (fun ({constructor=Label l;_}:Ast_typed.matching_content_case) -> String.equal l "Some") cases in
+                  let x = List.find_exn ~f:(fun ({constructor=Label l;_}:Ast_typed.matching_content_case) -> String.equal l "Some") cases in
                   return [(x.pattern,proj_t)]
                 | None -> (
                   match Ast_typed.get_t_list matchee.type_expression with
                   | Some list_proj ->
-                    let x = List.find (fun ({constructor=Label l;_}:Ast_typed.matching_content_case) -> String.equal l "Cons") cases in
+                    let x = List.find_exn ~f:(fun ({constructor=Label l;_}:Ast_typed.matching_content_case) -> String.equal l "Cons") cases in
                     let t = Ast_typed.t_pair list_proj matchee.type_expression in
                     return [(x.pattern,t)]
                   | None -> failwith "matched value in the Match_variant: wrong type"
@@ -69,16 +69,13 @@ let extract_variable_types :
           return (Ast_typed.LMap.to_list fields)
       )
     in
-    let aux' : bindings_map -> Ast_typed.declaration -> (bindings_map, _) result = fun env decl ->
-      match decl with
-      | Declaration_constant { binder ; expr ; _ } -> add env [binder,expr.type_expression]
-      | Declaration_type _ -> ok env
-      | Declaration_module _ -> ok env
-      | Module_alias _ -> ok env
-    in
-    match to_option @@ Self_ast_typed.Helpers.fold_module_decl aux aux' prev prg with
-    | Some bindings -> bindings
-    | None -> prev
+    match decl with
+    | Declaration_constant { binder ; expr ; _ } ->
+      let prev = add prev [binder,expr.type_expression] in
+      Self_ast_typed.Helpers.fold_expression aux prev expr
+    | Declaration_type _ -> prev
+    | Declaration_module _ -> prev
+    | Module_alias _ -> prev
 
 let get_binder_name : 'a Var.t -> string = fun v ->
   if Var.is_generated v

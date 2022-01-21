@@ -13,7 +13,7 @@ module Token       = Lexing_reasonligo.Token
 module Self_tokens = Lexing_reasonligo.Self_tokens
 module ParErr      = Parsing_reasonligo.ParErr
 module Parser      = Parsing_reasonligo.Parser
-module CST         = Cst.Reasonligo
+module CST         = Cst_reasonligo.CST
 module Pretty      = Parsing_reasonligo.Pretty
 
 (* Making the parsers *)
@@ -22,6 +22,8 @@ module ReasonligoParser =
   struct
     module CST = CST
     include Parser
+
+    module Recovery = Parsing_reasonligo.RecoverParser
   end
 
 include Parsing_shared.Common.MakeTwoParsers
@@ -32,11 +34,11 @@ include Parsing_shared.Common.MakeTwoParsers
 
 include Parsing_shared.Common.MakePretty (CST) (Pretty)
 
-let pretty_print_file buffer file_path =
-  ContractParser.parse_file buffer file_path |> Trace.map pretty_print
+let pretty_print_file ~raise buffer file_path =
+  ContractParser.parse_file ~raise buffer file_path |> pretty_print
 
-let pretty_print_cst buffer file_path =
-  let cst = parse_file buffer file_path in
+let pretty_print_cst ~raise buffer file_path =
+  let cst = parse_file ~raise buffer file_path in
   let buffer = Buffer.create 59 in
   let state =
     Cst_reasonligo.Printer.mk_state
@@ -45,4 +47,4 @@ let pretty_print_cst buffer file_path =
       ~buffer in
   let apply tree =
     Cst_reasonligo.Printer.pp_cst state tree; buffer
-  in Trace.map apply cst
+  in apply cst

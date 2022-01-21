@@ -5,9 +5,10 @@
   (public_name simple-utils)
   (libraries
     ;; Third party
+   core
    yojson
    result
    unix
    str)
-  (preprocess
-    (pps ppx_let)))
+  (flags (:standard -open Core))
+)

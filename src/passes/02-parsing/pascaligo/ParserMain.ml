@@ -10,7 +10,7 @@ module Comments      = Preprocessing_pascaligo.Comments
 module File          = Preprocessing_pascaligo.File
 module Token         = Lexing_pascaligo.Token
 module Self_tokens   = Lexing_pascaligo.Self_tokens
-module CST           = Cst.Pascaligo
+module CST           = Cst_pascaligo.CST
 module ParErr        = Parser_msg
 module ParserMainGen = Parsing_shared.ParserMainGen
 
@@ -33,6 +33,8 @@ module Parser =
       struct
         let main = Incremental.contract
       end
+
+    module Recovery = Parsing_pascaligo.RecoverParser
   end
 
 module Pretty =

@@ -1,4 +1,5 @@
-import cors from 'cors';
+
+import cors, { CorsOptions } from 'cors';
 import express from 'express';
 import { dirname, join } from 'path';
 
@@ -7,8 +8,8 @@ import { compileExpressionHandler } from './handlers/compile-expression';
 import { compileStorageHandler } from './handlers/compile-storage';
 import { deployHandler } from './handlers/deploy';
 import { dryRunHandler } from './handlers/dry-run';
-import { evaluateValueHandler } from './handlers/evaluate-value';
-import { runFunctionHandler } from './handlers/run-function';
+import { evaluateValueHandler } from './handlers/evaluate-expr';
+import { runFunctionHandler } from './handlers/evaluate-call';
 import { shareHandler } from './handlers/share';
 import { sharedLinkHandler } from './handlers/shared-link';
 import { listDeclarationHandler } from './handlers/list-declaration';
@@ -24,7 +25,7 @@ const APP_PORT = 8080;
 const metrics = express();
 const METRICS_PORT = 8081;
 
-const corsOptions = {
+const corsOptions: CorsOptions  = {
   origin: [
     'https://ligolang.org',
     'http://localhost:3000',
@@ -51,18 +52,16 @@ app.use(
 );
 
 app.use(express.static(appBundleDirectory));
-
-app.options('/api/share', cors(corsOptions));
-app.options('/api/compile-contract', cors(corsOptions));
+app.use(cors(corsOptions))
 
 app.get(`/api/share/:hash([0-9a-zA-Z\-\_]+)`, sharedLinkHandler());
-app.post('/api/compile-contract', cors(corsOptions), compileContractHandler);
+app.post('/api/compile-contract', compileContractHandler);
 app.post('/api/compile-expression', compileExpressionHandler);
 app.post('/api/compile-storage', compileStorageHandler);
 app.post('/api/dry-run', dryRunHandler);
-app.post('/api/share', cors(corsOptions), shareHandler);
-app.post('/api/evaluate-value', evaluateValueHandler);
-app.post('/api/run-function', runFunctionHandler);
+app.post('/api/share', shareHandler);
+app.post('/api/evaluate-expr', evaluateValueHandler);
+app.post('/api/evaluate-call', runFunctionHandler);
 app.post('/api/deploy', deployHandler);
 app.post('/api/list-declaration', listDeclarationHandler);
 

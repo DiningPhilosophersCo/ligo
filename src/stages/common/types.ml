@@ -1,16 +1,28 @@
+module Location = Simple_utils.Location
+module Var      = Simple_utils.Var
+module List     = Simple_utils.List
 include Enums
 
-module SMap = Map.Make(String)
+module SMap = Simple_utils.Map.Make(String)
 
 type location = Location.t
 type 'a location_wrap = 'a Location.wrap
 
 type attributes = string list
+type known_attributes = {
+  inline: bool ;
+  no_mutation: bool;
+  view : bool;
+  public: bool;
+}
 
 type expression_
-and expression_variable = expression_ Var.t Location.wrap
+and expression_variable = expression_ Var.t Location.wrap 
 let expression_variable_to_yojson var = Location.wrap_to_yojson (Var.to_yojson) var
 let expression_variable_of_yojson var = Location.wrap_of_yojson (Var.of_yojson) var
+let equal_expression_variable t1 t2 = Location.equal_content ~equal:Var.equal t1 t2
+let compare_expression_variable t1 t2 = Location.compare_content ~compare:Var.compare t1 t2
+
 type type_
 and type_variable = type_ Var.t
 let type_variable_to_yojson var = Var.to_yojson var
@@ -18,21 +30,27 @@ let type_variable_of_yojson var = Var.of_yojson var
 type module_variable = string
 let module_variable_to_yojson var = `String var
 let module_variable_of_yojson var = `String var
+let compare_module_variable = String.compare
+let equal_module_variable = String.equal
+type kind = unit
+let equal_kind = Unit.equal
+let compare_kind = Unit.compare
 
 type label = Label of string
 let label_to_yojson (Label l) = `List [`String "Label"; `String l]
 let label_of_yojson = function
   | `List [`String "Label"; `String l] -> Ok (Label l)
-  | _ -> Utils.error_yojson_format "Label of string"
+  | _ -> Simple_utils.Utils.error_yojson_format "Label of string"
+let equal_label (Label a) (Label b) = String.equal a b
+let compare_label (Label a) (Label b) = String.compare a b
 
-
-module LMap = Map.Make( struct type t = label let compare (Label a) (Label b) = String.compare a b end)
+module LMap = Simple_utils.Map.Make(struct type t = label let compare = compare_label end)
 type 'a label_map = 'a LMap.t
 
 let const_name = function
   | Deprecated {const;_} -> const
   | Const      const     -> const
-let bindings_to_yojson f g xs = `List (List.map (fun (x,y) -> `List [f x; g y]) xs)
+let bindings_to_yojson f g xs = `List (List.map ~f:(fun (x,y) -> `List [f x; g y]) xs)
 let label_map_to_yojson row_elem_to_yojson m =
   bindings_to_yojson label_to_yojson row_elem_to_yojson (LMap.bindings m)
 
@@ -59,6 +77,12 @@ type 'a module_access = {
 }
 
 (* Type level types *)
+type 'ty_exp abstraction = {
+  ty_binder : type_variable Location.wrap ;
+  kind : kind ;
+  type_ : 'ty_exp ;
+}
+
 type 'ty_exp rows = {
   fields     : 'ty_exp row_element label_map;
   attributes : string list ;
@@ -70,9 +94,14 @@ type 'ty_exp arrow = {
   }
 
 (* Expression level types *)
+type binder_attributes = {
+    const_or_var : [`Const | `Var] option;
+  }
+
 type 'ty_exp binder = {
   var  : expression_variable ;
   ascr : 'ty_exp option;
+  attributes : binder_attributes ;
   }
 
 
@@ -182,7 +211,7 @@ and 'ty_exp pattern_repr =
   | P_unit
   | P_var of 'ty_exp binder
   | P_list of 'ty_exp list_pattern
-  | P_variant of label * 'ty_exp pattern option
+  | P_variant of label * 'ty_exp pattern
   | P_tuple of 'ty_exp pattern list
   | P_record of label list * 'ty_exp pattern list
 
@@ -202,6 +231,7 @@ type ('exp , 'ty_exp) match_exp = {
 type 'ty_exp declaration_type = {
     type_binder : type_variable ;
     type_expr : 'ty_exp ;
+    type_attr : attributes ;
   }
 
 and ('exp,'ty_exp) declaration_constant = {
@@ -214,6 +244,7 @@ and ('exp,'ty_exp) declaration_constant = {
 and ('exp,'ty_expr) declaration_module = {
     module_binder : module_variable ;
     module_ : ('exp,'ty_expr) module' ;
+    module_attr : attributes
   }
 
 and module_alias = {

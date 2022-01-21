@@ -1,10 +1,12 @@
+module Var = Simple_utils.Var
+module Ligo_string = Simple_utils.Ligo_string
 open Errors
 open Ast_imperative
-open Trace
+open Simple_utils.Trace
 open Stage_common.Constant
 
-let peephole_expression : expression -> (expression , self_ast_imperative_error) result = fun e ->
-  let return expression_content = ok { e with expression_content } in
+let peephole_expression ~raise : expression -> expression = fun e ->
+  let return expression_content = { e with expression_content } in
   match e.expression_content with
   | E_ascription {anno_expr=e'; type_annotation=t} as ec -> (
       match (e'.expression_content , t.type_content) with
@@ -15,16 +17,19 @@ let peephole_expression : expression -> (expression , self_ast_imperative_error)
       | (E_literal (Literal_string str) , T_variable tv) when Var.equal tv v_timestamp ->
         let open Tezos_base.TzPervasives.Time.Protocol in
         let str = Ligo_string.extract str in
-        let%bind time =
-          trace_option (bad_timestamp str e')
+        let time =
+          trace_option ~raise (bad_timestamp str e')
           @@ of_notation str in
         let itime = Z.of_int64 @@ to_seconds time in
         return @@ E_literal (Literal_timestamp itime)
       | (E_literal (Literal_string str) , T_variable tv) when Var.equal tv v_chain_id -> return @@ E_literal (Literal_chain_id (Ligo_string.extract str))
       | (E_literal (Literal_string str) , T_variable tv) when Var.equal tv v_address -> return @@ E_literal (Literal_address (Ligo_string.extract str))
+      | (E_literal (Literal_bytes b) , T_variable tv) when Var.equal tv v_bls12_381_g1 -> return @@ E_literal (Literal_bls12_381_g1 b)
+      | (E_literal (Literal_bytes b) , T_variable tv) when Var.equal tv v_bls12_381_g2 -> return @@ E_literal (Literal_bls12_381_g2 b)
+      | (E_literal (Literal_bytes b) , T_variable tv) when Var.equal tv v_bls12_381_fr -> return @@ E_literal (Literal_bls12_381_fr b)
       | (E_literal (Literal_string str) , T_variable tv) when Var.equal tv v_bytes -> (
           let str = Ligo_string.extract str in
-          let%bind e' = trace_option (bad_conversion_bytes e) @@ e'_bytes str in
+          let e' = trace_option ~raise (bad_conversion_bytes e) @@ e'_bytes str in
           return e'
         )
       | _ -> return ec

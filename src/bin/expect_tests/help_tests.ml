@@ -3,815 +3,406 @@ open Cli_expect
 let%expect_test _ =
   (* TODO good? *)
   run_ligo_good [] ;
+  [%expect.unreachable ]
+[@@expect.uncaught_exn {|
+  (* CR expect_test_collector: This test expectation appears to contain a backtrace.
+     This is strongly discouraged as backtraces are fragile.
+     Please change this test to not include a backtrace. *)
+
+  (src/command.ml.Exit_called (status 1))
+  Raised at Core_kernel__Command.exit in file "src/command.ml", line 23, characters 34-64
+  Called from Core_kernel__Command.Exn.handle_uncaught_and_exit in file "src/command.ml", line 32, characters 12-16
+  Called from Cli.run in file "src/bin/cli.ml", line 621, characters 2-49
+  Called from Cli_expect_tests__Cli_expect.run_ligo_good in file "src/bin/expect_tests/cli_expect.ml", line 25, characters 18-31
+  Called from Cli_expect_tests__Help_tests.(fun) in file "src/bin/expect_tests/help_tests.ml", line 5, characters 2-18
+  Called from Expect_test_collector.Make.Instance.exec in file "collector/expect_test_collector.ml", line 244, characters 12-19
+
+  Trailing output
+  ---------------
+  the LigoLANG compiler
+
+    ligo SUBCOMMAND
+
+  === subcommands ===
+
+    compile    compile a ligo program to michelson
+    transpile  transpile ligo code from a syntax to another (BETA)
+    run        compile and interpret ligo code
+    info       tools to get information from contracts
+    mutate     create mutants of a ligo file
+    repl       interactive ligo interpreter
+    changelog  print the ligo changelog
+    print      print intermediary program representation.
+               Warning: Intended for development of LIGO and can break at any time
+    version    print version information
+    help       explain a given subcommand (perhaps recursively)
+
+  missing subcommand for command ligo |}] 
+
+let%expect_test _ =
+  run_ligo_good [ "-help" ] ;
   [%expect {|
-    NAME
-           ligo
+    the LigoLANG compiler
 
-    SYNOPSIS
-           ligo COMMAND ...
+      ligo SUBCOMMAND
 
-    MORE HELP
-           Use `ligo COMMAND --help' for help on a single command.
+    === subcommands ===
 
-    DOCUMENTATION
-           https://ligolang.org/docs/intro/introduction
+      compile    compile a ligo program to michelson
+      transpile  transpile ligo code from a syntax to another (BETA)
+      run        compile and interpret ligo code
+      info       tools to get information from contracts
+      mutate     create mutants of a ligo file
+      repl       interactive ligo interpreter
+      changelog  print the ligo changelog
+      print      print intermediary program representation.
+                 Warning: Intended for development of LIGO and can break at any time
+      version    print version information
+      help       explain a given subcommand (perhaps recursively)
 
-    ASK A QUESTION
-           https://discord.gg/9rhYaEt
-
-    OPEN AN ISSUE
-           https://gitlab.com/ligolang/ligo/issues/new
-
-    COMMANDS
-           changelog
-               Dump the LIGO changelog to stdout.
-
-           compile-contract
-               Subcommand: Compile a contract.
-
-           compile-expression
-               Subcommand: Compile to a Michelson value.
-
-           compile-parameter
-               Subcommand: Compile parameters to a Michelson expression.
-
-           compile-storage
-               Subcommand: Compile an initial storage in LIGO syntax to a
-               Michelson expression.
-
-           dry-run
-               Subcommand: Run a smart-contract with the given storage and input.
-
-           evaluate-value
-               Subcommand: Evaluate a given definition.
-
-           get-scope
-               Subcommand: Return the JSON encoded environment for a given file.
-
-           interpret
-               Subcommand: Interpret the expression in the context initialized by
-               the provided source file.
-
-           list-declarations
-               Subcommand: List all the top-level declarations.
-
-           measure-contract
-               Subcommand: Measure a contract's compiled size in bytes.
-
-           preprocess
-               Subcommand: Preprocess the source file. Warning: Intended for
-               development of LIGO and can break at any time.
-
-           pretty-print
-               Subcommand: Pretty-print the source file.
-
-           print-ast
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-combined
-               Subcommand: Print the contract after combination with the build
-               system. Warning: Intended for development of LIGO and can break at
-               any time.
-
-           print-ast-core
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-sugar
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-typed
-               Subcommand: Print the typed AST. Warning: Intended for development
-               of LIGO and can break at any time.
-
-           print-cst
-               Subcommand: Print the CST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-graph
-               Subcommand: Print the dependency graph. Warning: Intended for
-               development of LIGO and can break at any time.
-
-           print-mini-c
-               Subcommand: Print Mini-C. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           repl
-               Subcommand: REPL
-
-           run-function
-               Subcommand: Run a function with the given parameter.
-
-           test
-               Subcommand: Test a contract with the LIGO test framework (BETA).
-
-           transpile-contract
-               Subcommand: Transpile a contract to another syntax (BETA).
-
-           transpile-expression
-               Subcommand: Transpile an expression to another syntax (BETA).
-
-    OPTIONS
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --version
-               Show version information. |} ] ;
-
-  run_ligo_good [ "--help" ] ;
+    (src/command.ml.Exit_called (status 0)) |} ] 
+ 
+let%expect_test _ =
+  run_ligo_good [ "compile" ; "contract" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo
+    compile a contract.
 
-    SYNOPSIS
-           ligo COMMAND ...
+      ligo compile contract SOURCE_FILE
 
-    MORE HELP
-           Use `ligo COMMAND --help' for help on a single command.
+    This sub-command compiles a contract to Michelson code. It expects a source file and an entrypoint function that has the type of a contract: "parameter * storage -> operations list * storage".
 
-    DOCUMENTATION
-           https://ligolang.org/docs/intro/introduction
+    === flags ===
 
-    ASK A QUESTION
-           https://discord.gg/9rhYaEt
+      [--disable-michelson-typechecking]  Disable Michelson typecking, this might
+                                          produce ill-typed Michelson code.
+      [--display-format format]           the format that will be used by the CLI.
+                                          Available formats are 'dev', 'json', and
+                                          'human-readable' (default). When
+                                          human-readable lacks details (we are still
+                                          tweaking it), please contact us and use
+                                          another format in the meanwhile.
+                                          (alias: --format)
+      [--michelson-comments Selects] ...  kinds of comments to be added to the
+                                          Michelson output. Currently only
+                                          'location' is supported, which propagates
+                                          original source locations (line/col).
+      [--michelson-format format]         is the format that will be used by
+                                          compile-contract for the resulting
+                                          Michelson. Available formats are 'text'
+                                          (default), 'json' and 'hex'.
+      [--no-warn]                         disable warning messages
+      [--output-file FILENAME]            if used, prints the output into the
+                                          specified file instead of stdout
+                                          (alias: -o)
+      [--syntax SYNTAX]                   the syntax that will be used. Currently
+                                          supported syntaxes are "pascaligo",
+                                          "cameligo", "reasonligo" and "jsligo". By
+                                          default, the syntax is guessed from the
+                                          extension (.ligo, .mligo, .religo, and
+                                          .jsligo respectively).
+                                          (alias: -s)
+      [--views VIEWS]                     A list of declaration name that will be
+                                          compiled as on-chain views, separated by
+                                          ','
+                                          (alias: -v)
+      [--werror]                          treat warnings as errors
+      [-e ENTRY-POINT]                    the entry-point that will be compiled.
+                                          (alias: --entry-point)
+      [-p PROTOCOL]                       choose protocol's types/values pre-loaded
+                                          into the LIGO environment (edo ,
+                                          hangzhou). By default, the current
+                                          protocol (edo) will be used
+                                          (alias: --protocol)
+      [-help]                             print this help text and exit
+                                          (alias: -?)
 
-    OPEN AN ISSUE
-           https://gitlab.com/ligolang/ligo/issues/new
+    (src/command.ml.Exit_called (status 0)) |} ] 
 
-    COMMANDS
-           changelog
-               Dump the LIGO changelog to stdout.
-
-           compile-contract
-               Subcommand: Compile a contract.
-
-           compile-expression
-               Subcommand: Compile to a Michelson value.
-
-           compile-parameter
-               Subcommand: Compile parameters to a Michelson expression.
-
-           compile-storage
-               Subcommand: Compile an initial storage in LIGO syntax to a
-               Michelson expression.
-
-           dry-run
-               Subcommand: Run a smart-contract with the given storage and input.
-
-           evaluate-value
-               Subcommand: Evaluate a given definition.
-
-           get-scope
-               Subcommand: Return the JSON encoded environment for a given file.
-
-           interpret
-               Subcommand: Interpret the expression in the context initialized by
-               the provided source file.
-
-           list-declarations
-               Subcommand: List all the top-level declarations.
-
-           measure-contract
-               Subcommand: Measure a contract's compiled size in bytes.
-
-           preprocess
-               Subcommand: Preprocess the source file. Warning: Intended for
-               development of LIGO and can break at any time.
-
-           pretty-print
-               Subcommand: Pretty-print the source file.
-
-           print-ast
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-combined
-               Subcommand: Print the contract after combination with the build
-               system. Warning: Intended for development of LIGO and can break at
-               any time.
-
-           print-ast-core
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-sugar
-               Subcommand: Print the AST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-ast-typed
-               Subcommand: Print the typed AST. Warning: Intended for development
-               of LIGO and can break at any time.
-
-           print-cst
-               Subcommand: Print the CST. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           print-graph
-               Subcommand: Print the dependency graph. Warning: Intended for
-               development of LIGO and can break at any time.
-
-           print-mini-c
-               Subcommand: Print Mini-C. Warning: Intended for development of
-               LIGO and can break at any time.
-
-           repl
-               Subcommand: REPL
-
-           run-function
-               Subcommand: Run a function with the given parameter.
-
-           test
-               Subcommand: Test a contract with the LIGO test framework (BETA).
-
-           transpile-contract
-               Subcommand: Transpile a contract to another syntax (BETA).
-
-           transpile-expression
-               Subcommand: Transpile an expression to another syntax (BETA).
-
-    OPTIONS
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --version
-               Show version information. |} ] ;
-
-  run_ligo_good [ "compile-contract" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "compile" ; "parameter" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-compile-contract - Subcommand: Compile a contract.
+    compile parameters to a Michelson expression.
 
-    SYNOPSIS
-           ligo compile-contract [OPTION]... SOURCE_FILE ENTRY_POINT
+      ligo compile parameter SOURCE_FILE PARAMETER_EXPRESSION
 
-    DESCRIPTION
-           This sub-command compiles a contract to Michelson code. It expects a
-           source file and an entrypoint function that has the type of a
-           contract: "parameter * storage -> operations list * storage".
+    This sub-command compiles a parameter for a given contract to a Michelson expression. The resulting Michelson expression can be passed as an argument in a transaction which calls a contract.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+      [--amount INT]               the tezos amount the Michelson interpreter will
+                                   use for the transaction.
+      [--balance INT]              the balance the Michelson interpreter will use
+                                   for the contract balance.
+      [--display-format format]    the format that will be used by the CLI.
+                                   Available formats are 'dev', 'json', and
+                                   'human-readable' (default). When human-readable
+                                   lacks details (we are still tweaking it), please
+                                   contact us and use another format in the
+                                   meanwhile.
+                                   (alias: --format)
+      [--michelson-format format]  is the format that will be used by
+                                   compile-contract for the resulting Michelson.
+                                   Available formats are 'text' (default), 'json'
+                                   and 'hex'.
+      [--no-warn]                  disable warning messages
+      [--now TIMESTAMP]            the NOW value the Michelson interpreter will use
+                                   (e.g. '2000-01-01T10:10:10Z')
+      [--output-file FILENAME]     if used, prints the output into the specified
+                                   file instead of stdout
+                                   (alias: -o)
+      [--sender ADDRESS]           the sender the Michelson interpreter transaction
+                                   will use.
+      [--source ADDRESS]           the source the Michelson interpreter transaction
+                                   will use.
+      [--syntax SYNTAX]            the syntax that will be used. Currently supported
+                                   syntaxes are "pascaligo", "cameligo",
+                                   "reasonligo" and "jsligo". By default, the syntax
+                                   is guessed from the extension (.ligo, .mligo,
+                                   .religo, and .jsligo respectively).
+                                   (alias: -s)
+      [--werror]                   treat warnings as errors
+      [-e ENTRY-POINT]             the entry-point that will be compiled.
+                                   (alias: --entry-point)
+      [-p PROTOCOL]                choose protocol's types/values pre-loaded into
+                                   the LIGO environment (edo ,
+                                   hangzhou). By default, the current protocol (edo)
+                                   will be used
+                                   (alias: --protocol)
+      [-help]                      print this help text and exit
+                                   (alias: -?)
 
-    OPTIONS
-           --disable-michelson-typechecking
-               disable Michelson typecking, this might produce ill-typed
-               Michelson code.
+    (src/command.ml.Exit_called (status 0)) |} ]
 
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --michelson-format=MICHELSON_FORMAT (absent=text)
-               MICHELSON_FORMAT is the format that will be used by
-               compile-contract for the resulting Michelson. Available formats
-               are 'text' (default), 'json' and 'hex'.
-
-           --output-file=OUTPUT_FILE, --output=OUTPUT_FILE
-               OUTPUT_FILE if used, prints the output into the specified file
-               instead of stdout
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "compile-parameter" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "compile"; "storage" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-compile-parameter - Subcommand: Compile parameters to a Michelson
-           expression.
+    compile an initial storage in LIGO syntax to a Michelson expression.
 
-    SYNOPSIS
-           ligo compile-parameter [OPTION]... SOURCE_FILE ENTRY_POINT
-           PARAMETER_EXPRESSION
+      ligo compile storage SOURCE_FILE STORAGE_EXPRESSION
 
-    DESCRIPTION
-           This sub-command compiles a parameter for a given contract to a
-           Michelson expression. The resulting Michelson expression can be passed
-           as an argument in a transaction which calls a contract.
+    This sub-command compiles an initial storage for a given contract to a Michelson expression. The resulting Michelson expression can be passed as an argument in a transaction which originates a contract.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           PARAMETER_EXPRESSION (required)
-               PARAMETER_EXPRESSION is the expression that will be compiled.
+      [--amount INT]               the tezos amount the Michelson interpreter will
+                                   use for the transaction.
+      [--balance INT]              the balance the Michelson interpreter will use
+                                   for the contract balance.
+      [--display-format format]    the format that will be used by the CLI.
+                                   Available formats are 'dev', 'json', and
+                                   'human-readable' (default). When human-readable
+                                   lacks details (we are still tweaking it), please
+                                   contact us and use another format in the
+                                   meanwhile.
+                                   (alias: --format)
+      [--michelson-format format]  is the format that will be used by
+                                   compile-contract for the resulting Michelson.
+                                   Available formats are 'text' (default), 'json'
+                                   and 'hex'.
+      [--no-warn]                  disable warning messages
+      [--now TIMESTAMP]            the NOW value the Michelson interpreter will use
+                                   (e.g. '2000-01-01T10:10:10Z')
+      [--output-file FILENAME]     if used, prints the output into the specified
+                                   file instead of stdout
+                                   (alias: -o)
+      [--sender ADDRESS]           the sender the Michelson interpreter transaction
+                                   will use.
+      [--source ADDRESS]           the source the Michelson interpreter transaction
+                                   will use.
+      [--syntax SYNTAX]            the syntax that will be used. Currently supported
+                                   syntaxes are "pascaligo", "cameligo",
+                                   "reasonligo" and "jsligo". By default, the syntax
+                                   is guessed from the extension (.ligo, .mligo,
+                                   .religo, and .jsligo respectively).
+                                   (alias: -s)
+      [--werror]                   treat warnings as errors
+      [-e ENTRY-POINT]             the entry-point that will be compiled.
+                                   (alias: --entry-point)
+      [-p PROTOCOL]                choose protocol's types/values pre-loaded into
+                                   the LIGO environment (edo ,
+                                   hangzhou). By default, the current protocol (edo)
+                                   will be used
+                                   (alias: --protocol)
+      [-help]                      print this help text and exit
+                                   (alias: -?)
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+    (src/command.ml.Exit_called (status 0)) |} ]
 
-    OPTIONS
-           --amount=AMOUNT (absent=0)
-               AMOUNT is the amount the Michelson interpreter will use for the
-               transaction.
-
-           --balance=BALANCE (absent=0)
-               BALANCE is the balance the Michelson interpreter will use for the
-               contract balance.
-
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --michelson-format=MICHELSON_FORMAT (absent=text)
-               MICHELSON_FORMAT is the format that will be used by
-               compile-contract for the resulting Michelson. Available formats
-               are 'text' (default), 'json' and 'hex'.
-
-           --now=NOW
-               NOW is the NOW value the Michelson interpreter will use (e.g.
-               '2000-01-01T10:10:10Z')
-
-           --output-file=OUTPUT_FILE, --output=OUTPUT_FILE
-               OUTPUT_FILE if used, prints the output into the specified file
-               instead of stdout
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --sender=SENDER
-               SENDER is the sender the Michelson interpreter transaction will
-               use.
-
-           --source=SOURCE
-               SOURCE is the source the Michelson interpreter transaction will
-               use.
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "compile-storage" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "run" ; "dry-run" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-compile-storage - Subcommand: Compile an initial storage in LIGO
-           syntax to a Michelson expression.
+    run a smart-contract with the given storage and input.
 
-    SYNOPSIS
-           ligo compile-storage [OPTION]... SOURCE_FILE ENTRY_POINT
-           STORAGE_EXPRESSION
+      ligo run dry-run SOURCE_FILE PARAMETER_EXPRESSION STORAGE_EXPRESSION
 
-    DESCRIPTION
-           This sub-command compiles an initial storage for a given contract to a
-           Michelson expression. The resulting Michelson expression can be passed
-           as an argument in a transaction which originates a contract.
+    This sub-command runs a LIGO contract on a given storage and parameter. The context is initialized from a source file where the contract is implemented. The interpretation is done using Michelson's interpreter.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+      [--amount INT]             the tezos amount the Michelson interpreter will use
+                                 for the transaction.
+      [--balance INT]            the balance the Michelson interpreter will use for
+                                 the contract balance.
+      [--display-format format]  the format that will be used by the CLI. Available
+                                 formats are 'dev', 'json', and 'human-readable'
+                                 (default). When human-readable lacks details (we
+                                 are still tweaking it), please contact us and use
+                                 another format in the meanwhile.
+                                 (alias: --format)
+      [--no-warn]                disable warning messages
+      [--now TIMESTAMP]          the NOW value the Michelson interpreter will use
+                                 (e.g. '2000-01-01T10:10:10Z')
+      [--sender ADDRESS]         the sender the Michelson interpreter transaction
+                                 will use.
+      [--source ADDRESS]         the source the Michelson interpreter transaction
+                                 will use.
+      [--syntax SYNTAX]          the syntax that will be used. Currently supported
+                                 syntaxes are "pascaligo", "cameligo", "reasonligo"
+                                 and "jsligo". By default, the syntax is guessed
+                                 from the extension (.ligo, .mligo, .religo, and
+                                 .jsligo respectively).
+                                 (alias: -s)
+      [--werror]                 treat warnings as errors
+      [-e ENTRY-POINT]           the entry-point that will be compiled.
+                                 (alias: --entry-point)
+      [-p PROTOCOL]              choose protocol's types/values pre-loaded into the
+                                 LIGO environment (edo ,
+                                 hangzhou). By default, the current protocol (edo)
+                                 will be used
+                                 (alias: --protocol)
+      [-help]                    print this help text and exit
+                                 (alias: -?)
 
-           STORAGE_EXPRESSION (required)
-               STORAGE_EXPRESSION is the expression that will be compiled.
+    (src/command.ml.Exit_called (status 0)) |} ]
 
-    OPTIONS
-           --amount=AMOUNT (absent=0)
-               AMOUNT is the amount the Michelson interpreter will use for the
-               transaction.
-
-           --balance=BALANCE (absent=0)
-               BALANCE is the balance the Michelson interpreter will use for the
-               contract balance.
-
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --michelson-format=MICHELSON_FORMAT (absent=text)
-               MICHELSON_FORMAT is the format that will be used by
-               compile-contract for the resulting Michelson. Available formats
-               are 'text' (default), 'json' and 'hex'.
-
-           --now=NOW
-               NOW is the NOW value the Michelson interpreter will use (e.g.
-               '2000-01-01T10:10:10Z')
-
-           --output-file=OUTPUT_FILE, --output=OUTPUT_FILE
-               OUTPUT_FILE if used, prints the output into the specified file
-               instead of stdout
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --sender=SENDER
-               SENDER is the sender the Michelson interpreter transaction will
-               use.
-
-           --source=SOURCE
-               SOURCE is the source the Michelson interpreter transaction will
-               use.
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "dry-run" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "run" ; "evaluate-call" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-dry-run - Subcommand: Run a smart-contract with the given storage
-           and input.
+    run a function with the given parameter.
 
-    SYNOPSIS
-           ligo dry-run [OPTION]... SOURCE_FILE ENTRY_POINT PARAMETER_EXPRESSION
-           STORAGE_EXPRESSION
+      ligo run evaluate-call SOURCE_FILE PARAMETER_EXPRESSION
 
-    DESCRIPTION
-           This sub-command runs a LIGO contract on a given storage and
-           parameter. The context is initialized from a source file where the
-           contract is implemented. The interpretation is done using Michelson's
-           interpreter.
+    This sub-command runs a LIGO function on a given argument. The context is initialized from a source file where the function is implemented. The interpretation is done using Michelson's interpreter.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           PARAMETER_EXPRESSION (required)
-               PARAMETER_EXPRESSION is the expression that will be compiled.
+      [--amount INT]             the tezos amount the Michelson interpreter will use
+                                 for the transaction.
+      [--balance INT]            the balance the Michelson interpreter will use for
+                                 the contract balance.
+      [--display-format format]  the format that will be used by the CLI. Available
+                                 formats are 'dev', 'json', and 'human-readable'
+                                 (default). When human-readable lacks details (we
+                                 are still tweaking it), please contact us and use
+                                 another format in the meanwhile.
+                                 (alias: --format)
+      [--no-warn]                disable warning messages
+      [--now TIMESTAMP]          the NOW value the Michelson interpreter will use
+                                 (e.g. '2000-01-01T10:10:10Z')
+      [--sender ADDRESS]         the sender the Michelson interpreter transaction
+                                 will use.
+      [--source ADDRESS]         the source the Michelson interpreter transaction
+                                 will use.
+      [--syntax SYNTAX]          the syntax that will be used. Currently supported
+                                 syntaxes are "pascaligo", "cameligo", "reasonligo"
+                                 and "jsligo". By default, the syntax is guessed
+                                 from the extension (.ligo, .mligo, .religo, and
+                                 .jsligo respectively).
+                                 (alias: -s)
+      [--werror]                 treat warnings as errors
+      [-e ENTRY-POINT]           the entry-point that will be compiled.
+                                 (alias: --entry-point)
+      [-p PROTOCOL]              choose protocol's types/values pre-loaded into the
+                                 LIGO environment (edo ,
+                                 hangzhou). By default, the current protocol (edo)
+                                 will be used
+                                 (alias: --protocol)
+      [-help]                    print this help text and exit
+                                 (alias: -?)
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+    (src/command.ml.Exit_called (status 0)) |} ]
 
-           STORAGE_EXPRESSION (required)
-               STORAGE_EXPRESSION is the expression that will be compiled.
 
-    OPTIONS
-           --amount=AMOUNT (absent=0)
-               AMOUNT is the amount the Michelson interpreter will use for the
-               transaction.
-
-           --balance=BALANCE (absent=0)
-               BALANCE is the balance the Michelson interpreter will use for the
-               contract balance.
-
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --now=NOW
-               NOW is the NOW value the Michelson interpreter will use (e.g.
-               '2000-01-01T10:10:10Z')
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --sender=SENDER
-               SENDER is the sender the Michelson interpreter transaction will
-               use.
-
-           --source=SOURCE
-               SOURCE is the source the Michelson interpreter transaction will
-               use.
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "run-function" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "run" ; "evaluate-expr" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-run-function - Subcommand: Run a function with the given
-           parameter.
+    evaluate a given definition.
 
-    SYNOPSIS
-           ligo run-function [OPTION]... SOURCE_FILE ENTRY_POINT
-           PARAMETER_EXPRESSION
+      ligo run evaluate-expr SOURCE_FILE
 
-    DESCRIPTION
-           This sub-command runs a LIGO function on a given argument. The context
-           is initialized from a source file where the function is implemented.
-           The interpretation is done using Michelson's interpreter.
+    This sub-command evaluates a LIGO definition. The context is initialized from a source file where the definition is written. The interpretation is done using a Michelson interpreter.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           PARAMETER_EXPRESSION (required)
-               PARAMETER_EXPRESSION is the expression that will be compiled.
+      [--amount INT]             the tezos amount the Michelson interpreter will use
+                                 for the transaction.
+      [--balance INT]            the balance the Michelson interpreter will use for
+                                 the contract balance.
+      [--display-format format]  the format that will be used by the CLI. Available
+                                 formats are 'dev', 'json', and 'human-readable'
+                                 (default). When human-readable lacks details (we
+                                 are still tweaking it), please contact us and use
+                                 another format in the meanwhile.
+                                 (alias: --format)
+      [--no-warn]                disable warning messages
+      [--now TIMESTAMP]          the NOW value the Michelson interpreter will use
+                                 (e.g. '2000-01-01T10:10:10Z')
+      [--sender ADDRESS]         the sender the Michelson interpreter transaction
+                                 will use.
+      [--source ADDRESS]         the source the Michelson interpreter transaction
+                                 will use.
+      [--syntax SYNTAX]          the syntax that will be used. Currently supported
+                                 syntaxes are "pascaligo", "cameligo", "reasonligo"
+                                 and "jsligo". By default, the syntax is guessed
+                                 from the extension (.ligo, .mligo, .religo, and
+                                 .jsligo respectively).
+                                 (alias: -s)
+      [--werror]                 treat warnings as errors
+      [-e ENTRY-POINT]           the entry-point that will be compiled.
+                                 (alias: --entry-point)
+      [-p PROTOCOL]              choose protocol's types/values pre-loaded into the
+                                 LIGO environment (edo ,
+                                 hangzhou). By default, the current protocol (edo)
+                                 will be used
+                                 (alias: --protocol)
+      [-help]                    print this help text and exit
+                                 (alias: -?)
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+    (src/command.ml.Exit_called (status 0)) |} ]
 
-    OPTIONS
-           --amount=AMOUNT (absent=0)
-               AMOUNT is the amount the Michelson interpreter will use for the
-               transaction.
-
-           --balance=BALANCE (absent=0)
-               BALANCE is the balance the Michelson interpreter will use for the
-               contract balance.
-
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --now=NOW
-               NOW is the NOW value the Michelson interpreter will use (e.g.
-               '2000-01-01T10:10:10Z')
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --sender=SENDER
-               SENDER is the sender the Michelson interpreter transaction will
-               use.
-
-           --source=SOURCE
-               SOURCE is the source the Michelson interpreter transaction will
-               use.
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "evaluate-value" ; "--help" ] ;
+let%expect_test _ =
+  run_ligo_good [ "compile" ; "expression" ; "-help" ] ;
   [%expect {|
-    NAME
-           ligo-evaluate-value - Subcommand: Evaluate a given definition.
+    compile to a Michelson value.
 
-    SYNOPSIS
-           ligo evaluate-value [OPTION]... SOURCE_FILE ENTRY_POINT
+      ligo compile expression SYNTAX _EXPRESSION
 
-    DESCRIPTION
-           This sub-command evaluates a LIGO definition. The context is
-           initialized from a source file where the definition is written. The
-           interpretation is done using Michelson's interpreter.
+    This sub-command compiles a LIGO expression to a Michelson value. It works by compiling the LIGO expression to a Michelson expression and then interpreting it using Michelson's interpreter.
 
-    ARGUMENTS
-           ENTRY_POINT (required)
-               ENTRY_POINT is entry-point that will be compiled.
+    === flags ===
 
-           SOURCE_FILE (required)
-               SOURCE_FILE is the path to the smart contract file.
+      [--display-format format]    the format that will be used by the CLI.
+                                   Available formats are 'dev', 'json', and
+                                   'human-readable' (default). When human-readable
+                                   lacks details (we are still tweaking it), please
+                                   contact us and use another format in the
+                                   meanwhile.
+                                   (alias: --format)
+      [--init-file FILENAME]       the path to the smart contract file to be used
+                                   for context initialization.
+      [--michelson-format format]  is the format that will be used by
+                                   compile-contract for the resulting Michelson.
+                                   Available formats are 'text' (default), 'json'
+                                   and 'hex'.
+      [--no-warn]                  disable warning messages
+      [--werror]                   treat warnings as errors
+      [--without-run]              disable running of compiled expression.
+      [-p PROTOCOL]                choose protocol's types/values pre-loaded into
+                                   the LIGO environment (edo ,
+                                   hangzhou). By default, the current protocol (edo)
+                                   will be used
+                                   (alias: --protocol)
+      [-help]                      print this help text and exit
+                                   (alias: -?)
 
-    OPTIONS
-           --amount=AMOUNT (absent=0)
-               AMOUNT is the amount the Michelson interpreter will use for the
-               transaction.
-
-           --balance=BALANCE (absent=0)
-               BALANCE is the balance the Michelson interpreter will use for the
-               contract balance.
-
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --now=NOW
-               NOW is the NOW value the Michelson interpreter will use (e.g.
-               '2000-01-01T10:10:10Z')
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           -s SYNTAX, --syntax=SYNTAX (absent=auto)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo", "reasonligo" and "jsligo".
-               By default, the syntax is guessed from the extension (.ligo,
-               .mligo, .religo, and .jsligo respectively).
-
-           --sender=SENDER
-               SENDER is the sender the Michelson interpreter transaction will
-               use.
-
-           --source=SOURCE
-               SOURCE is the source the Michelson interpreter transaction will
-               use.
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
-
-  run_ligo_good [ "compile-expression" ; "--help" ] ;
-  [%expect {|
-    NAME
-           ligo-compile-expression - Subcommand: Compile to a Michelson value.
-
-    SYNOPSIS
-           ligo compile-expression [OPTION]... SYNTAX _EXPRESSION
-
-    DESCRIPTION
-           This sub-command compiles a LIGO expression to a Michelson value. It
-           works by compiling the LIGO expression to a Michelson expression and
-           then interpreting it using Michelson's interpreter.
-
-    ARGUMENTS
-           _EXPRESSION (required)
-               _EXPRESSION is the expression that will be compiled.
-
-           SYNTAX (required)
-               SYNTAX is the syntax that will be used. Currently supported
-               syntaxes are "pascaligo", "cameligo" and "reasonligo". By default,
-               the syntax is guessed from the extension (.ligo, .mligo, .religo,
-               .jsligo respectively).
-
-    OPTIONS
-           --format=DISPLAY_FORMAT, --display-format=DISPLAY_FORMAT
-           (absent=human-readable)
-               DISPLAY_FORMAT is the format that will be used by the CLI.
-               Available formats are 'dev', 'json', and 'human-readable'
-               (default). When human-readable lacks details (we are still
-               tweaking it), please contact us and use another format in the
-               meanwhile.
-
-           --help[=FMT] (default=auto)
-               Show this help in format FMT. The value FMT must be one of `auto',
-               `pager', `groff' or `plain'. With `auto', the format is `pager` or
-               `plain' whenever the TERM env var is `dumb' or undefined.
-
-           --infer
-               enable type inference
-
-           --init-file=INIT_FILE
-               INIT_FILE is the path to smart contract file to be used for
-               context initialization.
-
-           --michelson-format=MICHELSON_FORMAT (absent=text)
-               MICHELSON_FORMAT is the format that will be used by
-               compile-contract for the resulting Michelson. Available formats
-               are 'text' (default), 'json' and 'hex'.
-
-           -p PROTOCOL_VERSION, --protocol=PROTOCOL_VERSION (absent=current)
-               PROTOCOL_VERSION will decide protocol's types/values pre-loaded
-               into the LIGO environment (edo). By default, the current protocol
-               (edo) will be used
-
-           --version
-               Show version information.
-
-           --warn=BOOL (absent=true)
-               BOOL indicates whether warning messages should be printed in
-               stderr or not
-
-           --werror=BOOL (absent=false)
-               BOOL indicates whether warning messages should be treated as
-               errors or not |} ] ;
+    (src/command.ml.Exit_called (status 0)) |} ] ;

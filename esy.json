@@ -2,7 +2,6 @@
   "name": "ligo",
   "version": "0.31.0",
   "esy": {
-    "build": "dune build -p #{self.name}",
     "release": {
       "bin": ["ligo"],
       "includePackages": [
@@ -14,395 +13,409 @@
         "esy-gmp"
       ],
       "rewritePrefix": true
-    },
+    }
+  },
+  "source": "./ligo.opam",
+  "override": {
+    "build": "dune build -p ligo",
     "buildEnv": {
       "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-    }
-  },
-  "exportedEnv": {
-    "LD_LIBRARY_PATH": {
-      "val": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}",
-      "scope": "global"
     },
-    "DYLD_LIBRARY_PATH": {
-      "val": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $DYLD_LIBRARY_PATH}",
-      "scope": "global"
-    }
-  },
-  "license": "MIT",
-  "dependencies": {
-    "ocaml": ">= 4.12.0",
-    "@opam/UnionFind": "*",
-    "@opam/Preprocessor": "*",
-    "@opam/ParserLib": "*",
-    "@opam/LexerLib": "*",
-    "@opam/ligo_008_PtEdo2Zk_test_helpers": "*",
-    "@opam/proto-alpha-utils": "*",
-    "@opam/ppx_let": "*",
-    "@opam/tezos-utils": "*",
-    "@opam/dune": ">= 2.9.1",
-    "@opam/hex": ">= 1.4.0",
-    "@opam/menhir": "20211012",
-    "@opam/ocamlgraph": ">= 2.0.0",
-    "@opam/coq": "8.13.1",
-    "@opam/ppx_deriving": ">= 5.2.1",
-    "@opam/ppx_deriving_yojson": ">= 3.6.1",
-    "@opam/ppx_expect": "v0.14.1",
-    "@opam/yojson": ">= 1.7.0",
-    "@opam/alcotest": ">= 1.0",
-    "@opam/getopt": "20120615",
-    "@opam/terminal_size": ">= 0.1.4",
-    "@opam/pprint": "20200410",
-    "@opam/linenoise": ">= 1.3.1",
-    "@opam/qcheck": ">= 0.17",
-    "@opam/ocaml-migrate-parsetree": ">= 2.1.0",
-    "@opam/lwt": ">= 5.4.2",
-    "@opam/bisect_ppx": ">= 2.5.0",
-    "@opam/alcotest-lwt": "*",
-    "@opam/data-encoding": "*",
-    "@opam/lwt_log": "*",
-    "@opam/ringo": "*",
-    "@opam/ringo-lwt": "*",
-    "@opam/ipaddr": "*",
-    "@opam/ptime": "*",
-    "@opam/mtime": "*",
-    "@opam/secp256k1-internal": "*",
-    "@opam/resto-directory": "*",
-    "@opam/hacl-star": "*",
-    "@opam/hacl-star-raw": "*",
-    "@opam/irmin-pack": "*",
-    "@opam/tezos-rust-libs": "*",
-    "@opam/sexplib": "v0.14.0",
-    "@opam/irmin": "2.7.2",
-    "@opam/domain-name": "0.3.0",
-    "@opam/qcheck-alcotest": "*",
-    "@opam/lwt-canceler": "*",
-    "@opam/bls12-381": "*",
-    "@opam/bls12-381-unix": "*",
-    "@opam/bls12-381-legacy": "*",
-    "@opam/ocaml-recovery-parser": "0.1",
-    "@opam/zarith": "1.11",
-    "@opam/ctypes": "*"
-  },
-  "devDependencies": {
-    "@opam/ocaml-lsp-server": "1.4.1",
-    "@opam/ocamlformat": "0.19.0"
-  },
-  "resolutions": {
-    "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#7a759aed307f986d43006c50b8ced677e18b5a6d",
-    "@esy-ocaml/libffi": "ManasJayanth/esy-libffi:esy.json#41698aeda66c004df26c0c1d80a191503bada03d",
-    "@opam/conf-libffi": {
-      "source": "no-source:",
-      "override": {
-        "dependencies": {
-          "@esy-ocaml/libffi": "*"
-        }
+    "exportedEnv": {
+      "LD_LIBRARY_PATH": {
+        "val": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}",
+        "scope": "global"
+      },
+      "DYLD_LIBRARY_PATH": {
+        "val": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $DYLD_LIBRARY_PATH}",
+        "scope": "global"
       }
     },
-    "@opam/conf-libev": {
-      "source": "no-source:",
-      "override": {
-        "dependencies": {
-          "esy-libev": "*"
-        }
-      }
+    "license": "MIT",
+    "dependencies": {
+      "@opam/hacl-star-raw": "*",
+      "@opam/tezos-rust-libs": "*",
+      "esy-libev": "*",
+      "@opam/tezos-011-PtHangz2-test-helpers": "*",
+      "@opam/tezos-client-011-PtHangz2": "*",
+      "@esy-ocaml/libffi": "*"
     },
-    "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
-      "version": "opam:8.2",
-      "override": {
-        "build": [
-          ["rm", "-r", "vendors"],
-          [
-            "env",
-            "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
-            "dune",
-            "build",
-            "-p",
-            "tezos-embedded-protocol-008-PtEdo2Zk",
-            "-j",
-            "4"
-          ],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.install",
-            "./"
-          ]
-        ],
-        "buildEnvOverride": {
-          "DYLD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $DYLD_LIBRARY_PATH}",
-          "LD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}"
-        },
-        "dependencies": {
-          "@esy-ocaml/libffi": "*",
-          "@opam/hacl-star-raw": "*",
-          "esy-libev": "*"
-        }
-      }
+    "devDependencies": {
+      "@opam/ocaml-lsp-server": "*"
     },
-    "esy-libev": "esy-packages/libev:package.json#0817b2d",
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
-    "@opam/conduit-lwt-unix": "4.0.1",
-    "@opam/hacl-star": "0.3.2",
-    "@opam/hacl-star-raw": {
-      "version": "opam:0.3.2",
-      "override": {
-        "exportedEnv": {
-          "DYLD_LIBRARY_PATH": {
-            "scope": "global",
-            "val": "#{self.lib / 'hacl-star-raw'}:$DYLD_LIBRARY_PATH"
-          },
-          "LD_LIBRARY_PATH": {
-            "scope": "global",
-            "val": "#{self.lib / 'hacl-star-raw'}:$LD_LIBRARY_PATH"
+    "resolutions": {
+      "@opam/mtime": {
+        "version": "opam:1.3.0",
+        "override": {
+          "install": "esy-installer ./mtime.install"
+        }
+      },
+      "@opam/tezos-test-helpers": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_test/tezos-test-helpers.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/bls12-381": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
+      "@opam/bls12-381-unix": "ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
+      "@opam/bls12-381-gen": "opam:0.4.4",
+      "@opam/tezos-protocol-plugin-011-PtHangz2": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/secp256k1-internal": "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494",
+      "@opam/getopt": "ulrikstrid/ocaml-getopt:getopt.opam#645ab74",
+      "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#7a759aed307f986d43006c50b8ced677e18b5a6d",
+      "@esy-ocaml/libffi": "ManasJayanth/esy-libffi:esy.json#2c92299035449460bdf56f866866aea64702b95f",
+      "@opam/conf-libffi": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*"
           }
-        },
-        "buildEnv": {
-          "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$DYLD_LIBRARY_PATH",
-          "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$LD_LIBRARY_PATH"
-        },
-        "dependencies": {
-          "@opam/ctypes": "*",
-          "@opam/ctypes-foreign": "*",
-          "@opam/ocamlfind": "*",
-          "@esy-ocaml/libffi": "*"
-        },
-        "buildsInSource": true,
-        "build": [
-          ["sh", "-exc", "cd raw && ./configure"],
-          ["make", "-C", "raw"]
-        ],
-        "install": [["make", "-C", "raw", "install-hacl-star-raw"]]
-      }
-    },
-    "@opam/conf-rust": {
-      "source": "no-source:",
-      "override": {
-        "build": ["true"],
-        "dependencies": {
-          "esy-rustup": "*"
         }
-      }
-    },
-    "@opam/tezos-base": "8.2",
-    "@opam/bls12-381": {
-      "version": "opam:0.4.3",
-      "override": {
-        "buildsInSource": "_build",
-        "build": [["dune", "build", "-j", "4", "-p", "bls12-381", "@install"]],
-        "install": [["esy-installer", "bls12-381.install"]],
-        "buildEnvOverride": {
-          "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-        },
-        "dependencies": {
-          "@opam/tezos-rust-libs": "*"
+      },
+      "@opam/conf-libev": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "esy-libev": "*"
+          }
         }
-      }
-    },
-    "@opam/bls12-381-unix": {
-      "source": "https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3/ocaml-bls12-381-0.4.3.tar.gz#fe25427dbc9f01a676532c6e0c9d75a72bf42b51",
-      "override": {
-        "buildsInSource": "_build",
-        "build": [
-          ["dune", "build", "-j", "4", "-p", "bls12-381-unix", "@install"]
-        ],
-        "install": [["esy-installer", "bls12-381-unix.install"]],
-        "buildEnvOverride": {
-          "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-        },
-        "dependencies": {
-          "@opam/conf-rust": "*",
-          "@opam/dune": "*",
-          "@opam/ff-sig": "*",
-          "@opam/zarith": "*",
-          "@opam/ctypes": "*",
-          "@opam/ctypes-foreign": "*",
-          "@opam/bls12-381-gen": "*",
-          "@opam/bls12-381": "*",
-          "@opam/hex": "*",
-          "@opam/tezos-rust-libs": "*"
-        }
-      }
-    },
-    "@opam/tezos-protocol-compiler": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {
-          "@opam/bls12-381-unix": "*"
-        }
-      }
-    },
-    "@opam/tezos-rust-libs": "1.1",
-    "@opam/bls12-381-legacy": {
-      "source": "https://gitlab.com/dannywillems/ocaml-bls12-381/-/archive/0.4.3-legacy/ocaml-bls12-381-0.4.3-legacy.tar.bz2#sha512:0102db9dcab07c788291e9f799a4cf7a480716f18da6833587381e88ecc699d6e6bb0f44afef0ec7cd14a742d8ec6efc7900b45b0bcdeba409a89420465c0a25",
-      "override": {
-        "buildsInSource": "_build",
-        "build": [
-          ["dune", "build", "-j", "4", "-p", "bls12-381-legacy", "@install"]
-        ],
-        "install": [["esy-installer", "bls12-381-legacy.install"]],
-        "buildEnvOverride": {
-          "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-        },
-        "dependencies": {
-          "@opam/conf-rust": "*",
-          "@opam/dune": "*",
-          "@opam/ff-sig": "*",
-          "@opam/zarith": "*",
-          "@opam/ctypes": "*",
-          "@opam/ctypes-foreign": "*",
-          "@opam/bls12-381-gen": "*",
-          "@opam/tezos-rust-libs": "*"
-        }
-      }
-    },
-    "esy-rustup": "ManasJayanth/esy-rustup:esy.json#e07d864138ed41c5a151a4065063521d0588eb2a",
-    "@opam/simple-utils": "link:./vendors/ligo-utils/simple-utils/simple-utils.opam",
-    "@opam/tezos-utils": "link:./vendors/ligo-utils/tezos-utils/tezos-utils.opam",
-    "@opam/UnionFind": "link:./vendors/UnionFind/UnionFind.opam",
-    "@opam/Preprocessor": "link:./vendors/Preprocessor/Preprocessor.opam",
-    "@opam/ParserLib": "link:./vendors/ParserLib/ParserLib.opam",
-    "@opam/LexerLib": "link:./vendors/LexerLib/LexerLib.opam",
-    "@opam/tezos-memory-proto-alpha": "link:./vendors/ligo-utils/memory-proto-alpha/tezos-memory-proto-alpha.opam",
-    "@opam/RedBlackTrees": "link:./vendors/Red-Black_Trees/RedBlackTrees.opam",
-    "@opam/ligo_008_PtEdo2Zk_test_helpers": "link:./vendors/ligo-utils/ligo_008_PtEdo2Zk_test_helpers/ligo-008-PtEdo2Zk-test-helpers.opam",
-    "@opam/proto-alpha-utils": "link:./vendors/ligo-utils/proto-alpha-utils/proto-alpha-utils.opam",
-    "ocaml": "4.10.2000",
-    "@opam/zarith": "1.11",
-    "@opam/conf-hidapi": {
-      "source": "no-source:",
-      "override": {
-        "dependencies": {
-          "yarn-pkg-config": "*",
-          "esy-hidapi": "*"
-        }
-      }
-    },
-    "esy-hidapi": "esy-packages/esy-hidapi:esy.json#e21f930d6474e460fa5bb955a26505f6c3500c7a",
-    "libtool": "ManasJayanth/esy-libtool:esy.json#d6725b52f8d021539e92d182d29979951e706836",
-    "@opam/resto-cohttp-server": "0.5",
-    "@opam/resto-directory": "0.5",
-    "@opam/resto-cohttp": "0.5",
-    "@opam/resto": "0.5",
-    "@opam/resto-cohttp-client": "0.5",
-    "@opam/tezos-error-monad": "8.2",
-    "@opam/tezos-shell-services": "8.2",
-    "@opam/tezos-client-base": "8.2",
-    "@opam/irmin-pack": "2.2.0",
-    "@opam/irmin": "2.2.0",
-    "@opam/tezos-p2p-services": "8.2",
-    "@opam/tezos-version": "8.2",
-    "@opam/tezos-sapling": {
-      "version": "opam:8.2",
-      "override": {
-        "buildEnvOverride": {
-          "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
-        },
-        "dependencies": {
-          "@opam/tezos-crypto": "*",
-          "@opam/dune": "*",
-          "@opam/ctypes-foreign": "*",
-          "@esy-ocaml/substs": "*",
-          "@opam/tezos-rust-libs": "*"
-        }
-      }
-    },
-    "@opam/tezos-micheline": "8.2",
-    "@opam/tezos-stdlib-unix": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {}
-      }
-    },
-    "@opam/tezos-clic": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {
-          "@opam/tezos-lwt-result-stdlib": "*"
-        }
-      }
-    },
-    "@opam/tezos-crypto": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {
-          "@opam/bls12-381-unix": "*",
-          "@opam/tezos-error-monad": "*"
-        }
-      }
-    },
-    "@opam/tezos-protocol-compiler": {
-      "version": "opam:8.2",
-      "override": {
-        "build": [
-          "rm -rf vendors",
-          "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' src/lib_protocol_compiler/dune",
-          "dune build -j 4 -p tezos-protocol-compiler",
-          "mv src/lib_protocol_compiler/tezos-protocol-compiler.install ./"
-        ],
-        "dependencies": {
-          "@opam/bls12-381-unix": "*"
-        }
-      }
-    },
-    "@opam/tezos-protocol-008-PtEdo2Zk": {
-      "version": "opam:8.2",
-      "override": {
-        "build": [
-          ["rm", "-r", "vendors"],
-          [
-            "sed",
-            "-i.back",
-            "-e",
-            "s/-nostdlib//g",
-            "#{self.target_dir}/src/proto_008_PtEdo2Zk/lib_protocol/dune.inc"
+      },
+      "@opam/tezos-lwt-result-stdlib": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "build": [
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
+              "dune",
+              "build",
+              "-p",
+              "tezos-embedded-protocol-008-PtEdo2Zk",
+              "-j",
+              "4"
+            ]
           ],
-          ["dune", "build", "-p", "tezos-protocol-008-PtEdo2Zk", "-j", "4"],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.install",
-            "./"
-          ]
-        ]
-      }
-    },
-    "@opam/tezos-protocol-008-PtEdo2Zk-parameters": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {
-          "@esy-ocaml/libffi": "*",
-          "@opam/hacl-star-raw": "*"
-        },
-        "buildEnv": {
-          "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
-          "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
-        },
-        "build": [
-          ["rm", "-r", "vendors"],
-          "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' src/proto_008_PtEdo2Zk/lib_parameters/dune",
-          [
-            "env",
-            "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
-            "dune",
-            "build",
-            "-p",
-            "tezos-protocol-008-PtEdo2Zk-parameters",
-            "-j",
-            "4"
+          "buildEnvOverride": {
+            "DYLD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}"
+          },
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*",
+            "esy-libev": "*"
+          }
+        }
+      },
+      "esy-rustup": {
+        "source": "https://github.com/rust-lang/rustup/archive/refs/tags/1.24.2.tar.gz#979e8139734d39313b0147e0db3bfd2675f49507",
+        "override": {
+          "buildsInSource": true,
+          "buildEnv": {
+            "RUSTUP_USE_CURL": "1",
+            "CARGO_HOME": "#{self.target_dir}",
+            "RUSTUP_HOME": "#{self.target_dir / '.rustup'}"
+          },
+          "exportedEnv": {
+            "CARGO_HOME": {
+              "val": "#{self.install}",
+              "scope": "global"
+            },
+            "RUSTUP_HOME": {
+              "val": "#{self.install / '.rustup'}",
+              "scope": "global"
+            }
+          },
+          "build": [
+            [
+              "sh",
+              "-c",
+              "./rustup-init.sh -y --no-modify-path --default-toolchain 1.51 --profile minimal #{os == 'windows' ? '--default-host=x86_64-pc-windows-gnu' : ''}"
+            ]
           ],
-          [
-            "mv",
-            "src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.install",
-            "./"
+          "install": [
+            "cp #{self.target_dir}/bin/cargo-fmt#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/cargo-miri#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/cargo#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/clippy-driver#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rls#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rust-gdb#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rust-lldb#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustc#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustdoc#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustfmt#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp #{self.target_dir}/bin/rustup#{os == 'windows' ? '.exe': ''} #{self.bin}",
+            "cp -R #{self.target_dir}/.cargo #{self.install}/.cargo",
+            "cp -R #{self.target_dir}/.rustup #{self.install}/.rustup"
           ]
-        ]
-      }
-    },
-    "@opam/tezos-event-logging": {
-      "version": "opam:8.2",
-      "override": {
-        "dependencies": {
-          "@opam/tezos-error-monad": "*",
-          "@opam/lwt_log": "*"
+        }
+      },
+      "esy-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
+      "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+      "@opam/conduit-lwt-unix": "opam:4.0.1",
+      "@opam/hacl-star": "opam:0.4.1",
+      "@opam/hacl-star-raw": {
+        "version": "opam:0.4.1",
+        "override": {
+          "exportedEnv": {
+            "DYLD_LIBRARY_PATH": {
+              "scope": "global",
+              "val": "#{self.lib / 'hacl-star-raw'}:$DYLD_LIBRARY_PATH"
+            },
+            "LD_LIBRARY_PATH": {
+              "scope": "global",
+              "val": "#{self.lib / 'hacl-star-raw'}:$LD_LIBRARY_PATH"
+            }
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$DYLD_LIBRARY_PATH",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$LD_LIBRARY_PATH"
+          },
+          "dependencies": {
+            "@opam/ctypes": "*",
+            "@opam/ctypes-foreign": "*",
+            "@opam/ocamlfind": "*",
+            "@esy-ocaml/libffi": "*"
+          },
+          "buildsInSource": true,
+          "build": [
+            ["sh", "-exc", "cd raw && ./configure"],
+            ["make", "-C", "raw"]
+          ],
+          "install": [["make", "-C", "raw", "install-hacl-star-raw"]]
+        }
+      },
+      "@opam/conf-rust": {
+        "source": "no-source:",
+        "override": {
+          "build": ["true"],
+          "dependencies": {
+            "esy-rustup": "*"
+          }
+        }
+      },
+      "@opam/tezos-base": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_base/tezos-base.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-rust-libs": "opam:1.1",
+      "@opam/simple-utils": "link:./vendors/ligo-utils/simple-utils/simple-utils.opam",
+      "@opam/tezos-utils": "link:./vendors/ligo-utils/tezos-utils/tezos-utils.opam",
+      "@opam/UnionFind": "link:./vendors/UnionFind/UnionFind.opam",
+      "@opam/Preprocessor": "link:./vendors/Preprocessor/Preprocessor.opam",
+      "@opam/ParserLib": "link:./vendors/ParserLib/ParserLib.opam",
+      "@opam/LexerLib": "link:./vendors/LexerLib/LexerLib.opam",
+      "@opam/tezos-memory-proto-alpha": "link:./vendors/ligo-utils/memory-proto-alpha/tezos-memory-proto-alpha.opam",
+      "@opam/RedBlackTrees": "link:./vendors/Red-Black_Trees/RedBlackTrees.opam",
+      "@opam/zarith": "opam:1.12",
+      "@opam/proto-alpha-utils": "link:./vendors/ligo-utils/proto-alpha-utils/proto-alpha-utils.opam",
+      "@opam/conf-hidapi": {
+        "source": "no-source:",
+        "override": {
+          "dependencies": {
+            "yarn-pkg-config": "*",
+            "esy-hidapi": "*"
+          }
+        }
+      },
+      "esy-hidapi": "esy-packages/esy-hidapi:esy.json#e21f930d6474e460fa5bb955a26505f6c3500c7a",
+      "libtool": "ManasJayanth/esy-libtool:esy.json#d6725b52f8d021539e92d182d29979951e706836",
+      "@opam/tezos-error-monad": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_error_monad/tezos-error-monad.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@opam/tezos-lwt-result-stdlib": "*"
+          }
+        }
+      },
+      "@opam/tezos-shell-services": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_shell_services/tezos-shell-services.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-client-base": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base/tezos-client-base.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-client-base-unix": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_base_unix/tezos-client-base-unix.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-p2p-services": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p_services/tezos-p2p-services.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-version": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_version/tezos-version.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-sapling": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_sapling/tezos-sapling.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "buildEnvOverride": {
+            "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
+          },
+          "dependencies": {
+            "@opam/tezos-crypto": "*",
+            "@opam/dune": "*",
+            "@opam/ctypes-foreign": "*",
+            "@esy-ocaml/substs": "*",
+            "@opam/tezos-rust-libs": "*"
+          }
+        }
+      },
+      "@opam/tezos-micheline": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_micheline/tezos-micheline.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/linenoise": "DiningPhilosophersCo/ocaml-linenoise:linenoise.opam#1ba074f9bedbaa46280146d834b49064e4722695",
+      "@opam/tezos-stdlib": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib/tezos-stdlib.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-stdlib-unix": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_stdlib_unix/tezos-stdlib-unix.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {}
+        }
+      },
+      "@opam/tezos-clic": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_clic/tezos-clic.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@opam/tezos-lwt-result-stdlib": "*"
+          }
+        }
+      },
+      "@opam/tezos-crypto": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_crypto/tezos-crypto.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@opam/bls12-381-unix": "*",
+            "@opam/tezos-error-monad": "*"
+          }
+        }
+      },
+      "@opam/tezos-protocol-compiler": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_compiler/tezos-protocol-compiler.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "build": [
+            "sed -i -e 's/tezos-base.unix/tezos-base.unix bls12-381-unix/g' dune",
+            "dune build -j 4 -p tezos-protocol-compiler"
+          ],
+          "dependencies": {
+            "@opam/tezos-hacl-glue": "*",
+            "@opam/bls12-381-unix": "*"
+          }
+        }
+      },
+      "@opam/tezos-protocol-008-PtEdo2Zk": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_008_PtEdo2Zk/lib_protocol/tezos-protocol-008-PtEdo2Zk.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "build": [
+            ["sed", "-i.back", "-e", "s/-nostdlib//g", "dune.inc"],
+            ["dune", "build", "-p", "tezos-protocol-008-PtEdo2Zk", "-j", "4"]
+          ]
+        }
+      },
+      "@opam/tezos-protocol-008-PtEdo2Zk-parameters": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*"
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+          },
+          "build": [
+            "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' dune",
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
+              "dune",
+              "build",
+              "-p",
+              "tezos-protocol-008-PtEdo2Zk-parameters",
+              "-j",
+              "4"
+            ]
+          ]
+        }
+      },
+      "@opam/tezos-event-logging": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_event_logging/tezos-event-logging.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@opam/tezos-error-monad": "*",
+            "@opam/lwt_log": "*"
+          }
+        }
+      },
+      "@opam/tezos-rpc": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc/tezos-rpc.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-rpc-http": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-protocol-011-PtHangz2": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "build": [
+            [
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/replace#{os == 'windows' ? '.exe': ''}",
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/dune_protocol.template.v1",
+              "dune",
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/final_protocol_versions",
+              "011_PtHangz2"
+            ],
+            ["dune", "build", "-p", "tezos-protocol-011-PtHangz2", "-j", "4"]
+          ]
+        }
+      },
+      "@opam/tezos-protocol-011-PtHangzH": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "build": [
+            [
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/replace#{os == 'windows' ? '.exe': ''}",
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/dune_protocol.template.v1",
+              "dune",
+              "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/final_protocol_versions",
+              "011_PtHangz2"
+            ],
+            ["dune", "build", "-p", "tezos-protocol-011-PtHangz2", "-j", "4"]
+          ]
+        }
+      },
+      "@opam/PtHangz2-parameters": {
+        "source": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+        "override": {
+          "dependencies": {
+            "@esy-ocaml/libffi": "*",
+            "@opam/hacl-star-raw": "*",
+            "@opam/tezos-hacl-glue-unix": "*"
+          },
+          "buildEnv": {
+            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+          },
+          "build": [
+            [
+              "env",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
+              "dune",
+              "build",
+              "-p",
+              "PtHangz2-parameters",
+
+              "-j",
+              "4"
+            ]
+          ]
+        }
+      },
+      "@opam/tezos-client-011-PtHangzH": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-client-011-PtHangz2": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_client/tezos-client-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-011-PtHangz2-test-helpers": "git:https://gitlab.com/prometheansacrifice/tezos:src/proto_011_PtHangz2/lib_protocol/test/helpers/tezos-011-PtHangz2-test-helpers.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-hacl-glue": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/virtual/tezos-hacl-glue.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-protocol-environment-packer": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-packer.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-protocol-environment": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-protocol-environment-sigs": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-sigs.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-protocol-environment-structs": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_protocol_environment/tezos-protocol-environment-structs.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-proxy": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_proxy/tezos-proxy.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-context": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_context/tezos-context.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-hacl-glue-unix": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_hacl_glue/unix/tezos-hacl-glue-unix.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-mockup-registration": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-registration.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-p2p": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_p2p/tezos-p2p.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-mockup": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-mockup-commands": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup/tezos-mockup-commands.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-client-commands": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_client_commands/tezos-client-commands.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-signer-backends": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_backends/tezos-signer-backends.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-signer-services": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_signer_services/tezos-signer-services.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-mockup-proxy": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_mockup_proxy/tezos-mockup-proxy.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-workers": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_workers/tezos-workers.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-rpc-http-client-unix": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client-unix.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/tezos-rpc-http-client": "git:https://gitlab.com/prometheansacrifice/tezos:src/lib_rpc_http/tezos-rpc-http-client.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
+      "@opam/conf-gmp-powm-sec": {
+        "source": "no-source:",
+        "override": {
+          "build": "true"
+        }
+      },
+      "@opam/ocamlfind": "opam:1.9.1",
+      "@opam/conf-gmp": "opam:3",
+      "@opam/ocamlformat": {
+        "source": "no-source:",
+        "override": {
+          "build": "true"
         }
       }
     }

@@ -1,0 +1,6 @@
+(library
+ (name fuzz_jsligo)
+ (public_name ligo.fuzz.jsligo)
+ (instrumentation
+  (backend bisect_ppx))
+ (libraries fuzz_shared ligo_compile))

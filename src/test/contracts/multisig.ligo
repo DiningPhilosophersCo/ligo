@@ -31,7 +31,7 @@ type return is list (operation) * storage
 type parameter is CheckMessage of check_message_pt
 
 function check_message (const param : check_message_pt;
-                        const s : storage) : return is block {
+                        var s : storage) : return is block {
   var message : message := param.message;
 
   if param.counter =/= s.counter then
@@ -55,6 +55,8 @@ function check_message (const param : check_message_pt;
         }
       end
     };
+
+    var _ := keys;
 
     if valid < s.threshold then
       failwith ("Not enough signatures passed the check")

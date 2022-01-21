@@ -43,9 +43,11 @@ let is_string = function Token.String _ -> true | _ -> false
 let is_bytes  = function Token.Bytes _ -> true | _ -> false
 
 let is_hexa = function
-  Token.Constr
-    Region.{value="A"|"a"|"B"|"b"|"C"|"c"
-                 |"D"|"d"|"E"|"e"|"F"|"f"; _} -> true
+  Token.UIdent t -> 
+    (match t#payload with
+      "A"| "a"| "B"| "b"| "C"| "c" | "D"| "d"| "E"| "e"| "F"| "f" -> true
+    | _->  false
+    )
   | _ -> false
 
 let is_sym =

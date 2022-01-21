@@ -1,9 +1,9 @@
-open Trace
+open Simple_utils.Trace
 module Set = RedBlackTrees.PolySet
 
 module TYPE_VARIABLE_ABSTRACTION = Type_variable_abstraction.TYPE_VARIABLE_ABSTRACTION
 
-type ('selector_output , 'errors) propagator = 'selector_output -> (Ast_core.type_variable -> Ast_core.type_variable) -> (Ast_core.updates, 'errors) result
+type ('selector_output , 'errors) propagator = raise:'errors raise -> 'selector_output -> (Ast_core.type_variable -> Ast_core.type_variable) -> Ast_core.updates
 
 (* TODO: move this with the AST, probably? *)
 module Axioms = Axioms
@@ -20,7 +20,7 @@ module Opaque_type_variable = struct
   module Yojson       = Ast_core.Yojson
   module Misc         = Ast_core.Misc
   module Reasons      = Ast_core.Reasons
-  module Core         = Typesystem.Core
+  module Core         = Typesystem.Types
   module Axioms       = Axioms
   module Typelang     = Typelang
   module Errors       = Typer_common.Errors
@@ -75,7 +75,7 @@ type ('old, 'new_) merge_keys = {
 type ('state, 'a , 'b) normalizer = 'state -> 'a -> ('state * 'b PolySet.t)
 
 (* type normalizer_rm state a = state → a → MonadError typer_error state *)
-type ('state, 'a) normalizer_rm = 'state -> 'a -> ('state, Typer_common.Errors.typer_error) Trace.result
+type ('state, 'a) normalizer_rm = raise:Typer_common.Errors.typer_error raise -> 'state -> 'a -> 'state
 
 module INDEXER_PLUGIN_TYPE =
   functor
@@ -100,11 +100,12 @@ module INDEXER_PLUGIN_TYPE =
       (* Update the state when a constraint is removed *)
       (* TODO: check this API to see if we're giving too much flexibility to the plugin *)
       val remove_constraint :
+        raise:Type_variable_abstraction.Errors.typer_error raise ->
         (Format.formatter -> 'type_variable -> unit) ->
         (Type_variable.t -> 'type_variable) ->
         'type_variable t ->
         type_constraint_simpl ->
-        ('type_variable t, Type_variable_abstraction.Errors.typer_error) Trace.result
+        'type_variable t
       (* Update the state to merge entries of maps and sets of type
          variables.  *)
       val merge_aliases : ?debug:(Format.formatter -> 'new_ t -> unit) -> ('old, 'new_) merge_keys -> 'old t -> 'new_ t
@@ -155,12 +156,14 @@ module type Monad = sig
   type 'a t
   val return : 'a -> 'a t
   val bind : 'a t -> f:('a -> 'b t) -> 'b t
+  val (let*) : 'a t -> ('a -> 'b t) -> 'b t
 end
 
 module NoMonad = struct
   type 'a t = 'a
   let return x = x
   let bind x ~f = f x
+  let (let*)  x f = bind x ~f
 end
 
 (* type MappedFunction (t :: 🞰) (Plugin :: 🞰→🞰) =
@@ -169,9 +172,8 @@ module type Mapped_function = sig
   type extra_args
   module MakeInType : PerPluginType
   module MakeOutType : PerPluginType
-  module Monad : Monad
   module F(Indexer_plugin : INDEXER_PLUGIN_TYPE(Type_variable)(Opaque_type_variable).S) : sig
-    val f : string -> extra_args -> MakeInType(Indexer_plugin).t -> MakeOutType(Indexer_plugin).t Monad.t
+    val f : raise:Typer_common.Errors.typer_error raise -> string -> extra_args -> MakeInType(Indexer_plugin).t -> MakeOutType(Indexer_plugin).t
   end
 end
 
@@ -199,9 +201,10 @@ module type IndexerPlugins = sig
   module Map_indexer_plugins : functor (F : Mapped_function) ->
   sig
     val f :
+      raise: Typer_common.Errors.typer_error raise ->
       F.extra_args ->
       (Indexers_plugins_fields(F.MakeInType).flds) ->
-      (Indexers_plugins_fields(F.MakeOutType).flds F.Monad.t)
+      (Indexers_plugins_fields(F.MakeOutType).flds)
   end
 end
 
@@ -262,7 +265,7 @@ type ('plugin_states) typer_state = {
 }
 
 open Format
-open PP_helpers
+open Simple_utils.PP_helpers
 
 let pp_already_selected = fun printer ppf set ->
   let lst = (RedBlackTrees.PolySet.elements set) in
@@ -275,7 +278,7 @@ let pp_ex_propagator_state = fun ppf (Heuristic_state { plugin = { selector ; pr
 
 let json_already_selected = fun printer_json set : Yojson.Safe.t ->
   let lst = (RedBlackTrees.PolySet.elements set) in
-let list f lst = `List (List.map f lst) in
+let list f lst = `List (List.map ~f:f lst) in
     `List [`String "Set"; (list printer_json lst)]
 
 let json_ex_propagator_state = fun (Heuristic_state { plugin = { selector; propagator; printer=_ ; printer_json } ; already_selected }) : Yojson.Safe.t ->

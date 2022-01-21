@@ -1,3 +1,4 @@
+import { languages } from 'monaco-editor';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -8,7 +9,7 @@ import { Language } from '../../redux/types';
 import { Option, Select } from '../form/select';
 import { ShareComponent } from '../share';
 import { EditableTitleComponent } from './editable-title';
-import { MonacoComponent } from './monaco';
+import MonacoComponent from './monaco';
 
 const Container = styled.div`
   flex: 2;
@@ -67,13 +68,13 @@ export const EditorComponent = ({editorHeight}) => {
       return `Line ${cursorPosition.lineNumber}, Column ${cursorPosition.column}`
     }
   }
-  
 
   return (
     <Container>
       <Header>
         <LeftActions>
           <ShareComponent></ShareComponent>
+          {console.log('PPPP', language)}
           <StyledEditableTitleComponent
             id="editor-title"
             title={title}
@@ -92,7 +93,8 @@ export const EditorComponent = ({editorHeight}) => {
           >
             <Option value={Language.PascaLigo}>PascaLIGO</Option>
             <Option value={Language.CameLigo}>CameLIGO</Option>
-            <Option value={Language.ReasonLIGO}>ReasonLIGO</Option>
+            <Option value={Language.ReasonLigo}>ReasonLIGO</Option>
+            <Option value={Language.JsLigo}>JsLIGO</Option>
           </SelectLanguage>
         </LeftActions>
       </Header>

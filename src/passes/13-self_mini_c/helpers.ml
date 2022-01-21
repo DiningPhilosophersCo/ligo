@@ -1,163 +1,235 @@
+module Pair   = Simple_utils.Pair
+module Triple = Simple_utils.Triple
 open Mini_c
-open Trace
+open Simple_utils.Trace
 
-let rec fold_type_value : ('a -> type_expression -> ('a,_) result) -> 'a -> type_expression -> ('a,_) result = fun f init t ->
-  let self = fold_type_value f in
-  let%bind init' = f init t in
+let rec fold_type_value ~raise : ('a -> type_expression -> 'a) -> 'a -> type_expression -> 'a = fun f init t ->
+  let self = fold_type_value ~raise f in
+  let init = f init t in
   match t.type_content with
   | T_tuple ts ->
-    bind_fold_list self init' (List.map snd ts)
+    List.fold ~f:self ~init (List.map ~f:snd ts)
   | T_or ((_, a), (_, b))
   | T_function (a, b)
   | T_map (a, b)
   | T_big_map (a, b) ->
-     bind_fold_pair self init' (a, b)
+     Pair.fold ~f:self ~init (a, b)
   | T_list a
   | T_set a
   | T_contract a
   | T_option a ->
-     self init' a
+     self init a
   | T_base _ ->
-    ok init'
-  | T_sapling_transaction _ -> ok init
-  | T_sapling_state _ -> ok init
-  | T_ticket x -> self init' x
+    init
+  | T_sapling_transaction _ -> init
+  | T_sapling_state _ -> init
+  | T_ticket x -> self init x
 
-type ('a,'err) folder = 'a -> expression -> ('a,'err) result
-let rec fold_expression : ('a,'err) folder -> 'a -> expression -> ('a, 'err) result = fun f init e ->
-  let self = fold_expression f in 
-  let%bind init' = f init e in
+type ('a,'err) folder = raise:'err raise -> 'a -> expression -> 'a
+let rec fold_expression ~raise : ('a,'err) folder -> 'a -> expression -> 'a = fun f init e ->
+  let self = fold_expression ~raise f in 
+  let init = f ~raise init e in
   match e.content with
   | E_variable _
   | E_raw_michelson _
-  | E_literal _ -> ok init'
+  | E_literal _ -> init
   | E_constant (c) -> (
-      let%bind res = bind_fold_list self init' c.arguments in
-      ok res
+      let res = List.fold ~f:self ~init c.arguments in
+      res
   )
   | E_closure af -> (
-      let%bind res = self init' af.body in
-      ok res
+      let res = self init af.body in
+      res
   )
   | E_application farg -> (
-      let%bind res = bind_fold_pair self init' farg in 
-      ok res
+      let res = Pair.fold ~f:self ~init farg in 
+      res
   )
   | E_iterator (_, ((_ , _) , body) , exp) -> (
-      let%bind res = bind_fold_pair self init' (exp,body) in
-      ok res
+      let res = Pair.fold ~f:self ~init (exp,body) in
+      res
   )
   | E_fold (((_ , _) , body) , col , init) -> (
-      let%bind res = bind_fold_triple self init' (body,col,init) in
-      ok res
+      let res = Triple.fold ~f:self ~init (body,col,init) in
+      res
   )
   | E_fold_right (((_ , _) , body) , (col,_) , init) -> (
-      let%bind res = bind_fold_triple self init' (body,col,init) in
-      ok res
+      let res = Triple.fold ~f:self ~init (body,col,init) in
+      res
   )
   | E_if_bool cab -> (
-      let%bind res = bind_fold_triple self init' cab in
-      ok res
+      let res = Triple.fold ~f:self ~init cab in
+      res
   )
   | E_if_none (c, n, ((_, _) , s)) -> (
-      let%bind res = bind_fold_triple self init' (c,n,s) in
-      ok res
+      let res = Triple.fold ~f:self ~init (c,n,s) in
+      res
   )
   | E_if_cons (c, n, (((_, _) , (_, _)) , cons)) -> (
-      let%bind res = bind_fold_triple self init' (c,n,cons) in
-      ok res
+      let res = Triple.fold ~f:self ~init (c,n,cons) in
+      res
   )
   | E_if_left (c, ((_, _) , l), ((_, _) , r)) -> (
-      let%bind res = bind_fold_triple self init' (c,l,r) in
-      ok res
+      let res = Triple.fold ~f:self ~init (c,l,r) in
+      res
   )
   | E_let_in (expr, _inline , ((_, _) , body)) -> (        
-      let%bind res = bind_fold_pair self init' (expr,body) in
-      ok res
+      let res = Pair.fold ~f:self ~init (expr,body) in
+      res
   )
   | E_tuple exprs ->
-      bind_fold_list self init' exprs
+      List.fold ~f:self ~init exprs
   | E_let_tuple (expr, (_, body)) -> (
-      let%bind res = bind_fold_pair self init' (expr,body) in
-      ok res
+      let res = Pair.fold ~f:self ~init (expr,body) in
+      res
   )
   | E_proj (expr, _i, _n) ->
-      self init' expr
+      self init expr
   | E_update (expr, _i, update, _n) ->
-      bind_fold_pair self init' (expr, update)
+      Pair.fold ~f:self ~init (expr, update)
 
-type 'err mapper = expression -> (expression,'err) result
+type 'err mapper = raise:'err raise -> expression -> expression
 
-let rec map_expression : 'err mapper -> expression -> (expression, 'err) result = fun f e ->
-  let self = map_expression f in
-  let%bind e' = f e in
-  let return content = ok { e' with content } in
+let rec map_expression ~raise : 'err mapper -> expression -> expression = fun f e ->
+  let self = map_expression ~raise f in
+  let e' = f ~raise e in
+  let return content = { e' with content } in
   match e'.content with
   | E_variable _ | E_literal _ | E_raw_michelson _
     as em -> return em
   | E_constant (c) -> (
-      let%bind lst = bind_map_list self c.arguments in
+      let lst = List.map ~f:self c.arguments in
       return @@ E_constant {cons_name = c.cons_name; arguments = lst}
   )
   | E_closure af -> (
-      let%bind body = self af.body in
+      let body = self af.body in
       return @@ E_closure { af with body } 
   )
   | E_application farg -> (
-      let%bind farg' = bind_map_pair self farg in 
+      let farg' = Pair.map ~f:self farg in 
       return @@ E_application farg'
   )
   | E_iterator (s, ((name , tv) , body) , exp) -> (
-      let%bind (exp',body') = bind_map_pair self (exp,body) in
+      let (exp',body') = Pair.map ~f:self (exp,body) in
       return @@ E_iterator (s, ((name , tv) , body') , exp')
   )
   | E_fold (((name , tv) , body) , col , init) -> (
-      let%bind (body',col',init') = bind_map_triple self (body,col,init) in
-      return @@ E_fold (((name , tv) , body') , col', init')
+      let (body',col',init) = Triple.map ~f:self (body,col,init) in
+      return @@ E_fold (((name , tv) , body') , col', init)
   )
   | E_fold_right (((name , tv) , body) , (col,el_ty) , init) -> (
-      let%bind (body',col',init') = bind_map_triple self (body,col,init) in
-      return @@ E_fold_right (((name , tv) , body') , (col',el_ty), init')
+      let (body',col',init) = Triple.map ~f:self (body,col,init) in
+      return @@ E_fold_right (((name , tv) , body') , (col',el_ty), init)
   )
   | E_if_bool cab -> (
-      let%bind cab' = bind_map_triple self cab in
+      let cab' = Triple.map ~f:self cab in
       return @@ E_if_bool cab'
   )
   | E_if_none (c, n, ((name, tv) , s)) -> (
-      let%bind (c',n',s') = bind_map_triple self (c,n,s) in
+      let (c',n',s') = Triple.map ~f:self (c,n,s) in
       return @@ E_if_none (c', n', ((name, tv) , s'))
   )
   | E_if_cons (c, n, (((hd, hdtv) , (tl, tltv)) , cons)) -> (
-      let%bind (c',n',cons') = bind_map_triple self (c,n,cons) in
+      let (c',n',cons') = Triple.map ~f:self (c,n,cons) in
       return @@ E_if_cons (c', n', (((hd, hdtv) , (tl, tltv)) , cons'))
   )
   | E_if_left (c, ((name_l, tvl) , l), ((name_r, tvr) , r)) -> (
-      let%bind (c',l',r') = bind_map_triple self (c,l,r) in
+      let (c',l',r') = Triple.map ~f:self (c,l,r) in
       return @@ E_if_left (c', ((name_l, tvl) , l'), ((name_r, tvr) , r'))
   )
   | E_let_in (expr , inline , ((v , tv) , body)) -> (
-      let%bind (expr',body') = bind_map_pair self (expr,body) in
+      let (expr',body') = Pair.map ~f:self (expr,body) in
       return @@ E_let_in (expr', inline, ((v , tv) , body'))
   )
   | E_tuple exprs ->
-      let%bind exprs = bind_map_list self exprs in
+      let exprs = List.map ~f:self exprs in
       return @@ E_tuple exprs
   | E_let_tuple (expr, (xs, body)) -> (
-      let%bind (expr', body') = bind_map_pair self (expr, body) in
+      let (expr', body') = Pair.map ~f:self (expr, body) in
       return @@ E_let_tuple (expr', (xs, body'))
   )
   | E_proj (expr, i, n) ->
-      let%bind expr = self expr in
+      let expr = self expr in
       return @@ E_proj (expr, i, n)
   | E_update (expr, i, update, n) ->
-      let%bind expr = self expr in
-      let%bind update = self update in
+      let expr = self expr in
+      let update = self update in
       return @@ E_update (expr, i, update, n)
 
-let map_sub_level_expression : 'err mapper -> expression -> (expression , 'err) result = fun f e ->
+let map_sub_level_expression ~raise : 'err mapper -> expression -> expression = fun f e ->
   match e.content with
   | E_closure {binder ; body} ->
-    let%bind body = map_expression f body in
+    let body = map_expression ~raise f body in
     let content = E_closure {binder; body} in
-    ok @@ { e with content }
-  | _ -> ok e
+    { e with content }
+  | _ -> e
+
+type 'a fold_mapper = 'a -> expression -> bool * 'a * expression
+
+let rec fold_map_expression : 'a fold_mapper -> 'a -> expression -> 'a * expression = fun f a e ->
+  let self = fold_map_expression f in
+  let (continue, init,e') = f a e in
+  if (not continue) then (init,e')
+  else
+  let return content = { e' with content } in
+  match e'.content with
+  | E_literal _ | E_raw_michelson _ | E_variable _ as e' -> (init, return e')
+  | E_constant (c) -> (
+      let (res, args) = List.fold_map ~f:self ~init c.arguments in
+      (res, return @@ E_constant {c with arguments=args})
+  )
+  | E_closure { binder ; body } -> (
+   let (res, body) = self init body in
+   ( res, return @@ E_closure { binder ; body })
+  )
+  | E_application (lamb, args) -> (
+    let ab = (lamb, args) in
+    let (res,(lamb,args)) = Pair.fold_map ~f:self ~init ab in
+    (res, return @@ E_application (lamb, args))
+  )
+  | E_iterator (s, ((name , tv) , body) , exp) -> (
+      let (res, (exp',body')) = Pair.fold_map ~f:self ~init (exp,body) in
+      (res, return @@ E_iterator (s, ((name , tv) , body') , exp'))
+  )
+  | E_fold (((name , tv) , body) , col , init_) -> (
+      let (res, (body',col',init')) = Triple.fold_map ~f:self ~init (body,col,init_) in
+      (res, return @@ E_fold (((name , tv) , body') , col', init'))
+  )
+  | E_fold_right (((name , tv) , body) , (col,el_ty) , init_) -> (
+      let (res, (body',col',init')) = Triple.fold_map ~f:self ~init (body,col,init_) in
+      (res, return @@ E_fold_right (((name , tv) , body') , (col',el_ty), init'))
+  )
+  | E_if_bool cab -> (
+      let (res, cab') = Triple.fold_map ~f:self ~init cab in
+      (res, return @@ E_if_bool cab')
+  )
+  | E_if_none (c, n, ((name, tv) , s)) -> (
+      let (res, (c',n',s')) = Triple.fold_map ~f:self (c,n,s) ~init in
+      (res, return @@ E_if_none (c', n', ((name, tv) , s')))
+  )
+  | E_if_cons (c, n, (((hd, hdtv) , (tl, tltv)) , cons)) -> (
+      let (res, (c',n',cons')) = Triple.fold_map ~f:self ~init (c,n,cons) in
+      (res, return @@ E_if_cons (c', n', (((hd, hdtv) , (tl, tltv)) , cons')))
+  )
+  | E_if_left (c, ((name_l, tvl) , l), ((name_r, tvr) , r)) -> (
+      let (res, (c',l',r')) = Triple.fold_map ~f:self ~init (c,l,r) in
+      (res, return @@ E_if_left (c', ((name_l, tvl) , l'), ((name_r, tvr) , r')))
+  )
+  | E_let_in (expr , inline , ((v , tv) , body)) -> (
+      let (res, (expr',body')) = Pair.fold_map ~f:self ~init (expr,body) in
+      (res, return @@ E_let_in (expr', inline, ((v , tv) , body')))
+  )
+  | E_tuple exprs ->
+      let (res, exprs) = List.fold_map ~f:self ~init exprs in
+      (res, return @@ E_tuple exprs)
+  | E_let_tuple (expr, (xs, body)) -> (
+      let (res, (expr', body')) = Pair.fold_map ~f:self ~init (expr, body) in
+      (res, return @@ E_let_tuple (expr', (xs, body')))
+  )
+  | E_proj (expr, i, n) ->
+      let (res, expr) = self init expr in
+      (res, return @@ E_proj (expr, i, n))
+  | E_update (expr, i, update, n) ->
+      let (res, expr) = self init expr in
+      let (res, update) = self res update in
+      (res, return @@ E_update (expr, i, update, n))

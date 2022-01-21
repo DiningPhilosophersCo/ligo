@@ -55,15 +55,19 @@ module Tree_abstraction = struct
     | "Tezos.create_contract"    -> some_const C_CREATE_CONTRACT
     | "Tezos.transaction"        -> some_const C_CALL
     | "Tezos.set_delegate"       -> some_const C_SET_DELEGATE
+    | "Tezos.get_contract_with_error" -> some_const C_CONTRACT_WITH_ERROR
     | "Tezos.get_contract_opt"   -> some_const C_CONTRACT_OPT
     | "Tezos.get_entrypoint_opt" -> some_const C_CONTRACT_ENTRYPOINT_OPT
     | "Tezos.level"              -> some_const C_LEVEL
     | "Tezos.pairing_check"      -> some_const C_PAIRING_CHECK
+    | "Tezos.never"              -> some_const C_NEVER
+    | "Tezos.open_chest"         -> some_const C_OPEN_CHEST
+    | "Tezos.call_view"          -> some_const C_VIEW
 
     (* Sapling *)
     | "Tezos.sapling_empty_state" -> some_const C_SAPLING_EMPTY_STATE
     | "Tezos.sapling_verify_update" -> some_const C_SAPLING_VERIFY_UPDATE
-    
+
     (* Tickets *)
     | "Tezos.create_ticket" -> some_const C_TICKET
     | "Tezos.join_tickets" -> some_const C_JOIN_TICKET
@@ -77,6 +81,8 @@ module Tree_abstraction = struct
     | "Crypto.blake2b"  -> some_const C_BLAKE2b
     | "Crypto.sha256"   -> some_const C_SHA256
     | "Crypto.sha512"   -> some_const C_SHA512
+    | "Crypto.sha3"     -> some_const C_SHA3
+    | "Crypto.keccak"   -> some_const C_KECCAK
 
     (* Bytes module *)
 
@@ -85,6 +91,11 @@ module Tree_abstraction = struct
     | "Bytes.length" -> some_const C_SIZE
     | "Bytes.concat" -> some_const C_CONCAT
     | "Bytes.sub"    -> some_const C_SLICE
+
+    (* Options module *)
+
+    | "Option.unopt"            -> some_const C_UNOPT
+    | "Option.unopt_with_error" -> some_const C_UNOPT_WITH_ERROR
 
     (* List module *)
 
@@ -157,31 +168,63 @@ module Tree_abstraction = struct
     | "String.sub"      -> some_const C_SLICE
     | "String.concat"   -> some_const C_CONCAT
 
-    (* michelson pair/or type converter module *)
-
-    | "Layout.convert_to_right_comb" -> some_const C_CONVERT_TO_RIGHT_COMB
-    | "Layout.convert_to_left_comb" -> some_const C_CONVERT_TO_LEFT_COMB
-    | "Layout.convert_from_right_comb" -> some_const C_CONVERT_FROM_RIGHT_COMB
-    | "Layout.convert_from_left_comb" -> some_const C_CONVERT_FROM_LEFT_COMB
-
     (* Testing module *)
 
     | "Test.originate" -> some_const C_TEST_ORIGINATE
+    | "Test.originate_from_file" -> some_const C_TEST_ORIGINATE_FROM_FILE
     | "Test.set_now" -> some_const C_TEST_SET_NOW
     | "Test.set_source" -> some_const C_TEST_SET_SOURCE
     | "Test.set_baker" -> some_const C_TEST_SET_BAKER
-    | "Test.transfer" -> some_const C_TEST_EXTERNAL_CALL
-    | "Test.transfer_exn" -> some_const C_TEST_EXTERNAL_CALL_EXN
+    | "Test.transfer_to_contract" -> some_const C_TEST_EXTERNAL_CALL_TO_CONTRACT
+    | "Test.transfer_to_contract_exn" -> some_const C_TEST_EXTERNAL_CALL_TO_CONTRACT_EXN
+    | "Test.transfer" -> some_const C_TEST_EXTERNAL_CALL_TO_ADDRESS
+    | "Test.transfer_exn" -> some_const C_TEST_EXTERNAL_CALL_TO_ADDRESS_EXN
     | "Test.get_storage" -> some_const C_TEST_GET_STORAGE
+    | "Test.get_storage_of_address" -> some_const C_TEST_GET_STORAGE_OF_ADDRESS
     | "Test.get_balance" -> some_const C_TEST_GET_BALANCE
     | "Test.michelson_equal" -> some_const C_TEST_MICHELSON_EQUAL
     | "Test.log" -> some_const C_TEST_LOG
     | "Test.reset_state" -> some_const C_TEST_STATE_RESET
-    | "Test.compile_expression" -> some_const C_TEST_COMPILE_EXPRESSION
-    | "Test.compile_expression_subst" -> some_const C_TEST_COMPILE_EXPRESSION_SUBST
+    | "Test.bootstrap_contract" -> some_const C_TEST_BOOTSTRAP_CONTRACT
+    | "Test.nth_bootstrap_contract" -> some_const C_TEST_NTH_BOOTSTRAP_CONTRACT
     | "Test.nth_bootstrap_account" -> some_const C_TEST_GET_NTH_BS
     | "Test.last_originations" -> some_const C_TEST_LAST_ORIGINATIONS
     | "Test.compile_value" -> some_const C_TEST_COMPILE_META_VALUE
+    | "Test.mutate_value" -> some_const C_TEST_MUTATE_VALUE
+    | "Test.mutation_test" -> some_const C_TEST_MUTATION_TEST
+    | "Test.mutation_test_all" -> some_const C_TEST_MUTATION_TEST_ALL
+    | "Test.save_mutation" -> some_const C_TEST_SAVE_MUTATION
+    | "Test.run" -> some_const C_TEST_RUN
+    | "Test.eval" -> some_const C_TEST_EVAL
+    | "Test.compile_contract" -> some_const C_TEST_COMPILE_CONTRACT
+    | "Test.to_contract" -> some_const C_TEST_TO_CONTRACT
+    | "Test.nth_bootstrap_typed_address" -> some_const C_TEST_NTH_BOOTSTRAP_TYPED_ADDRESS
+    | "Test.to_entrypoint" -> some_const C_TEST_TO_ENTRYPOINT
+    | "Test.to_typed_address" -> some_const C_TEST_TO_TYPED_ADDRESS
+    | "Test.random" -> some_const C_TEST_RANDOM
+    | "Test.set_big_map" -> some_const C_TEST_SET_BIG_MAP
+    | "Test.cast_address" -> some_const C_TEST_CAST_ADDRESS
+    | "Test.create_chest" -> some_const C_TEST_CREATE_CHEST
+    | "Test.create_chest_key" -> some_const C_TEST_CREATE_CHEST_KEY
+
+    (* Operator module *)
+
+    | "Operator.neg"   -> some_const C_NEG
+    | "Operator.add"   -> some_const C_ADD
+    | "Operator.sub"   -> some_const C_SUB
+    | "Operator.times" -> some_const C_MUL
+    | "Operator.div"   -> some_const C_DIV
+    | "Operator.modulus" -> some_const C_MOD
+    | "Operator.eq"    -> some_const C_EQ
+    | "Operator.not"   -> some_const C_NOT
+    | "Operator.and"   -> some_const C_AND
+    | "Operator.or"    -> some_const C_OR
+    | "Operator.gt"    -> some_const C_GT
+    | "Operator.ge"    -> some_const C_GE
+    | "Operator.lt"    -> some_const C_LT
+    | "Operator.le"    -> some_const C_LE
+    | "Operator.cons"  -> some_const C_CONS
+    | "Operator.neq"   -> some_const C_NEQ
 
     | _ -> None
 
@@ -201,10 +244,33 @@ module Tree_abstraction = struct
     | C_CREATE_CONTRACT         -> "Tezos.create_contract"
     | C_CALL                    -> "Tezos.transaction"
     | C_SET_DELEGATE            -> "Tezos.set_delegate"
+    | C_CONTRACT_WITH_ERROR     -> "Tezos.get_contract_with_error"
     | C_CONTRACT_OPT            -> "Tezos.get_contract_opt"
     | C_CONTRACT_ENTRYPOINT_OPT -> "Tezos.get_entrypoint_opt"
     | C_CONTRACT                -> "Tezos.get_contract"
     | C_CONTRACT_ENTRYPOINT     -> "Tezos.get_entrypoint"
+    | C_NEVER                   -> "Tezos.never"
+    | C_OPEN_CHEST              -> "Tezos.open_chest" 
+    | C_VIEW                    -> "Tezos.call_view" 
+
+    (* Operator module *)
+
+    | C_NEG  -> "Operator.neg"
+    | C_ADD  -> "Operator.add"
+    | C_SUB  -> "Operator.sub"
+    | C_MUL  -> "Operator.times"
+    | C_DIV  -> "Operator.div"
+    | C_MOD  -> "Operator.modulus"
+    | C_EQ   -> "Operator.eq"
+    | C_NOT  -> "Operator.not"
+    | C_AND  -> "Operator.and"
+    | C_OR   -> "Operator.or"
+    | C_GT   -> "Operator.gt"
+    | C_GE   -> "Operator.ge"
+    | C_LT   -> "Operator.lt"
+    | C_LE   -> "Operator.le"
+    | C_CONS -> "Operator.cons"
+    | C_NEQ  -> "Operator.neq"
 
     (* Crypto module *)
 
@@ -273,8 +339,8 @@ module Tree_abstraction = struct
 
     (* Bitwise module *)
 
-    | C_OR  -> "Bitwise.or"
-    | C_AND -> "Bitwise.and"
+    (* | C_OR  -> "Bitwise.or" (* will never trigger *)
+     * | C_AND -> "Bitwise.and" *)
     | C_XOR -> "Bitwise.xor"
     | C_LSL -> "Bitwise.shift_left"
     | C_LSR -> "Bitwise.shift_right"
@@ -285,13 +351,6 @@ module Tree_abstraction = struct
         | C_SLICE  -> "String.sub"
         | C_CONCAT -> "String.concat" *)
 
-    (* michelson pair/or type converter module *)
-
-    | C_CONVERT_TO_RIGHT_COMB   -> "Layout.convert_to_right_comb"
-    | C_CONVERT_TO_LEFT_COMB    -> "Layout.convert_to_left_comb"
-    | C_CONVERT_FROM_RIGHT_COMB -> "Layout.convert_from_right_comb"
-    | C_CONVERT_FROM_LEFT_COMB  -> "Layout.convert_from_left_comb"
-
     (* Not parsed *)
     | C_SOME -> "Some"
     | C_NONE -> "None"
@@ -299,22 +358,43 @@ module Tree_abstraction = struct
     (* Testing module *)
 
     | C_TEST_ORIGINATE -> "Test.originate"
+    | C_TEST_ORIGINATE_FROM_FILE -> "Test.originate_from_file"
     | C_TEST_SET_NOW -> "Test.set_now"
     | C_TEST_SET_SOURCE -> "Test.set_source"
     | C_TEST_SET_BAKER -> "Test.set_baker"
-    | C_TEST_EXTERNAL_CALL -> "Test.transfer"
-    | C_TEST_EXTERNAL_CALL_EXN -> "Test.transfer_exn"
+    | C_TEST_EXTERNAL_CALL_TO_CONTRACT -> "Test.transfer_to_contract"
+    | C_TEST_EXTERNAL_CALL_TO_CONTRACT_EXN -> "Test.transfer_to_contract_exn"
+    | C_TEST_EXTERNAL_CALL_TO_ADDRESS -> "Test.transfer"
+    | C_TEST_EXTERNAL_CALL_TO_ADDRESS_EXN -> "Test.transfer_exn"
     | C_TEST_GET_STORAGE -> "Test.get_storage"
+    | C_TEST_GET_STORAGE_OF_ADDRESS -> "Test.get_storage_of_address"
     | C_TEST_GET_BALANCE -> "Test.get_balance"
     | C_TEST_MICHELSON_EQUAL -> "Test.michelson_equal"
     | C_TEST_LOG -> "Test.log"
     | C_TEST_STATE_RESET -> "Test.reset_state"
-    | C_TEST_COMPILE_EXPRESSION -> "Test.compile_expression"
-    | C_TEST_COMPILE_EXPRESSION_SUBST -> "Test.compile_expression_subst"
+    | C_TEST_BOOTSTRAP_CONTRACT -> "Test.bootstrap_contract"
+    | C_TEST_NTH_BOOTSTRAP_CONTRACT -> "Test.nth_bootstrap_contract"
     | C_TEST_GET_NTH_BS -> "Test.nth_bootstrap_account"
     | C_TEST_LAST_ORIGINATIONS -> "Test.last_originations"
     | C_TEST_COMPILE_META_VALUE -> "Test.compile_value"
-    
+    | C_TEST_MUTATE_COUNT -> "Test.mutate_count"
+    | C_TEST_MUTATE_VALUE -> "Test.mutate_value"
+    | C_TEST_MUTATION_TEST -> "Test.mutation_test"
+    | C_TEST_MUTATION_TEST_ALL -> "Test.mutation_test_all"
+    | C_TEST_SAVE_MUTATION -> "Test.save_mutation"
+    | C_TEST_RUN -> "Test.run"
+    | C_TEST_EVAL -> "Test.eval"
+    | C_TEST_COMPILE_CONTRACT -> "Test.compile_contract"
+    | C_TEST_TO_CONTRACT -> "Test.to_contract"
+    | C_TEST_NTH_BOOTSTRAP_TYPED_ADDRESS -> "Test.nth_bootstrap_typed_address"
+    | C_TEST_TO_ENTRYPOINT -> "Test.to_entrypoint"
+    | C_TEST_TO_TYPED_ADDRESS -> "Test.to_typed_address"
+    | C_TEST_RANDOM -> "Test.random"
+    | C_TEST_SET_BIG_MAP -> "Test.set_big_map"
+    | C_TEST_CAST_ADDRESS -> "Test.cast_address"
+    | C_TEST_CREATE_CHEST -> "Test.create_chest"
+
+
     | _ as c -> failwith @@ Format.asprintf "Constant not handled : %a" Stage_common.PP.constant' c
 
 
@@ -348,23 +428,7 @@ module Tree_abstraction = struct
       | "ediv"             -> some_const C_EDIV
       | "unit"             -> some_const C_UNIT
 
-      | "NEG"              -> some_const C_NEG
-      | "ADD"              -> some_const C_ADD
-      | "SUB"              -> some_const C_SUB
-      | "TIMES"            -> some_const C_MUL
-      | "DIV"              -> some_const C_DIV
-      | "MOD"              -> some_const C_MOD
-      | "EQ"               -> some_const C_EQ
-      | "NOT"              -> some_const C_NOT
-      | "AND"              -> some_const C_AND
-      | "OR"               -> some_const C_OR
-      | "GT"               -> some_const C_GT
-      | "GE"               -> some_const C_GE
-      | "LT"               -> some_const C_LT
-      | "LE"               -> some_const C_LE
-      | "CONS"             -> some_const C_CONS
       | "cons"             -> some_deprecated C_CONS (* Deprecated *)
-      | "NEQ"              -> some_const C_NEQ
 
       (* Crypto module *)
 
@@ -430,14 +494,15 @@ module Tree_abstraction = struct
 
       (* Others *)
 
-      | "assert"          -> some_const C_ASSERTION
-      | "assert_some"     -> some_const C_ASSERT_SOME
-      | "size"            -> some_deprecated C_SIZE (* Deprecated *)
+      | "assert"                 -> some_const C_ASSERTION
+      | "assert_with_error"      -> some_const C_ASSERTION_WITH_ERROR
+      | "assert_some"            -> some_const C_ASSERT_SOME
+      | "assert_some_with_error" -> some_const C_ASSERT_SOME_WITH_ERROR
+      | "assert_none"            -> some_const C_ASSERT_NONE
+      | "assert_none_with_error" -> some_const C_ASSERT_NONE_WITH_ERROR
+      | "size"                   -> some_deprecated C_SIZE (* Deprecated *)
 
-      | "Layout.convert_to_right_comb" -> some_const C_CONVERT_TO_RIGHT_COMB
-      | "Layout.convert_to_left_comb" -> some_const C_CONVERT_TO_LEFT_COMB
-
-      | _ as c            -> pseudo_modules c
+      | _ as c                   -> pseudo_modules c
 
     let constant'_to_string = function
       (* Tezos module (ex-Michelson) *)
@@ -450,30 +515,10 @@ module Tree_abstraction = struct
       | C_UNIT       -> "unit"
       | C_LIST_EMPTY -> "nil"
 
-      | C_NEG  -> "NEG"
-      | C_ADD  -> "ADD"
-      | C_SUB  -> "SUB"
-      | C_MUL  -> "TIMES"
-      | C_DIV  -> "DIV"
-      | C_MOD  -> "MOD"
-      | C_EQ   -> "EQ"
-      | C_NOT  -> "NOT"
-      | C_AND  -> "AND"
-      | C_OR   -> "OR"
-      | C_GT   -> "GT"
-      | C_GE   -> "GE"
-      | C_LT   -> "LT"
-      | C_LE   -> "LE"
-      | C_CONS -> "CONS"
-      | C_NEQ  -> "NEQ"
-
       (*->  Others *)
 
       | C_ASSERTION   -> "assert"
       | C_ASSERT_SOME -> "assert_some"
-
-      | C_CONVERT_TO_RIGHT_COMB -> "Layout.convert_to_right_comb"
-      | C_CONVERT_TO_LEFT_COMB  -> "Layout.convert_to_left_comb"
 
       | _ as c            -> pseudo_module_to_string c
 
@@ -520,23 +565,6 @@ module Tree_abstraction = struct
       | "ediv"             -> some_const C_EDIV
       | "unit"             -> some_const C_UNIT
 
-      | "NEG"              -> some_const C_NEG
-      | "ADD"              -> some_const C_ADD
-      | "SUB"              -> some_const C_SUB
-      | "TIMES"            -> some_const C_MUL
-      | "DIV"              -> some_const C_DIV
-      | "MOD"              -> some_const C_MOD
-      | "EQ"               -> some_const C_EQ
-      | "NOT"              -> some_const C_NOT
-      | "AND"              -> some_const C_AND
-      | "OR"               -> some_const C_OR
-      | "GT"               -> some_const C_GT
-      | "GE"               -> some_const C_GE
-      | "LT"               -> some_const C_LT
-      | "LE"               -> some_const C_LE
-      | "CONS"             -> some_const C_CONS
-      | "NEQ"              -> some_const C_NEQ
-
       (* Bytes module *)
 
       | "Bytes.size"   -> some_deprecated C_SIZE       (* Deprecated *)
@@ -564,8 +592,14 @@ module Tree_abstraction = struct
 
       (* Others *)
 
-      | "assert"       -> some_const C_ASSERTION
-      | "assert_some"  -> some_const C_ASSERT_SOME
+      | "assert"                 -> some_const C_ASSERTION
+      | "assert_with_error"      -> some_const C_ASSERTION_WITH_ERROR
+      | "assert_some"            -> some_const C_ASSERT_SOME
+      | "assert_some_with_error" -> some_const C_ASSERT_SOME_WITH_ERROR
+      | "assert_none"            -> some_const C_ASSERT_NONE
+      | "assert_none_with_error" -> some_const C_ASSERT_NONE_WITH_ERROR
+      | "true"         -> some_const C_TRUE
+      | "false"        -> some_const C_FALSE
 
       | _ as c -> pseudo_modules c
 
@@ -580,27 +614,12 @@ module Tree_abstraction = struct
       | C_UNIT       -> "unit"
       | C_LIST_EMPTY -> "[]"
 
-      | C_NEG  -> "NEG"
-      | C_ADD  -> "ADD"
-      | C_SUB  -> "SUB"
-      | C_MUL  -> "TIMES"
-      | C_DIV  -> "DIV"
-      | C_MOD  -> "MOD"
-      | C_EQ   -> "EQ"
-      | C_NOT  -> "NOT"
-      | C_AND  -> "AND"
-      | C_OR   -> "OR"
-      | C_GT   -> "GT"
-      | C_GE   -> "GE"
-      | C_LT   -> "LT"
-      | C_LE   -> "LE"
-      | C_CONS -> "CONS"
-      | C_NEQ  -> "NEQ"
-
       (* Others *)
 
       | C_ASSERTION   -> "assert"
       | C_ASSERT_SOME -> "assert_some"
+      | C_TRUE -> "true"
+      | C_FALSE -> "false"
 
       | _ as c -> pseudo_module_to_string c
 
@@ -647,23 +666,6 @@ module Tree_abstraction = struct
       | "ediv"             -> some_const C_EDIV
       | "unit"             -> some_const C_UNIT
 
-      | "NEG"              -> some_const C_NEG
-      | "ADD"              -> some_const C_ADD
-      | "SUB"              -> some_const C_SUB
-      | "TIMES"            -> some_const C_MUL
-      | "DIV"              -> some_const C_DIV
-      | "MOD"              -> some_const C_MOD
-      | "EQ"               -> some_const C_EQ
-      | "NOT"              -> some_const C_NOT
-      | "AND"              -> some_const C_AND
-      | "OR"               -> some_const C_OR
-      | "GT"               -> some_const C_GT
-      | "GE"               -> some_const C_GE
-      | "LT"               -> some_const C_LT
-      | "LE"               -> some_const C_LE
-      | "CONS"             -> some_const C_CONS
-      | "NEQ"              -> some_const C_NEQ
-
       (* Bytes module *)
 
       | "Bytes.size"   -> some_deprecated C_SIZE       (* Deprecated *)
@@ -691,8 +693,14 @@ module Tree_abstraction = struct
 
       (* Others *)
 
-      | "assert"      -> some_const C_ASSERTION
-      | "assert_some" -> some_const C_ASSERT_SOME
+      | "assert"                 -> some_const C_ASSERTION
+      | "assert_with_error"      -> some_const C_ASSERTION_WITH_ERROR
+      | "assert_some"            -> some_const C_ASSERT_SOME
+      | "assert_some_with_error" -> some_const C_ASSERT_SOME_WITH_ERROR
+      | "assert_none"            -> some_const C_ASSERT_NONE
+      | "assert_none_with_error" -> some_const C_ASSERT_NONE_WITH_ERROR
+      | "true"         -> some_const C_TRUE
+      | "false"        -> some_const C_FALSE
 
       | _ as c -> pseudo_modules c
 
@@ -707,27 +715,12 @@ module Tree_abstraction = struct
       | C_UNIT       -> "unit"
       | C_LIST_EMPTY -> "[]"
 
-      | C_NEG  -> "NEG"
-      | C_ADD  -> "ADD"
-      | C_SUB  -> "SUB"
-      | C_MUL  -> "TIMES"
-      | C_DIV  -> "DIV"
-      | C_MOD  -> "MOD"
-      | C_EQ   -> "EQ"
-      | C_NOT  -> "NOT"
-      | C_AND  -> "AND"
-      | C_OR   -> "OR"
-      | C_GT   -> "GT"
-      | C_GE   -> "GE"
-      | C_LT   -> "LT"
-      | C_LE   -> "LE"
-      | C_CONS -> "CONS"
-      | C_NEQ  -> "NEQ"
-
       (* Others *)
 
       | C_ASSERTION   -> "assert"
       | C_ASSERT_SOME -> "assert_some"
+      | C_TRUE -> "true"
+      | C_FALSE -> "false"
 
       | _ as c -> pseudo_module_to_string c
 
@@ -792,17 +785,24 @@ module Stacking = struct
     | C_MAP_FIND_OPT       , _   -> Some ( simple_binary @@ prim "GET")
     | C_MAP_ADD            , _   -> Some ( simple_ternary @@ seq [dip (i_some) ; prim "UPDATE"])
     | C_MAP_UPDATE         , _   -> Some ( simple_ternary @@ prim "UPDATE")
-    | (C_MAP_GET_AND_UPDATE|C_BIG_MAP_GET_AND_UPDATE) , Edo ->
+    | (C_MAP_GET_AND_UPDATE|C_BIG_MAP_GET_AND_UPDATE) , _ ->
       Some (simple_ternary @@ seq [prim "GET_AND_UPDATE"; prim "PAIR"])
     | C_FOLD_WHILE         , _   ->
       Some ( simple_binary @@ seq [i_swap ; (i_push (prim "bool") (prim "True"));prim ~children:[seq [dip i_dup; i_exec; i_unpair]] "LOOP" ;i_swap ; i_drop])
-    | C_FOLD_CONTINUE      , _   -> Some ( simple_unary @@ seq [(i_push (prim "bool") (prim "True")); i_pair])
-    | C_FOLD_STOP          , _   -> Some ( simple_unary @@ seq [(i_push (prim "bool") (prim "False")); i_pair])
-    | C_SIZE               , _   -> Some ( simple_unary @@ prim "SIZE")
-    | C_FAILWITH           , _   -> Some ( simple_unary @@ prim "FAILWITH")
-    | C_ASSERT_SOME        , _   -> Some ( simple_unary @@ i_assert_some)
+    | C_FOLD_CONTINUE         , _   -> Some ( simple_unary @@ seq [(i_push (prim "bool") (prim "True")); i_pair])
+    | C_FOLD_STOP             , _   -> Some ( simple_unary @@ seq [(i_push (prim "bool") (prim "False")); i_pair])
+    | C_SIZE                  , _   -> Some ( simple_unary @@ prim "SIZE")
+    | C_FAILWITH              , _   -> Some ( simple_unary @@ prim "FAILWITH")
+    | C_NEVER                 , _   -> Some ( simple_unary @@ prim "NEVER")
+    | C_UNOPT                 , _   -> Some ( simple_binary @@ i_if_none (seq [i_push_string "option is None"; i_failwith]) (seq []))
+    | C_UNOPT_WITH_ERROR      , _   -> Some ( simple_binary @@ i_if_none (i_failwith) (seq [ i_swap; i_drop]))
+    | C_ASSERT_SOME           , _   -> Some ( simple_unary @@ i_if_none (seq [i_push_string "failed assert some" ; i_failwith]) (seq [i_drop; i_push_unit]))
+    | C_ASSERT_SOME_WITH_ERROR, _   -> Some ( simple_binary @@ i_if_none (i_failwith) (seq [i_dropn 2; i_push_unit]))
+    | C_ASSERT_NONE           , _   -> Some ( simple_unary @@ i_if_none (seq [i_push_unit]) (seq [i_push_string "failed assert none" ; i_failwith]))
+    | C_ASSERT_NONE_WITH_ERROR, _   -> Some ( simple_binary @@ i_if_none (seq [i_drop; i_push_unit]) (seq[i_drop;i_failwith]))
     | C_ASSERT_INFERRED    , _   -> Some ( simple_binary @@ i_if (seq [i_failwith]) (seq [i_drop ; i_push_unit]))
     | C_ASSERTION          , _   -> Some ( simple_unary @@ i_if (seq [i_push_unit]) (seq [i_push_string "failed assertion" ; i_failwith]))
+    | C_ASSERTION_WITH_ERROR, _  -> Some ( simple_binary @@ i_if (seq [i_drop; i_push_unit]) (i_failwith))
     | C_INT                , _   -> Some ( simple_unary @@ prim "INT")
     | C_ABS                , _   -> Some ( simple_unary @@ prim "ABS")
     | C_IS_NAT             , _   -> Some ( simple_unary @@ prim "ISNAT")
@@ -852,18 +852,23 @@ module Stacking = struct
     | C_MAP_REMOVE         , _   -> Some (special (fun with_args -> seq [dip (with_args "NONE"); prim "UPDATE"]))
     | C_LEFT               , _   -> Some (trivial_special "LEFT")
     | C_RIGHT              , _   -> Some (trivial_special "RIGHT")
-    | C_TICKET             , Edo -> Some ( simple_binary @@ prim "TICKET" )
-    | C_READ_TICKET        , Edo -> Some ( simple_unary @@ seq [ prim "READ_TICKET" ; prim "PAIR" ] )
-    | C_SPLIT_TICKET       , Edo -> Some ( simple_binary @@ prim "SPLIT_TICKET" )
-    | C_JOIN_TICKET        , Edo -> Some ( simple_unary @@ prim "JOIN_TICKETS" )
-    | C_SAPLING_EMPTY_STATE, Edo -> Some (trivial_special "SAPLING_EMPTY_STATE")
-    | C_SAPLING_VERIFY_UPDATE , Edo -> Some (simple_binary @@ prim "SAPLING_VERIFY_UPDATE")
+    | C_TICKET             , _ -> Some ( simple_binary @@ prim "TICKET" )
+    | C_READ_TICKET        , _ -> Some ( simple_unary @@ seq [ prim "READ_TICKET" ; prim "PAIR" ] )
+    | C_SPLIT_TICKET       , _ -> Some ( simple_binary @@ prim "SPLIT_TICKET" )
+    | C_JOIN_TICKET        , _ -> Some ( simple_unary @@ prim "JOIN_TICKETS" )
+    | C_SAPLING_EMPTY_STATE, _ -> Some (trivial_special "SAPLING_EMPTY_STATE")
+    | C_SAPLING_VERIFY_UPDATE , _ -> Some (simple_binary @@ prim "SAPLING_VERIFY_UPDATE")
     | C_PAIRING_CHECK , _ -> Some (simple_binary @@ prim "PAIRING_CHECK")
     | C_CONTRACT           , _   ->
       Some (special
               (fun with_args ->
                  seq [with_args "CONTRACT";
                       i_assert_some_msg (i_push_string "bad address for get_contract")]))
+    | C_CONTRACT_WITH_ERROR, _   ->
+      Some (special
+              (fun with_args ->
+                 seq [with_args "CONTRACT";
+                      i_if_none (i_failwith) (seq [i_swap; i_drop])]))
     | C_CONTRACT_OPT         , _   -> Some (trivial_special "CONTRACT")
     | C_CONTRACT_ENTRYPOINT , _  ->
       Some (special
@@ -876,7 +881,18 @@ module Stacking = struct
               (fun with_args ->
                  seq [with_args "CREATE_CONTRACT";
                       i_pair]))
-
+    | C_OPEN_CHEST , Hangzhou -> (
+      Some (simple_ternary @@ seq [
+        prim "OPEN_CHEST" ;
+        i_if_left
+          ( prim "RIGHT" ~children:[t_or t_unit t_unit])
+          ( i_if
+            (seq [ i_push_unit ; prim "LEFT" ~children:[t_unit] ; prim "LEFT" ~children:[t_bytes] ])
+            (seq [ i_push_unit ; prim "RIGHT" ~children:[t_unit] ; prim "LEFT" ~children:[t_bytes] ])
+          ) 
+      ])
+    )
+    | C_VIEW , Hangzhou -> Some (trivial_special "VIEW")
     | _ -> None
 
 end
