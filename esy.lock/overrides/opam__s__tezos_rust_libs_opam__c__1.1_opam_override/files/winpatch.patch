@@ -1,0 +1,9 @@
+--- ./cargo-config
++++  ./cargo-config
+@@ -3,3 +3,6 @@
+ 
+ [source.vendored-sources]
+ directory = "vendor"
++
++[build]
++rustflags = ["-C", "link-args=-lole32 -luserenv", "-lole32", "-luserenv"]
