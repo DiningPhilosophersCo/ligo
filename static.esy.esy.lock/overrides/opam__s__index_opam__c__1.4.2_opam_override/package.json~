@@ -1,0 +1,15 @@
+{
+  "build": [
+    [
+      "bash",
+      "-c",
+      "#{os == 'windows' ? 'patch -p1 < 0001-Disable-Unix-APIs-on-Windows.patch' : 'true' }"
+    ],
+    [
+      "bash",
+      "-c",
+      "#{os == 'windows' ? 'patch -p1 < 0002-Disable-global-invocations-of-Unix-APIs.patch' : 'true' }"
+    ],
+    "dune build -p core -j 4"
+  ]
+}
