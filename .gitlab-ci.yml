@@ -6,6 +6,7 @@ variables:
 
 stages:
   - pretooling                      # changelog
+  - esy
   - docker-build                    # build, test, produces binaries/.deb/doc within docker
   - docker-extract                  # extract what have been built and expose them as artifact
   - tooling                         # build miscellaneous tooling-related things (website, changelog..)
@@ -20,6 +21,11 @@ include: '/tools/lsp/.gitlab-ci.yml'
   before_script:
     - find "$CI_PROJECT_DIR" -path "$CI_PROJECT_DIR/.git" -prune -o "(" -type d -a -not -perm -u=w ")" -exec chmod --verbose u+w {} ";"
     - export COMMIT_DATE="$(git show --no-patch --format=%ci)"
+
+esy:
+  stage: esy
+  script:
+    - esy
 
 changelog:
   stage: pretooling
