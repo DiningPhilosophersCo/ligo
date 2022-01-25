@@ -25,6 +25,7 @@ include: '/tools/lsp/.gitlab-ci.yml'
 esy:
   stage: esy
   script:
+    - npm i -g @esy-nightly/esy
     - esy
 
 changelog:
