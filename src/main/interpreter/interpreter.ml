@@ -167,10 +167,10 @@ let rec apply_comparison :
             l) ;
       fail @@ Errors.meta_lang_eval loc calltrace "Not comparable"
 
-let rec apply_operator ~raise ~steps ~protocol_version : Location.t -> calltrace -> AST.type_expression -> env -> AST.constant' -> (value * AST.type_expression * Location.t) list -> value Monad.t =
+let rec apply_operator ~raise ~steps ~protocol_version ~options : Location.t -> calltrace -> AST.type_expression -> env -> AST.constant' -> (value * AST.type_expression * Location.t) list -> value Monad.t =
   fun loc calltrace expr_ty env c operands ->
   let open Monad in
-  let eval_ligo = eval_ligo ~raise ~steps ~protocol_version in
+  let eval_ligo = eval_ligo ~raise ~steps ~protocol_version ~options in
   let locs = List.map ~f:(fun (_, _, c) -> c) operands in
   let types = List.map ~f:(fun (_, b, _) -> b) operands in
   let operands = List.map ~f:(fun (a, _, _) -> a) operands in
@@ -781,13 +781,13 @@ let rec apply_operator ~raise ~steps ~protocol_version : Location.t -> calltrace
         let* v = eval_ligo e calltrace env in
         let r = match tester with
           | V_Func_val {arg_binder ; body ; env; rec_name = None ; orig_lambda } ->
-            let* in_ty, _ = monad_option (Errors.generic_error loc "Expected function type") @@
-                             AST.get_t_function orig_lambda.type_expression in
+            let* AST.{ type1 = in_ty ; type2 = _ } = monad_option (Errors.generic_error loc "Expected function type") @@
+                             AST.get_t_arrow orig_lambda.type_expression in
             let f_env' = Env.extend env arg_binder (in_ty, v) in
             eval_ligo body (loc :: calltrace) f_env'
           | V_Func_val {arg_binder ; body ; env; rec_name = Some fun_name; orig_lambda } ->
-            let* in_ty, _ = monad_option (Errors.generic_error loc "Expected function type") @@
-                              AST.get_t_function orig_lambda.type_expression in
+            let* AST.{ type1 = in_ty ; type2 = _ } = monad_option (Errors.generic_error loc "Expected function type") @@
+                              AST.get_t_arrow orig_lambda.type_expression in
             let f_env' = Env.extend env arg_binder (in_ty, v) in
             let f_env'' = Env.extend f_env' fun_name (orig_lambda.type_expression, tester) in
             eval_ligo body (loc :: calltrace) f_env''
@@ -809,11 +809,11 @@ let rec apply_operator ~raise ~steps ~protocol_version : Location.t -> calltrace
         let* v = eval_ligo e calltrace env in
         let r =  match tester with
           | V_Func_val {arg_binder ; body ; env; rec_name = None ; orig_lambda } ->
-             let in_ty, _ = AST.get_t_function_exn orig_lambda.type_expression in
+             let AST.{ type1 = in_ty ; type2 = _ } = AST.get_t_arrow_exn orig_lambda.type_expression in
              let f_env' = Env.extend env arg_binder (in_ty, v) in
              eval_ligo body (loc :: calltrace) f_env'
           | V_Func_val {arg_binder ; body ; env; rec_name = Some fun_name; orig_lambda } ->
-             let in_ty, _ = AST.get_t_function_exn orig_lambda.type_expression in
+             let AST.{ type1 = in_ty ; type2 = _ } = AST.get_t_arrow_exn orig_lambda.type_expression in
              let f_env' = Env.extend env arg_binder (in_ty, v) in
              let f_env'' = Env.extend f_env' fun_name (orig_lambda.type_expression, tester) in
              eval_ligo body (loc :: calltrace) f_env''
@@ -1011,9 +1011,9 @@ and eval_literal : AST.literal -> value Monad.t = function
   )
   | l -> Monad.fail @@ Errors.literal Location.generated l
 
-and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> env -> value Monad.t
+and eval_ligo ~raise ~steps ~protocol_version ~options : AST.expression -> calltrace -> env -> value Monad.t
   = fun term calltrace env ->
-    let eval_ligo ?(steps = steps - 1) = eval_ligo ~raise ~steps ~protocol_version in
+    let eval_ligo ?(steps = steps - 1) = eval_ligo ~raise ~steps ~protocol_version ~options in
     let open Monad in
     let* () = if steps <= 0 then fail (Errors.meta_lang_eval term.location calltrace "Out of fuel") else return () in
     match term.expression_content with
@@ -1024,11 +1024,11 @@ and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> e
         let* args' = eval_ligo args calltrace env in
         match f' with
           | V_Func_val {arg_binder ; body ; env; rec_name = None ; orig_lambda } ->
-            let in_ty, _ = AST.get_t_function_exn orig_lambda.type_expression in
+            let AST.{ type1 = in_ty ; type2 = _ } = AST.get_t_arrow_exn orig_lambda.type_expression in
             let f_env' = Env.extend env arg_binder (in_ty, args') in
             eval_ligo body (term.location :: calltrace) f_env'
           | V_Func_val {arg_binder ; body ; env; rec_name = Some fun_name; orig_lambda} ->
-            let in_ty, _ = AST.get_t_function_exn orig_lambda.type_expression in
+            let AST.{ type1 = in_ty ; type2 = _ } = AST.get_t_arrow_exn orig_lambda.type_expression in
             let f_env' = Env.extend env arg_binder (in_ty, args') in
             let f_env'' = Env.extend f_env' fun_name (orig_lambda.type_expression, f') in
             eval_ligo body (term.location :: calltrace) f_env''
@@ -1084,7 +1084,7 @@ and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> e
           let* value = eval_ligo ae calltrace env in
           return @@ (value, ae.type_expression, ae.location))
         arguments in
-      apply_operator ~raise ~steps ~protocol_version term.location calltrace term.type_expression env cons_name arguments'
+      apply_operator ~raise ~steps ~protocol_version ~options term.location calltrace term.type_expression env cons_name arguments'
     )
     | E_constructor { constructor = Label c ; element = { expression_content = E_literal (Literal_unit) ; _ } } when String.equal c "True" ->
       return @@ V_Ct (C_bool true)
@@ -1125,7 +1125,7 @@ and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> e
         if b then eval_ligo match_true calltrace env
         else eval_ligo match_false calltrace env
       | Match_variant {cases ; tv} , V_Construct (matched_c , proj) ->
-        let* tv = match AST.get_t_sum tv with
+        let* tv = match AST.get_t_sum_opt tv with
           | Some tv ->
              let {associated_type; michelson_annotation=_; decl_pos=_} = LMap.find
                                   (Label matched_c) tv.content in
@@ -1167,18 +1167,18 @@ and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> e
       let open AST in
       match code.expression_content with
       | E_literal (Literal_string _) when String.equal language Stage_common.Backends.michelson &&
-                                           is_t_function (get_type_expression code) ->
-        let in_type, out_type = trace_option ~raise (Errors.generic_error term.location "Expected function") @@
-                                   get_t_function (get_type_expression code) in
+                                           is_t_arrow (get_type code) ->
+        let AST.{ type1 = in_type ; type2 = out_type } = trace_option ~raise (Errors.generic_error term.location "Expected function") @@
+                                   get_t_arrow (get_type code) in
         let arg_binder = Location.wrap @@ Var.fresh () in
         let body = e_a_application term (e_a_variable arg_binder in_type) out_type in
         let orig_lambda = e_a_lambda { binder = arg_binder ; result = body } in_type out_type in
         return @@ V_Func_val { rec_name = None ; orig_lambda ; body ; env ; arg_binder }
-      | E_literal (Literal_string x) when is_t_function (get_type_expression term) ->
+      | E_literal (Literal_string x) when is_t_arrow (get_type term) ->
         let exp_as_string = Ligo_string.extract x in
         return @@ V_Ligo (language , exp_as_string)
       | E_literal (Literal_string x) when String.equal language Stage_common.Backends.michelson ->
-        let ast_ty = get_type_expression code in
+        let ast_ty = get_type code in
         let exp_as_string = Ligo_string.extract x in
         let code_ty, code = Michelson_backend.run_raw_michelson_code ~raise ~loc:term.location exp_as_string ast_ty in
         return @@ V_Michelson (Ty_code { code ; code_ty ; ast_ty })
@@ -1188,9 +1188,9 @@ and eval_ligo ~raise ~steps ~protocol_version : AST.expression -> calltrace -> e
       | _ -> failwith "impossible"
     )
 
-and try_eval ~raise ~steps ~protocol_version expr env state r = Monad.eval ~raise (eval_ligo ~raise ~steps ~protocol_version expr [] env) state r
+and try_eval ~raise ~steps ~protocol_version ~options expr env state r = Monad.eval ~raise ~options (eval_ligo ~raise ~steps ~protocol_version ~options expr [] env) state r
 
-let eval_test ~raise ~steps ~protocol_version : Ast_typed.program -> ((string * value) list) =
+let eval_test ~raise ~steps ~options ~protocol_version : Ast_typed.program -> ((string * value) list) =
   fun prg ->
   let decl_lst = prg in
   (* Pass over declarations, for each "test"-prefixed one, add a new
@@ -1218,7 +1218,7 @@ let eval_test ~raise ~steps ~protocol_version : Ast_typed.program -> ((string * 
   let expr = Ast_typed.e_a_record map in
   let expr = ctxt expr in
   let expr = Self_ast_aggregated.expression_mono expr in
-  let value, _ = try_eval ~raise ~steps ~protocol_version expr Env.empty_env initial_state None in
+  let value, _ = try_eval ~raise ~steps ~protocol_version ~options expr Env.empty_env initial_state None in
   match value with
   | V_Record m ->
     let f (n, _) r =

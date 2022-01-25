@@ -3,6 +3,7 @@
   "version": "0.31.0",
   "source": "./esy.json",
   "esy": {
+    "opamOverrideRemote": "https://github.com/DiningPhilosophersCo/esy-opam-override",
     "buildEnv": {
       "LIGO_VERSION": "0.31.0"
     },
@@ -42,6 +43,7 @@
           "build": "true"
         }
       },
+      "@opam/dune": "opam:2.9.2",
       "@opam/terminal_size": "DiningPhilosophersCo/terminal_size:terminal_size.opam#4fa00d7e812a59e669bfc0392d6539252afa5fb",
       "@opam/mtime": {
         "version": "opam:1.3.0",
