@@ -23,6 +23,8 @@ include: '/tools/lsp/.gitlab-ci.yml'
     - export COMMIT_DATE="$(git show --no-patch --format=%ci)"
 
 esy:
+  tags:
+    - windows
   stage: esy
   script:
     - npm i -g @esy-nightly/esy
