@@ -29,7 +29,7 @@ esy:
   script:
     - npm i -g @esy-nightly/esy
     - $env:PATH = 'C:\Users\gitlab_runner\AppData\Roaming\npm;' + $env:PATH
-    - esy
+    - esy -vvv
 
 changelog:
   stage: pretooling
