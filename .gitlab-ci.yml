@@ -5,8 +5,8 @@ variables:
   LIGO_IMAGE_TAG: "ligo:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
 
 stages:
-  - pretooling                      # changelog
   - esy
+  - pretooling                      # changelog
   - docker-build                    # build, test, produces binaries/.deb/doc within docker
   - docker-extract                  # extract what have been built and expose them as artifact
   - tooling                         # build miscellaneous tooling-related things (website, changelog..)
