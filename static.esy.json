@@ -3,6 +3,7 @@
   "version": "0.31.0",
   "source": "./esy.json",
   "esy": {
+    "opamOverrideRemote": "https://github.com/DiningPhilosophersCo/esy-opam-override",
     "buildEnv": {
       "LIGO_VERSION": "0.31.0"
     },

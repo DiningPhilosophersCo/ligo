@@ -2,6 +2,7 @@
   "name": "ligo",
   "version": "0.31.0",
   "esy": {
+    "opamOverrideRemote": "https://github.com/DiningPhilosophersCo/esy-opam-override",
     "release": {
       "bin": ["ligo"],
       "includePackages": [
