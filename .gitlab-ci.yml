@@ -27,6 +27,7 @@ esy:
     - windows
   stage: esy
   script:
+    - git config http.postBuffer 524288000
     - npm i -g @esy-nightly/esy
     - $env:PATH = 'C:\Users\gitlab_runner\AppData\Roaming\npm;' + $env:PATH
     - esy -vvv
