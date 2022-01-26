@@ -47,18 +47,24 @@ jobs:
           key: source-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
         # restore keys are not used for install sources because esy cleanup does not remove those.
         # Therefore the esy/source directory would grow infinitely
-      - name: Install dependencies
+      - name: Install dependencies (Windows, concurrency = 1)
         run: esy install
+        if: runner.os == 'Windows'
+        env:
+          ESY__FETCH_CONCURRENCY: '1'
+      - name: Install dependencies (Non Windows, concurrency = default)
+        run: esy install
+        if: runner.os != 'Windows'
       - name: Print esy cache
         id: print_esy_cache
         run: node .github/workflows/print_esy_cache.js
-      - name: Try to restore dependencies cache
-        id: deps-cache
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.print_esy_cache.outputs.esy_cache }}
-          key: build-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
-          restore-keys: build-${{ matrix.os }}-
+#       - name: Try to restore dependencies cache
+#         id: deps-cache
+#         uses: actions/cache@v1
+#         with:
+#           path: ${{ steps.print_esy_cache.outputs.esy_cache }}
+#           key: build-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
+#           restore-keys: build-${{ matrix.os }}-
       - name: Build
         run: esy build
 
