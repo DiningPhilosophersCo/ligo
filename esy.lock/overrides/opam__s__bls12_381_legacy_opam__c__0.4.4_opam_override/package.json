@@ -1,5 +1,4 @@
 {
-  
   "buildsInSource": "_build",
   "build": [
     [
@@ -7,7 +6,21 @@
       "-c",
       "#{os == 'windows' ? 'patch -p1 < winpatch.patch' : 'true' }"
     ],
-    ["dune", "build", "-j", "4", "-p", "bls12-381-legacy", "@install"]
+    [
+      "dune",
+      "build",
+      "-j",
+      "4",
+      "-p",
+      "bls12-381-legacy",
+      "@install"
+    ]
+  ],
+  "install": [
+    [
+      "esy-installer",
+      "bls12-381-legacy.install"
+    ]
   ],
   "buildEnvOverride": {
     "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"

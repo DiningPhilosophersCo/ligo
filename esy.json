@@ -8,7 +8,7 @@
       "includePackages": [
         "root",
         "esy-libev",
-        "@esy-ocaml/libffi",
+        "esy-libffi",
         "@opam/hacl-star-raw",
         "@opam/conf-libev",
         "esy-gmp"
@@ -39,7 +39,7 @@
       "esy-libev": "*",
       "@opam/tezos-011-PtHangz2-test-helpers": "*",
       "@opam/tezos-client-011-PtHangz2": "*",
-      "@esy-ocaml/libffi": "*"
+      "esy-libffi": "*"
     },
     "devDependencies": {
       "@opam/ocaml-lsp-server": "*"
@@ -61,23 +61,6 @@
       "@opam/secp256k1-internal": "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494",
       "@opam/getopt": "ulrikstrid/ocaml-getopt:getopt.opam#645ab74",
       "@opam/ocaml-recovery-parser": "serokell/ocaml-recovery-parser:ocaml-recovery-parser.opam#381dae7afafd6557808c6cbc927e856e84167067",
-      "@esy-ocaml/libffi": "ManasJayanth/esy-libffi:esy.json#2c92299035449460bdf56f866866aea64702b95f",
-      "@opam/conf-libffi": {
-        "source": "no-source:",
-        "override": {
-          "dependencies": {
-            "@esy-ocaml/libffi": "*"
-          }
-        }
-      },
-      "@opam/conf-libev": {
-        "source": "no-source:",
-        "override": {
-          "dependencies": {
-            "esy-libev": "*"
-          }
-        }
-      },
       "@opam/tezos-lwt-result-stdlib": "git:https://github.com/callistonianembrace/tezos:src/lib_lwt_result_stdlib/tezos-lwt-result-stdlib.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
       "@opam/tezos-embedded-protocol-008-PtEdo2Zk": {
         "source": "git:https://github.com/callistonianembrace/tezos:src/proto_008_PtEdo2Zk/lib_protocol/tezos-embedded-protocol-008-PtEdo2Zk.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
@@ -85,7 +68,7 @@
           "build": [
             [
               "env",
-              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
               "dune",
               "build",
               "-p",
@@ -99,7 +82,7 @@
             "LD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib : $LD_LIBRARY_PATH}"
           },
           "dependencies": {
-            "@esy-ocaml/libffi": "*",
+            "esy-libffi": "*",
             "@opam/hacl-star-raw": "*",
             "esy-libev": "*"
           }
@@ -123,14 +106,14 @@
             }
           },
           "buildEnv": {
-            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$DYLD_LIBRARY_PATH",
-            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib}:$LD_LIBRARY_PATH"
+            "DYLD_LIBRARY_PATH": "#{esy-libffi.lib}:$DYLD_LIBRARY_PATH",
+            "LD_LIBRARY_PATH": "#{esy-libffi.lib}:$LD_LIBRARY_PATH"
           },
           "dependencies": {
             "@opam/ctypes": "*",
             "@opam/ctypes-foreign": "*",
             "@opam/ocamlfind": "*",
-            "@esy-ocaml/libffi": "*"
+            "esy-libffi": "*"
           },
           "buildsInSource": true,
           "build": [
@@ -252,18 +235,18 @@
         "source": "git:https://github.com/callistonianembrace/tezos:src/proto_008_PtEdo2Zk/lib_parameters/tezos-protocol-008-PtEdo2Zk-parameters.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
         "override": {
           "dependencies": {
-            "@esy-ocaml/libffi": "*",
+            "esy-libffi": "*",
             "@opam/hacl-star-raw": "*"
           },
           "buildEnv": {
-            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
-            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+            "DYLD_LIBRARY_PATH": "#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
           },
           "build": [
             "sed -i -e 's/tezos-base/tezos-base bls12-381-unix/g' dune",
             [
               "env",
-              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw'}",
               "dune",
               "build",
               "-p",
@@ -288,6 +271,13 @@
       "@opam/tezos-protocol-011-PtHangz2": {
         "source": "git:https://github.com/callistonianembrace/tezos:src/proto_011_PtHangz2/lib_protocol/tezos-protocol-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
         "override": {
+          "buildEnvOverride": {
+            "LD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}",
+            "DYLD_LIBRARY_PATH": "#{@opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}"
+          },
+          "dependencies": {
+            "@opam/hacl-star-raw": "*"
+          },
           "build": [
             [
               "#{@opam/tezos-protocol-compiler.lib}/tezos-protocol-compiler/replace#{os == 'windows' ? '.exe': ''}",
@@ -319,19 +309,19 @@
         "source": "git:https://github.com/callistonianembrace/tezos:src/proto_011_PtHangz2/lib_parameters/PtHangz2-parameters.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
         "override": {
           "dependencies": {
-            "@esy-ocaml/libffi": "*",
+            "esy-libffi": "*",
             "esy-libev": "*",
             "@opam/hacl-star-raw": "*",
             "@opam/tezos-hacl-glue-unix": "*"
           },
           "buildEnv": {
-            "DYLD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
-            "LD_LIBRARY_PATH": "#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
+            "DYLD_LIBRARY_PATH": "#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $DYLD_LIBRARY_PATH}",
+            "LD_LIBRARY_PATH": "#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : $LD_LIBRARY_PATH}"
           },
           "build": [
             [
               "env",
-              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{@esy-ocaml/libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
+              "#{ os == 'darwin' ? 'DY': ''}LD_LIBRARY_PATH=#{esy-libffi.lib : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libev.lib}",
               "dune",
               "build",
               "-p",
