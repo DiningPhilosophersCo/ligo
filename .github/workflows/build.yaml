@@ -41,6 +41,7 @@ jobs:
       - name: Install and build
         run: |
           esy
+          rm -Recurse -Force D:/.esy/3/b
           esy release
         if: runner.os == 'Windows'
         env:
