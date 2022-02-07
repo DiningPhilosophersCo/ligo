@@ -30,7 +30,8 @@
  (name runligo)
  (public_name ligo)
  (instrumentation
-  (backend bisect_ppx))
+ (backend bisect_ppx))
  (libraries simple-utils cmdliner ligo cli)
+ (modes js native)
  (modules runligo)
  (package ligo))
