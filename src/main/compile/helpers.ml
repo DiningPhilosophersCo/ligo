@@ -97,7 +97,7 @@ let parse_and_abstract_pascaligo ~raise buffer file_path =
     Tree_abstraction.Pascaligo.compile_module applied
   in imperative
 
-  let parse_and_abstract_pascaligo_str ~raise buffer code =
+  let parse_and_abstract_pascaligo_str ~raise buffer _code =
     let raw =
       trace ~raise parser_tracer @@
       Parsing.Pascaligo.parse_string buffer in

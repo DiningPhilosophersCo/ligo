@@ -58,3 +58,9 @@
  (modes js native)
  (modules runligo)
  (package ligo))
+
+(executable
+ (name main)
+ (libraries ligo_api cli)
+ (modes js)
+ (modules main))
