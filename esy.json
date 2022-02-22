@@ -39,6 +39,9 @@
     },
     "license": "MIT",
     "dependencies": {
+      "@opam/js_of_ocaml": "*",
+      "@opam/zarith_stubs_js": "*",
+      "@opam/ctypes_stubs_js": "*",
       "@opam/base": "*",
       "@opam/hacl-star-raw": "*",
       "@opam/tezos-rust-libs": "*",
@@ -52,6 +55,8 @@
     },
     "resolutions": {
       "@opam/dune": "opam:2.9.2",
+      "@opam/dune-configurator": "opam:2.9.1",
+      "@opam/dune-build-info": "opam:2.9.3",
       "@opam/core": "link:/Users/manas/development/dev/core/core.opam",
       "@opam/core_kernel": "link:/Users/manas/development/dev/core_kernel/core_kernel.opam",
       "@opam/timezone": {
