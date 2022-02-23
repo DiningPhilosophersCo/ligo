@@ -42,12 +42,11 @@
       "@opam/js_of_ocaml": "*",
       "@opam/zarith_stubs_js": "*",
       "@opam/ctypes_stubs_js": "*",
+      "@opam/integers_stubs_js": "*",
       "@opam/base": "*",
       "@opam/hacl-star-raw": "*",
       "@opam/tezos-rust-libs": "*",
       "esy-libev": "*",
-      "@opam/tezos-011-PtHangz2-test-helpers": "*",
-      "@opam/tezos-client-011-PtHangz2": "*",
       "esy-libffi": "*"
     },
     "devDependencies": {
@@ -57,6 +56,7 @@
       "@opam/dune": "opam:2.9.2",
       "@opam/dune-configurator": "opam:2.9.1",
       "@opam/dune-build-info": "opam:2.9.3",
+      "@opam/sexplib": "link:../sexplib/sexplib.opam",
       "@opam/core": "link:/Users/manas/development/dev/core/core.opam",
       "@opam/core_kernel": "link:/Users/manas/development/dev/core_kernel/core_kernel.opam",
       "@opam/timezone": {
