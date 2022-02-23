@@ -8,7 +8,6 @@
    core
    yojson
    result
-   unix
    str)
   (flags (:standard -open Core))
 )
