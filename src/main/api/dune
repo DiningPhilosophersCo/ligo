@@ -3,7 +3,8 @@
  (public_name ligo.api)
  (instrumentation
   (backend bisect_ppx))
- (libraries simple-utils ligo build interpreter))
+ (flags "-open" "Ligo_api_formatter")
+ (libraries ligo.api.helpers ligo_api_compile simple-utils build))
 
 (rule
  (targets changelog.ml)
