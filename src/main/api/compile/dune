@@ -1,0 +1,6 @@
+(library
+ (name ligo_api_compile)
+ (instrumentation
+  (backend bisect_ppx))
+ (flags "-open" "Ligo_api_formatter")
+ (libraries ligo.api.helpers ligo_api_formatter simple-utils build))
