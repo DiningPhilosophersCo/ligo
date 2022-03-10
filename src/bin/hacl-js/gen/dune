@@ -1,0 +1,7 @@
+(executable
+ (name gen)
+ (libraries
+  ctypes.stubs
+  ctypes
+  hacl-star-raw
+  ezjsonm))

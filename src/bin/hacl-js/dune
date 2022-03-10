@@ -1,0 +1,7 @@
+(rule
+ (targets runtime-generated.js)
+ (deps gen/api.json gen/gen.exe random.js evercrypt.js)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run gen/gen.exe -api gen/api.json -stubs random.js -stubs evercrypt.js))))
