@@ -123,7 +123,7 @@ let make_options ~raise ?param ctxt =
                   parameter_ty = param } in
   match ctxt with
   | None ->
-     make_dry_run_options ~raise default
+     Obj.magic 0 (* make_dry_run_options ~raise default *)
   | Some (ctxt: Tezos_state.context) ->
     let source = ctxt.internals.source in
     let tezos_context = Tezos_state.get_alpha_context ~raise ctxt in

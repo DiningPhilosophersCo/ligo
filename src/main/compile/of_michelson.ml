@@ -1,6 +1,8 @@
+[@@@warning "-27"]
 open Main_errors
 open Tezos_utils
-open Proto_alpha_utils
+(* open Proto_alpha_utils *)
+open Simple_utils
 open Trace
 
 (* should preserve locations, currently wipes them *)
@@ -32,16 +34,18 @@ let build_contract ~raise :
       if disable_typecheck then
         contract
       else
-        let contract' =
-          Trace.trace_tzresult_lwt ~raise (typecheck_contract_tracer contract)
-            (Memory_proto_alpha.prims_of_strings contract) in
-        let _ = Trace.trace_tzresult_lwt ~raise (typecheck_contract_tracer contract) @@
-          Proto_alpha_utils.Memory_proto_alpha.typecheck_contract contract' in
-        contract
+        (* let contract' =
+         *   Trace.trace_tzresult_lwt ~raise (typecheck_contract_tracer contract)
+         *     (Memory_proto_alpha.prims_of_strings contract) in
+         * let _ = Trace.trace_tzresult_lwt ~raise (typecheck_contract_tracer contract) @@
+         *   Proto_alpha_utils.Memory_proto_alpha.typecheck_contract contract' in
+         * contract *)
+        Obj.magic 0
 
 let measure ~raise = fun m ->
-  Trace.trace_tzresult_lwt ~raise (main_could_not_serialize) @@
-    Proto_alpha_utils.Measure.measure m
+  (* Trace.trace_tzresult_lwt ~raise (main_could_not_serialize) @@
+   *   Proto_alpha_utils.Measure.measure m *)
+  Obj.magic 0
 
 (* find pairs of canonical Michelson locations, and the original Ligo
    locations recorded there by the compiler *)

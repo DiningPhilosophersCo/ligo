@@ -1,14 +1,14 @@
 module Michelson = Tezos_utils.Michelson
 module Location  = Simple_utils.Location
-open Proto_alpha_utils
+(* open Proto_alpha_utils *)
 open Simple_utils.Trace
-open Memory_proto_alpha.Protocol.Script_ir_translator
-open Memory_proto_alpha.X
+(* open Memory_proto_alpha.Protocol.Script_ir_translator
+ * open Memory_proto_alpha.X *)
 open Simple_utils.Runned_result
 
 module Errors = Main_errors
 
-type options = Memory_proto_alpha.options
+(* type options = Memory_proto_alpha.options *)
 
 type dry_run_options =
   { parameter_ty : (Location.t, string) Tezos_micheline.Micheline.node option ; (* added to allow dry-running contract using `Tezos.self` *)
@@ -20,50 +20,50 @@ type dry_run_options =
   }
 
 (* Shouldn't this be done by the cli parser ? *)
-let make_dry_run_options ~raise ?tezos_context (opts : dry_run_options) : options  =
-  let open Proto_alpha_utils.Trace in
-  let open Proto_alpha_utils.Memory_proto_alpha in
-  let open Protocol.Alpha_context in
-  let balance = match Tez.of_string opts.balance with
-    | None -> raise.raise @@ Errors.main_invalid_balance opts.balance
-    | Some balance -> balance in
-  let amount = match Tez.of_string opts.amount with
-    | None -> raise.raise @@ Errors.main_invalid_amount opts.amount
-    | Some amount -> amount in
-  let sender =
-    match opts.sender with
-    | None -> None
-    | Some sender ->
-      let sender =
-        trace_alpha_tzresult ~raise
-          (fun _ -> Errors.main_invalid_sender sender)
-          (Contract.of_b58check sender) in
-      (Some sender) in
-  let source =
-    match opts.source with
-    | None -> None
-    | Some source ->
-      let source =
-        trace_alpha_tzresult ~raise
-          (fun _ -> Errors.main_invalid_source source)
-          (Contract.of_b58check source) in
-      (Some source) in
-  let now =
-    match opts.now with
-    | None -> None
-    | Some st ->
-      match Memory_proto_alpha.Protocol.Alpha_context.Script_timestamp.of_string st with
-        | Some t -> (Some t)
-        | None -> raise.raise @@ Errors.main_invalid_timestamp st in
-  let parameter_ty =
-    match opts.parameter_ty with
-    | Some x ->
-      let x = Trace.trace_tzresult_lwt ~raise Errors.parsing_payload_tracer @@ Memory_proto_alpha.prims_of_strings x in
-      let x = Tezos_micheline.Micheline.strip_locations x in
-      (Some x)
-    | None -> None
-  in
-  make_options ?tezos_context ?now:now ~amount ~balance ?sender ?source ?parameter_ty ()
+(* let make_dry_run_options ~raise ?tezos_context (opts : dry_run_options) : options  =
+ *   let open Proto_alpha_utils.Trace in
+ *   let open Proto_alpha_utils.Memory_proto_alpha in
+ *   let open Protocol.Alpha_context in
+ *   let balance = match Tez.of_string opts.balance with
+ *     | None -> raise.raise @@ Errors.main_invalid_balance opts.balance
+ *     | Some balance -> balance in
+ *   let amount = match Tez.of_string opts.amount with
+ *     | None -> raise.raise @@ Errors.main_invalid_amount opts.amount
+ *     | Some amount -> amount in
+ *   let sender =
+ *     match opts.sender with
+ *     | None -> None
+ *     | Some sender ->
+ *       let sender =
+ *         trace_alpha_tzresult ~raise
+ *           (fun _ -> Errors.main_invalid_sender sender)
+ *           (Contract.of_b58check sender) in
+ *       (Some sender) in
+ *   let source =
+ *     match opts.source with
+ *     | None -> None
+ *     | Some source ->
+ *       let source =
+ *         trace_alpha_tzresult ~raise
+ *           (fun _ -> Errors.main_invalid_source source)
+ *           (Contract.of_b58check source) in
+ *       (Some source) in
+ *   let now =
+ *     match opts.now with
+ *     | None -> None
+ *     | Some st ->
+ *       match Memory_proto_alpha.Protocol.Alpha_context.Script_timestamp.of_string st with
+ *         | Some t -> (Some t)
+ *         | None -> raise.raise @@ Errors.main_invalid_timestamp st in
+ *   let parameter_ty =
+ *     match opts.parameter_ty with
+ *     | Some x ->
+ *       let x = Trace.trace_tzresult_lwt ~raise Errors.parsing_payload_tracer @@ Memory_proto_alpha.prims_of_strings x in
+ *       let x = Tezos_micheline.Micheline.strip_locations x in
+ *       (Some x)
+ *     | None -> None
+ *   in
+ *   make_options ?tezos_context ?now:now ~amount ~balance ?sender ?source ?parameter_ty () *)
 
 let ex_value_ty_to_michelson ~raise (v : ex_typed_value) : _ Michelson.t * _ Michelson.t =
   let (Ex_typed_value (ty , value)) = v in

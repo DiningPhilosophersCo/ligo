@@ -11,8 +11,8 @@ let dump_changelog display_format () =
 
 
 module Compile = Compile
-module Transpile = Transpile
-module Run = Run
+(* module Transpile = Transpile *)
+(* module Run = Run *)
 module Info = Info
 module Print = Print
 module Mutate = Mutate

@@ -18,7 +18,7 @@
   },
   "source": "./ligo.opam",
   "override": {
-    "build": "dune build -p ligo",
+    "build": "echo noop",
     "buildEnv": {
       "CAML_LD_LIBRARY_PATH": "#{@opam/base.lib / 'stublibs' : @opam/hacl-star-raw.lib / 'hacl-star-raw' : esy-libffi.lib : esy-libev.lib : $LD_LIBRARY_PATH : $CAML_LD_LIBRARY_PATH}",
       "OPAM_SWITCH_PREFIX": "#{ @opam/tezos-rust-libs.install }"
@@ -76,7 +76,15 @@
       },
       "@opam/tezos-test-helpers": "git:https://github.com/callistonianembrace/tezos:src/lib_test/tezos-test-helpers.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
       "@opam/bls12-381": "ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
-      "@opam/bls12-381-unix": "ManasJayanth/ocaml-bls12-381:bls12-381-unix.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
+      "@opam/bls12-381-unix": {
+        "source": "link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam",
+        "override": {
+          "buildEnv": {
+            "HOME": "#{$cur__target_dir}",
+            "PATH": "$PATH:/opt/homebrew/bin"
+          }
+        }
+      },
       "@opam/bls12-381-gen": "opam:0.4.4",
       "@opam/tezos-protocol-plugin-011-PtHangz2": "git:https://github.com/callistonianembrace/tezos:src/proto_011_PtHangz2/lib_plugin/tezos-protocol-plugin-011-PtHangz2.opam#a00bdee3936f6900dfd2fd2f5cbc1569180a68f9",
       "@opam/secp256k1-internal": "git:https://gitlab.com/nomadic-labs/ocaml-secp256k1-internal:secp256k1-internal.opam#18012dcbe3169d51a2b2d6e991150a9a02a85494",

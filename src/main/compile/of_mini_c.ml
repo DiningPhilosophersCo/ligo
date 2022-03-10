@@ -1,6 +1,7 @@
 open Main_errors
 open Mini_c
-open Proto_alpha_utils
+(* open Proto_alpha_utils *)
+open Simple_utils
 open Trace
 open! Stacking
 open Tezos_micheline

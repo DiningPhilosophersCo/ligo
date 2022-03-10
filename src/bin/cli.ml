@@ -642,7 +642,7 @@ let repl =
      return_result ~return @@ fun () ->
     (let protocol = Environment.Protocols.protocols_to_variant protocol_version in
     let syntax = Ligo_compile.Helpers.syntax_to_variant (Syntax_name syntax_name) None in
-    let dry_run_opts = Ligo_run.Of_michelson.make_dry_run_options {now ; amount ; balance ; sender ; source ; parameter_ty = None } in
+    let dry_run_opts = Obj.magic 0 (* Ligo_run.Of_michelson.make_dry_run_options {now ; amount ; balance ; sender ; source ; parameter_ty = None } *) in
     match protocol, Simple_utils.Trace.to_option syntax, Simple_utils.Trace.to_option dry_run_opts with
     | _, None, _ -> Error ("", "Please check syntax name.")
     | None, _, _ -> Error ("", "Please check protocol name.")
