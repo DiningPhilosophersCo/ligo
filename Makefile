@@ -1,7 +1,43 @@
+BLST_FILES = $(shell esy echo '\#{@opam/bls12-381-unix.lib}/bls12-381-unix')
+PROFILE ?= dev
+JS_FILES = threads.js bls12-runtime.js random.js runtime-generated.js evercrypt.js
+
+space := $(null) #
+comma := ,
+
+
 # last refactor: 2021-05-05
 .ONESHELL:
 
 all: test
+
+.PHONY: esy
+esy: esy.json
+	esy
+.PHONY: sudo-prompt
+sudo-prompt:
+	echo "SUDO password for copying files" && sudo true
+
+_http:
+	mkdir -p _http
+
+_http/blst.js: esy sudo-prompt _http
+	sudo cp $(BLST_FILES)/blst.js _http
+
+_http/blst.wasm: esy sudo-prompt _http
+	sudo cp $(BLST_FILES)/blst.wasm _http
+
+_http/index.html: _http
+	cp src/bin/index.html _http
+
+_build/default/src/bin/main.bc.js: esy
+	esy dune build ./src/bin/main.bc.js --profile $(PROFILE) -j 8
+
+_http/%.js: _build/default/src/bin/%.js _build/default/src/bin/main.bc.js _http sudo-prompt
+	sudo cp $< _http
+
+jsoo: _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html _http/blst.js _http/blst.wasm
+	python3 -m http.server -d _http
 
 # Use install-deps instead of 'install' because usually 'make install' adds a
 # binary to the system path and we don't want to confuse users
@@ -38,7 +74,7 @@ test: build
 
 clean:
 	dune clean
-	rm -fr _coverage_all _coverage_cli _coverage_ligo
+	rm -fr _coverage_all _coverage_cli _coverage_ligo _http
 
 coverage:
 	eval $$(opam config env)
