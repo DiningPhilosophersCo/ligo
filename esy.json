@@ -39,6 +39,7 @@
     },
     "license": "MIT",
     "dependencies": {
+      "@opam/bls12-381-unix": "*",
       "@opam/ezjsonm": "*",
       "@opam/js_of_ocaml": "*",
       "@opam/zarith_stubs_js": "*",

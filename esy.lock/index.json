@@ -1,5 +1,5 @@
 {
-  "checksum": "9d2a544eaeb6450c469039d98827f0dd",
+  "checksum": "128dfe99e96176fa8f762af68b547a42",
   "root": "ligo-jsoo@link-dev:./ligo.opam",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -78,8 +78,9 @@
         "@opam/ctypes-foreign@opam:0.18.0@d7de6eb2",
         "@opam/core@link:/Users/manas/development/dev/core/core.opam",
         "@opam/coq@opam:8.13.2@d8e9a38c",
+        "@opam/bls12-381-unix@link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam",
         "@opam/bls12-381-legacy@opam:0.4.4@c1f223f4",
-        "@opam/bisect_ppx@opam:2.8.0@69bf7d46",
+        "@opam/bisect_ppx@opam:2.8.1@5403b8fc",
         "@opam/base@opam:v0.14.3@b3ddb868",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
@@ -113,7 +114,7 @@
         "@opam/ctypes-foreign@opam:0.18.0@d7de6eb2",
         "@opam/core@link:/Users/manas/development/dev/core/core.opam",
         "@opam/bls12-381-legacy@opam:0.4.4@c1f223f4",
-        "@opam/bisect_ppx@opam:2.8.0@69bf7d46",
+        "@opam/bisect_ppx@opam:2.8.1@5403b8fc",
         "@opam/alcotest-lwt@opam:1.5.0@f1f00af0",
         "@opam/alcotest@opam:1.5.0@338d9572"
       ]
@@ -6052,20 +6053,20 @@
         "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.2@f5a20a5e"
       ]
     },
-    "@opam/bisect_ppx@opam:2.8.0@69bf7d46": {
-      "id": "@opam/bisect_ppx@opam:2.8.0@69bf7d46",
+    "@opam/bisect_ppx@opam:2.8.1@5403b8fc": {
+      "id": "@opam/bisect_ppx@opam:2.8.1@5403b8fc",
       "name": "@opam/bisect_ppx",
-      "version": "opam:2.8.0",
+      "version": "opam:2.8.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/ba/ba8c80cd2bf6b86537296736a4c6ba89#md5:ba8c80cd2bf6b86537296736a4c6ba89",
-          "archive:https://github.com/aantron/bisect_ppx/archive/2.8.0.tar.gz#md5:ba8c80cd2bf6b86537296736a4c6ba89"
+          "archive:https://opam.ocaml.org/cache/md5/e8/e8831e6e99292f221ded6fb02652e2a5#md5:e8831e6e99292f221ded6fb02652e2a5",
+          "archive:https://github.com/aantron/bisect_ppx/archive/2.8.1.tar.gz#md5:e8831e6e99292f221ded6fb02652e2a5"
         ],
         "opam": {
           "name": "bisect_ppx",
-          "version": "2.8.0",
-          "path": "esy.lock/opam/bisect_ppx.2.8.0"
+          "version": "2.8.1",
+          "path": "esy.lock/opam/bisect_ppx.2.8.1"
         }
       },
       "overrides": [],

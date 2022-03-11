@@ -33,8 +33,13 @@ _http/index.html: _http
 _build/default/src/bin/main.bc.js: esy
 	esy dune build ./src/bin/main.bc.js --profile $(PROFILE) -j 8
 
-_http/%.js: _build/default/src/bin/%.js _build/default/src/bin/main.bc.js _http sudo-prompt
-	sudo cp $< _http
+# <<<<<<< HEAD
+# _http/%.js: _build/default/src/bin/%.js _build/default/src/bin/main.bc.js _http sudo-prompt
+# 	sudo cp $< _http
+# =======
+$(foreach F, $(JS_FILES), _http/$(F)) _http/main.bc.js: _build/default/src/bin/main.bc.js _http sudo-prompt
+	sudo cp $(subst _http,_build/default/src/bin,$@) $@ 
+# >>>>>>> a6ca19a17 (Adds makefile)
 
 jsoo: _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html _http/blst.js _http/blst.wasm
 	python3 -m http.server -d _http
