@@ -41,7 +41,7 @@ $(foreach F, $(JS_FILES), _http/$(F)) _http/main.bc.js: _build/default/src/bin/m
 	sudo cp $(subst _http,_build/default/src/bin,$@) $@ 
 # >>>>>>> a6ca19a17 (Adds makefile)
 
-jsoo: _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html _http/blst.js _http/blst.wasm
+jsoo: _http/main.bc.runtime.js _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html _http/blst.js _http/blst.wasm
 	python3 -m http.server -d _http
 
 # Use install-deps instead of 'install' because usually 'make install' adds a
