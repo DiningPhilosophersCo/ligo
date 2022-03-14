@@ -76,7 +76,7 @@ let rec decompile_value ~(raise : stacking_error raise) :
   | Prim (_, "timestamp", [], _), Int (_, n) ->
       D_timestamp n
   | Prim (_, "timestamp", [], _), String (_, n) ->
-      let open Tezos_base.TzPervasives.Time.Protocol in
+      let open Tezos_utils.Time.Protocol in
       let n = Z.of_int64 (to_seconds (of_notation_exn n)) in
       D_timestamp n
   | Prim (_, "mutez", [], _), Int (_, n) ->

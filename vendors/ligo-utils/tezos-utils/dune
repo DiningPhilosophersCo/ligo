@@ -2,13 +2,26 @@
   (name tezos_utils)
   (public_name tezos-utils)
   (libraries
+    tezos-clic
+    tezos-crypto
     tezos-error-monad
     tezos-stdlib-unix
+    tezos-lwt-result-stdlib
     tezos-micheline
-    tezos-base
     data-encoding
     simple-utils
     base
   )
- (flags (:standard -open Core ))
+ (flags (:standard -open Tezos_stdlib
+                   -open Tezos_lwt_result_stdlib
+                   -open Tezos_crypto
+                   -open Data_encoding
+                   -open Tezos_error_monad
+                   -open Tezos_error_monad.TzLwtreslib
+                   -open Tezos_rpc
+                   -open Tezos_clic
+                   -open Tezos_micheline
+                   -open Tezos_event_logging
+                   -open Core
+                   ))
 )

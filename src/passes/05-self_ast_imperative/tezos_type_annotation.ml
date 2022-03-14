@@ -15,7 +15,7 @@ let peephole_expression ~raise : expression -> expression = fun e ->
       | (E_literal (Literal_string s)   , T_variable tv) when Var.equal tv v_key -> return @@ E_literal (Literal_key (Ligo_string.extract s))
       | (E_literal (Literal_int i)      , T_variable tv) when Var.equal tv v_timestamp -> return @@ E_literal (Literal_timestamp i)
       | (E_literal (Literal_string str) , T_variable tv) when Var.equal tv v_timestamp ->
-        let open Tezos_base.TzPervasives.Time.Protocol in
+        let open Tezos_utils.Time.Protocol in
         let str = Ligo_string.extract str in
         let time =
           trace_option ~raise (bad_timestamp str e')
