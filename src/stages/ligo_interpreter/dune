@@ -1,7 +1,0 @@
-(library
- (name ligo_interpreter)
- (public_name ligo.ligo_interpreter)
- (instrumentation
-  (backend bisect_ppx))
- (libraries simple-utils tezos-utils ast_aggregated
-   stage_common))
