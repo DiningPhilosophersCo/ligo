@@ -44,16 +44,16 @@ depends: [
   "ctypes-foreign"
   "lwt" { = "5.4.2" }
   "bisect_ppx" {>= "2.3"}
-  "irmin" { = "2.8.0" }
+  # "irmin" { = "2.8.0" }
   # work around upstream in-place update
   "ocaml-migrate-parsetree" { = "2.1.0" }
   # dependencies of vendored dependencies
   # "bls12-381-legacy"
-  "alcotest-lwt" { with-test }
-  "qcheck-alcotest"
-  "irmin-pack"
-  "ringo-lwt"
-  "resto-cohttp-self-serving-client" { >= "0.6" & < "0.7" }
+  # "alcotest-lwt" { with-test }
+  # "qcheck-alcotest"
+  # "irmin-pack"
+  # "ringo-lwt"
+  # "resto-cohttp-self-serving-client" { >= "0.6" & < "0.7" }
 ]
 build: [
   [ "dune" "build" "-p" name "-j" jobs ]
