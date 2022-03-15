@@ -1,5 +1,5 @@
 {
-  "checksum": "628143fee4dab46e8334615997a2656a",
+  "checksum": "fe2ea5a855a9f4c0fb1e6a2684ee8352",
   "root": "ligo-jsoo@link-dev:./ligo.opam",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -66,13 +66,11 @@
         "@opam/integers_stubs_js@opam:1.0@8df7df87",
         "@opam/hacl-star-raw@opam:0.4.1@dc7adab0",
         "@opam/getopt@github:ulrikstrid/ocaml-getopt:getopt.opam#645ab74@d41d8cd9",
-        "@opam/ezjsonm@opam:1.3.0@7e3d4a08",
         "@opam/dune@opam:2.9.2@f5a20a5e",
         "@opam/ctypes_stubs_js@opam:0.1@3a0e81b3",
         "@opam/ctypes-foreign@opam:0.18.0@d7de6eb2",
         "@opam/core@link:/Users/manas/development/dev/core/core.opam",
         "@opam/coq@opam:8.13.2@d8e9a38c",
-        "@opam/bls12-381-unix@link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam",
         "@opam/bisect_ppx@opam:2.8.1@5403b8fc",
         "@opam/base@opam:v0.14.3@b3ddb868",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
@@ -3533,32 +3531,6 @@
         "@opam/base@opam:v0.14.3@b3ddb868"
       ]
     },
-    "@opam/ff-sig@opam:0.6.2@13e04ec3": {
-      "id": "@opam/ff-sig@opam:0.6.2@13e04ec3",
-      "name": "@opam/ff-sig",
-      "version": "opam:0.6.2",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/fa/fa68c430de8cba04fb8b7819e4cc4b38#md5:fa68c430de8cba04fb8b7819e4cc4b38",
-          "archive:https://gitlab.com/dannywillems/ocaml-ff/-/archive/0.6.2/ocaml-ff-0.6.2.tar.gz#md5:fa68c430de8cba04fb8b7819e4cc4b38"
-        ],
-        "opam": {
-          "name": "ff-sig",
-          "version": "0.6.2",
-          "path": "esy.lock/opam/ff-sig.0.6.2"
-        }
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/dune@opam:2.9.2@f5a20a5e", "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/dune@opam:2.9.2@f5a20a5e"
-      ]
-    },
     "@opam/ezjsonm@opam:1.3.0@7e3d4a08": {
       "id": "@opam/ezjsonm@opam:1.3.0@7e3d4a08",
       "name": "@opam/ezjsonm",
@@ -4224,65 +4196,6 @@
         "ocaml@4.12.0@d41d8cd9", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [ "ocaml@4.12.0@d41d8cd9" ]
-    },
-    "@opam/bls12-381-unix@link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam": {
-      "id":
-        "@opam/bls12-381-unix@link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam",
-      "name": "@opam/bls12-381-unix",
-      "version":
-        "link:/Users/manas/development/prometheansacrifice/ocaml-bls12-381/bls12-381-unix.opam",
-      "source": {
-        "type": "link",
-        "path":
-          "/Users/manas/development/prometheansacrifice/ocaml-bls12-381",
-        "manifest": "bls12-381-unix.opam"
-      },
-      "overrides": [
-        {
-          "buildEnv": {
-            "HOME": "#{$cur__target_dir}",
-            "PATH": "$PATH:/opt/homebrew/bin"
-          }
-        }
-      ],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/integers@opam:0.6.0@0cc267a8",
-        "@opam/hex@opam:1.4.0@41725494",
-        "@opam/dune-configurator@opam:2.9.1@b7cf7a02",
-        "@opam/dune@opam:2.9.2@f5a20a5e",
-        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/integers@opam:0.6.0@0cc267a8",
-        "@opam/hex@opam:1.4.0@41725494", "@opam/dune@opam:2.9.2@f5a20a5e",
-        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9"
-      ]
-    },
-    "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9": {
-      "id":
-        "@opam/bls12-381@github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e@d41d8cd9",
-      "name": "@opam/bls12-381",
-      "version":
-        "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e",
-      "source": {
-        "type": "install",
-        "source": [
-          "github:ManasJayanth/ocaml-bls12-381:bls12-381.opam#59dadfe4582a48cd3a81e57db93a97137945022e"
-        ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.2@f5a20a5e",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.12.0@d41d8cd9", "@opam/zarith@opam:1.12@232cc7f2",
-        "@opam/ff-sig@opam:0.6.2@13e04ec3", "@opam/dune@opam:2.9.2@f5a20a5e"
-      ]
     },
     "@opam/bisect_ppx@opam:2.8.1@5403b8fc": {
       "id": "@opam/bisect_ppx@opam:2.8.1@5403b8fc",
