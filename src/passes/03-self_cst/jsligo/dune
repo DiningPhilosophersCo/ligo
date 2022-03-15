@@ -3,6 +3,6 @@
  (public_name ligo.self_cst.jsligo)
  (instrumentation
   (backend bisect_ppx))
- (libraries simple-utils cst tezos-crypto )
+ (libraries simple-utils cst)
  (preprocess
   (pps ppx_poly_constructor)))

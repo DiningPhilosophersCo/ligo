@@ -54,7 +54,6 @@
 *)
 
 open Tezos_stdlib
-open Tezos_crypto
 open Data_encoding
 open Tezos_error_monad
 open Tezos_error_monad.TzLwtreslib
