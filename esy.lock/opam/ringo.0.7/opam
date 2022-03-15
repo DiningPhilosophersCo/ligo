@@ -15,9 +15,9 @@ build: [
 synopsis: "Caches (bounded-size key-value stores) and other bounded-size stores"
 url {
   src:
-    "https://gitlab.com/nomadic-labs/ringo/-/archive/v0.5/ringo-v0.5.tar.gz"
+    "https://gitlab.com/nomadic-labs/ringo/-/archive/v0.7/ringo-v0.7.tar.gz"
   checksum: [
-    "md5=849b464c922398958bdd8c88994da58e"
-    "sha512=612838fe7bd2bc31c4cd541ca1821ac2d30520edda5345fcf1d90d687eba8a98103298e05682954c903de015ee4f2905d3e74181932b57c1cfc93a807a8b3b21"
+    "md5=e32bbf680f33158cac632d5bcef478cb"
+    "sha512=1e5daa9c5741ebce5a0265227674daed9f1bf7a2acd9be8ea655ae26220f85e003fb4ac3783253391ea6780d8bef9cd057df62c3872a9f6e6871852b4df3dc74"
   ]
 }

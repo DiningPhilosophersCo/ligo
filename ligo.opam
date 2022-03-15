@@ -30,8 +30,8 @@ depends: [
   "yojson"
   "ocaml-recovery-parser" { = "0.2.2" }
   # Tezos libs
-  "tezos-base"
-  "tezos-crypto"
+  # "tezos-base"
+  # "tezos-crypto"
   "tezos-micheline"
   # "tezos-011-PtHangz2-test-helpers"
   # PPXs
@@ -48,7 +48,7 @@ depends: [
   # work around upstream in-place update
   "ocaml-migrate-parsetree" { = "2.1.0" }
   # dependencies of vendored dependencies
-  "bls12-381-legacy"
+  # "bls12-381-legacy"
   "alcotest-lwt" { with-test }
   "qcheck-alcotest"
   "irmin-pack"
