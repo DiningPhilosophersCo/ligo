@@ -2,10 +2,16 @@ let () =
   let werror = false in
   let source_file = {|
 type storage = int
+type parameter = unit
+type return = operation list * storage
+let main (_, _store : parameter * storage) : return =
+ ([] : operation list), 1000   // No operations
+
+
 |} in
   let entry_point = "main" in
   let oc_views = [] in
-  let syntax = "cameligo" in
+  let syntax = "camelgo" in
   let protocol_version = "hangzhou" in
   let display_format = Simple_utils.Display.human_readable in
   let disable_typecheck = false in
