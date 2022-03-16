@@ -37,6 +37,7 @@ depends: [
   "ocplib-json-typed-bson"
   "tezos-rpc"
   "tezos-stdlib-unix"
+  "tezos-event-logging"
   "tezos-micheline"
   "data-encoding"
   "simple-utils"

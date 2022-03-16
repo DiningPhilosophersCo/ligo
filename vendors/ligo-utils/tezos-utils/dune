@@ -5,7 +5,9 @@
     tezos-clic
     tezos-rpc
     tezos-error-monad
-    tezos-stdlib-unix
+    tezos-stdlib
+    ptime
+    tezos-event-logging
     tezos-lwt-result-stdlib
     tezos-micheline
     data-encoding
