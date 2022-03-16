@@ -65,11 +65,11 @@ module Michelson_formatter = struct
 
   let comment michelson_comments =
     match michelson_comments with
-    | {location; source = _; env = _} ->
-      fun loc ->
-        if location && not (Simple_utils.Location.is_virtual loc)
-        then Some (Format.asprintf "%a" Location.pp loc)
-        else None
+    | {location = _; source = _; env = _} ->
+      fun _loc -> None
+        (* if location && not (Simple_utils.Location.is_virtual loc)
+         * then Some (Format.asprintf "%a" Location.pp loc)
+         * else None *)
 
   let rec yojson_to_json (x : Yojson.Safe.t) : Data_encoding.Json.t =
     match x with
