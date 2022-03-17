@@ -40,7 +40,7 @@ let build_contract ~raise :
          * let _ = Trace.trace_tzresult_lwt ~raise (typecheck_contract_tracer contract) @@
          *   Proto_alpha_utils.Memory_proto_alpha.typecheck_contract contract' in
          * contract *)
-        Obj.magic 0
+        contract
 
 let measure ~raise = fun m ->
   (* Trace.trace_tzresult_lwt ~raise (main_could_not_serialize) @@
