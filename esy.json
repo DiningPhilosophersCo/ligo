@@ -40,6 +40,7 @@
     "license": "MIT",
     "dependencies": {
       "@opam/js_of_ocaml": "*",
+      "@opam/js_of_ocaml-ppx": "*",
       "@opam/zarith_stubs_js": "*",
       "@opam/ctypes_stubs_js": "*",
       "@opam/integers_stubs_js": "*",
