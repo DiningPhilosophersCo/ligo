@@ -21,6 +21,9 @@ sudo-prompt:
 _http:
 	mkdir -p _http
 
+_http/editor.bundle.js: src/bin/editor.js
+	yarn dev
+
 _http/blst.js: esy sudo-prompt _http
 	sudo cp $(BLST_FILES)/blst.js _http
 
@@ -36,7 +39,7 @@ _build/default/src/bin/main.bc.js: esy
 $(foreach F, $(JS_FILES), _http/$(F)) _http/main.bc.js: _build/default/src/bin/main.bc.js _http sudo-prompt
 	sudo cp $(subst _http,_build/default/src/bin,$@) $@ 
 
-jsoo: _http/main.bc.runtime.js _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html
+jsoo: _http/main.bc.js $(foreach F, $(JS_FILES), _http/$(F)) _http/index.html _http/editor.bundle.js
 	python3 -m http.server -d _http
 
 # Use install-deps instead of 'install' because usually 'make install' adds a

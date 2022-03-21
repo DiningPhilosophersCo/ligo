@@ -1,7 +1,9 @@
+<!doctype html>
 <html>
   <head>
+    <meta charset="utf8" />
     <title>jsoo</title>
-    <script src="./threads.js"></script>
+    <!-- <script src="./threads.js"></script> -->
     <!-- <script src="./blst.js"></script>
 	 <script>
 	 _BLS12381()
@@ -11,13 +13,20 @@
          .catch((e) => console.log(e));
 	 </script>
 	 <script src="./bls12-runtime.js"></script> -->
-    <script src="./runtime-generated.js"></script>
-    <script src="./random.js"></script>
-    <script src="./evercrypt.js"></script>
+    <!-- <script src="./runtime-generated.js"></script>
+	 <script src="./random.js"></script>
+	 <script src="./evercrypt.js"></script> -->
     <script src="./main.bc.runtime.js"></script>
     <script src="./main.bc.js"></script>
+    <script src="./editor.bundle.js"></script>
   </head>
   <body>
-    Check console for logs
+    <h1>In browser Ligo compiler</h1>
+    <button id="compile" type="button">Compile</button>
+    <h2>Ligo</h2>
+    <div id="ligo"></div>
+    <h2>Michelson</h2>
+    <div id="michelson"></div>
+    <script src="editor.bundle.js"></script>
   </body>
 </html>

@@ -67,7 +67,8 @@
  (name main)
  (flags -g)
  (js_of_ocaml
-  (javascript_files threads.js bls12-runtime.js blst.js runtime-generated.js helper.js random.js evercrypt.js)
+  ; (javascript_files threads.js bls12-runtime.js blst.js runtime-generated.js helper.js random.js evercrypt.js)
+  (javascript_files threads.js)
    (flags
      "--debuginfo") ; "+bls12-381-unix/bls-runtime-helpers.js" "+bls12-381-unix/blst_bindings_stubs.js")
  )
