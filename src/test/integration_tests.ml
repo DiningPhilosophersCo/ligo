@@ -1617,7 +1617,8 @@ let website2_ligo ~raise ~add_warning f : unit =
 let tez_ligo ~raise ~add_warning () : unit =
   let program = type_file ~raise ~add_warning "./contracts/tez.ligo" in
   let _ = expect_eq_evaluate ~raise program "add_tez" (e_mutez 42) in
-  let _ = expect_eq_evaluate ~raise program "sub_tez" (e_mutez 1) in
+  let _ = expect_eq_evaluate ~raise program "sub_tez" (e_some (e_mutez 1)) in
+  let _ = expect_eq_evaluate ~raise program "sub_tez_none" (e_none ()) in
   let _ = expect_eq_evaluate ~raise program "not_enough_tez" (e_mutez 4611686018427387903) in
   let _ = expect_eq_evaluate ~raise program "nat_mul_tez" (e_mutez 100) in
   let _ = expect_eq_evaluate ~raise program "tez_mul_nat" (e_mutez 1000) in
@@ -1632,7 +1633,8 @@ let tez_ligo ~raise ~add_warning () : unit =
 let tez_mligo ~raise ~add_warning () : unit =
   let program = type_file ~raise ~add_warning "./contracts/tez.mligo" in
   let _ = expect_eq_evaluate ~raise program "add_tez" (e_mutez 42) in
-  let _ = expect_eq_evaluate ~raise program "sub_tez" (e_mutez 1) in
+  let _ = expect_eq_evaluate ~raise program "sub_tez" (e_some (e_mutez 1)) in
+  let _ = expect_eq_evaluate ~raise program "sub_tez_none" (e_none ()) in
   let _ = expect_eq_evaluate ~raise program "not_enough_tez" (e_mutez 4611686018427387903) in
   let _ = expect_eq_evaluate ~raise program "add_more_tez" (e_mutez 111111000) in
   ()
@@ -1713,13 +1715,13 @@ let jsligo_let_multiple ~raise ~add_warning () : unit =
 
 let balance_test_options ~raise () =
   let balance = trace_option ~raise (test_internal "could not convert balance") @@
-    Memory_proto_alpha.Protocol.Alpha_context.Tez.of_string "4000000" in
+    Memory_proto_alpha.Protocol.Alpha_context.Tez.of_string "0" in
   Proto_alpha_utils.Memory_proto_alpha.(make_options ~env:(test_environment ()) ~balance ())
 
 let balance_constant ~raise ~add_warning f : unit =
   let program = type_file ~raise ~add_warning f in
   let input = e_tuple [e_unit () ; e_mutez 0]  in
-  let expected = e_tuple [e_list []; e_mutez 4000000000000] in
+  let expected = e_tuple [e_list []; e_mutez 0] in
   let options = balance_test_options ~raise () in
   expect_eq ~raise ~options program "main" input expected
 
@@ -2216,6 +2218,16 @@ let tuple_fun_religo ~raise ~add_warning () : unit =
  let _ = type_file ~raise ~add_warning "./contracts/tuple_fun.religo" in
  ()
 
+let while_and_for_loops_jsligo ~raise ~add_warning () : unit =
+  let program = type_file ~raise ~add_warning "./contracts/loops.jsligo" in
+  let _ = expect_eq ~raise program "for_of_single_statement" (e_list [e_int 1;e_int 2;e_int 3]) (e_list [e_int 3;e_int 2;e_int 1]) in
+  let _ = expect_eq ~raise program "for_of_multi_statements_1" (e_list [e_int 1;e_int 2;e_int 3]) (e_list [e_int 5;e_int 4;e_int 3]) in
+  let _ = expect_eq ~raise program "for_of_multi_statements_2" (e_list [e_int 1;e_int 2;e_int 3]) (e_list [e_int 6;e_int 4;e_int 2]) in
+  let _ = expect_eq ~raise program "while_single_statement" (e_int 10) (e_int 10) in
+  let _ = expect_eq ~raise program "while_multi_statements_1" (e_int 10) (e_int 55) in
+  let _ = expect_eq ~raise program "while_multi_statements_2" (e_int 10) (e_int 55) in
+  ()
+
 let main = test_suite "Integration (End to End)"
   @@ [
 
@@ -2399,5 +2411,6 @@ let main = test_suite "Integration (End to End)"
     test_w "assignment_operators (jsligo)" assignment_operators_jsligo;
     test_w "if_if_return (jsligo)" if_if_return_jsligo;
     test_w "switch case (jsligo)" switch_cases_jsligo;
-    test_w "tuple fun (religo)" tuple_fun_religo
+    test_w "tuple fun (religo)" tuple_fun_religo;
+    test_w "for-of & while loop (jsligo)"while_and_for_loops_jsligo
   ]

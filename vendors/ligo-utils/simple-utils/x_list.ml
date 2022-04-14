@@ -47,7 +47,7 @@ module Ne = struct
   let unzip ((hd, tl): _ t) =
     let (a, b) = hd and (la, lb) = List.unzip tl in
     (a, la), (b, lb)
-  let of_list lst = List.hd_exn lst, List.tl_exn lst
+  let of_list lst = List.hd_exn lst, List.tl_exn lst (* TODO: Remove *)
   let to_list (hd, tl : _ t) = hd :: tl
   let singleton hd : 'a t = hd , []
   let hd : 'a t -> 'a = fst
@@ -55,6 +55,7 @@ module Ne = struct
   let iter f (hd, tl : _ t) = f hd ; List.iter ~f tl
   let map f (hd, tl : _ t) = f hd, List.map ~f tl
   let fold_left ~f ~init (hd, tl : _ t) = List.fold_left ~f ~init:(f init hd) tl
+  let fold_right ~f ~init (hd, tl : _ t) = f hd (List.fold_right ~f ~init tl)
   let hd_map : _ -> 'a t -> 'a t = fun f (hd , tl) -> (f hd , tl)
   let mapi f (hd, tl : _ t) =
     let lst = List.mapi ~f (hd::tl) in

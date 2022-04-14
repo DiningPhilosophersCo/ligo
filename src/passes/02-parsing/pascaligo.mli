@@ -1,4 +1,4 @@
-(* Interfacing the PascaLIGO parser. *)
+(* Interfacing the PascaLIGO parser with the compiler *)
 
 (* Vendor dependencies *)
 
@@ -8,6 +8,7 @@ module Trace = Simple_utils.Trace
 
 module CST    = Cst_pascaligo.CST
 module Errors = Parsing_shared.Errors
+module Self_tokens = Lexing_pascaligo.Self_tokens
 
 (* Parsing *)
 
@@ -38,5 +39,9 @@ val pretty_print            : CST.t -> Buffer.t
 val pretty_print_expression : CST.expr -> Buffer.t
 val pretty_print_pattern    : CST.pattern -> Buffer.t
 val pretty_print_type_expr  : CST.type_expr -> Buffer.t
-val pretty_print_file       : raise:Errors.t Trace.raise -> Buffer.t -> file_path -> Buffer.t
-val pretty_print_cst        : raise:Errors.t Trace.raise -> Buffer.t -> file_path -> Buffer.t
+
+val pretty_print_file :
+  raise:Errors.t Trace.raise -> Buffer.t -> file_path -> Buffer.t
+
+val pretty_print_cst :
+  raise:Errors.t Trace.raise -> Buffer.t -> file_path -> Buffer.t

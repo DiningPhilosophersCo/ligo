@@ -1,11 +1,12 @@
-(* Note: All external symbols here should be unqualified because this file is used
-         by [menhir] that does not always insert the [%{..%}] header. So we work
-         around it by the [-open Module] option in [dune] but symbols should be
-         unqualified.
+(* Tokens (mirroring these defined in module Token) *)
 
-         Also, keep in mind that [ParToken.mly] and [Parser.mly] are merging into
-         one file and the header of [Parser.mly] affects this code.
-         For example: [lexeme] type comes from [open CST] *)
+(* All external symbols here should be unqualified because this file
+   is used by [menhir] that does not always insert the [%{..%}]
+   header. So we work around it by the [-open Module] option in [dune]
+   but symbols should be unqualified.
+
+   Also, keep in mind that [ParToken.mly] and [Parser.mly] are merged
+   into one file, and the header of [Parser.mly] affects this code. *)
 
 %[@recover.prelude
   (* See [dune] file for [-open] flags for modules used in the
@@ -16,7 +17,7 @@
   module Token     = Lexing_jsligo.Token
 
   let mk_Directive region =
-    let value = (1, "file_path", None)
+    let value = 1, "file_path", None
     in Directive.Linemarker Region.{value; region}
 
  (*
@@ -25,18 +26,25 @@
 
   (* Ghost semantic values for inserted tokens *)
 
-  let mk_string     loc = Token.wrap_string    "ghost string" loc
-  let mk_verbatim   loc = Token.wrap_verbatim  "ghost verbatim" loc
-  let mk_bytes      loc = Token.wrap_bytes     (Hex.of_string "Ghost bytes") loc
-  let mk_int        loc = Token.wrap_int       Z.zero loc
-(*let mk_nat        loc = Token.wrap_nat       Z.zero loc
-  let mk_mutez      loc = Token.wrap_mutez     Int64.zero) *)
-  let mk_ident      loc = Token.wrap_ident     "ghost_ident" loc
-  let mk_uident     loc = Token.wrap_uident    "Ghost_uident" loc
-  let mk_attr       loc = Token.wrap_attr      "ghost_attr" loc
-  let mk_block_com  loc = Token.wrap_block_com "(* comment *)" loc
-  let mk_line_com   loc = Token.wrap_line_com  "// comment" loc
+  let mk_string   = Token.wrap_string   "ghost string"
+  let mk_verbatim = Token.wrap_verbatim "ghost verbatim"
+  let mk_bytes    = Token.wrap_bytes    (Hex.of_string "Ghost bytes")
+  let mk_int      = Token.wrap_int      Z.zero
+(*let mk_nat      = Token.wrap_nat      Z.zero
+  let mk_mutez    = Token.wrap_mutez    Int64.zero *)
+  let mk_ident    = Token.wrap_ident    "ghost_ident"
+  let mk_uident   = Token.wrap_uident   "Ghost_uident"
+  let mk_attr     = Token.wrap_attr     "ghost_attr" None
+
+  let mk_block_com = Token.wrap_block_com "(* comment *)"
+  let mk_line_com  = Token.wrap_line_com  "// comment"
+
 ]
+
+(* Make the recovery pay more attention to the number of synthesized tokens than
+   production reducing because the latter often means only precedence level *)
+%[@recover.default_cost_of_symbol     1000]
+%[@recover.default_cost_of_production 1]
 
 (* Literals *)
 
@@ -45,15 +53,16 @@
 
 %token         <LexerLib.Directive.t> Directive "<directive>" [@recover.expr mk_Directive  $loc]
 %token                <string Wrap.t> String    "<string>"    [@recover.expr mk_string     $loc]
-%token                <string Wrap.t> Verbatim  "<verbatim>"  [@recover.expr mk_verbatim   $loc]
+(* TODO: recovery annotation is turned off because it isn't supported in the pretty printer (see Pretty.pp_expr) *)
+%token                <string Wrap.t> Verbatim  "<verbatim>"  (* [@recover.expr mk_verbatim   $loc] *)
 %token      <(string * Hex.t) Wrap.t> Bytes     "<bytes>"     [@recover.expr mk_bytes      $loc]
 %token        <(string * Z.t) Wrap.t> Int       "<int>"       [@recover.expr mk_int        $loc]
-%token                <string Wrap.t> Ident     "<ident>"     [@recover.expr mk_ident      $loc]
+%token                <string Wrap.t> Ident     "<ident>"     [@recover.expr mk_ident      $loc] [@recover.cost 900]
 %token                <string Wrap.t> UIdent    "<uident>"    [@recover.expr mk_uident     $loc]
-%token                <string Wrap.t> Attr      "[@attr]"     [@recover.expr mk_attr       $loc]
+%token            <Attr.t Region.reg> Attr      "[@attr]"     [@recover.expr mk_attr       $loc]
 (*
 %token        <(string * Z.t) Wrap.t> Nat       "<nat>"       [@recover.expr mk_nat        $loc]
-%token        <(string * Z.t) Wrap.t> Mutez     "<mutez>"     [@recover.expr mk_mutez      $loc]
+%token    <(string * Int64.t) Wrap.t> Mutez     "<mutez>"     [@recover.expr mk_mutez      $loc]
 %token <string Region.reg Region.reg> Lang      "[%lang"      [@recover.expr mk_lang       $loc]
 *)
 
@@ -110,7 +119,7 @@
 *)
 %token <string Wrap.t> VBAR     "|"   [@recover.expr Token.wrap_vbar     $loc]
 %token <string Wrap.t> ARROW    "=>"  [@recover.expr Token.wrap_arrow    $loc]
-%token <string Wrap.t> WILD     "_"   [@recover.expr Token.wrap_wild     $loc]
+%token <string Wrap.t> WILD     "_"   [@recover.expr Token.wrap_wild     $loc] [@recover.cost 700]
 
 (* JavaScript Keywords *)
 

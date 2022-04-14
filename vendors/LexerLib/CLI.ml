@@ -19,12 +19,12 @@ module type PREPROCESSOR_CLI =
   sig
     include COMMENTS
 
-    val input            : string option (* input file         *)
-    val extension        : string option (* file extension     *)
-    val dirs             : string list   (* -I                 *)
-    val project_root     : string option (* --project-root     *)
-    val show_pp          : bool          (* --show-pp          *)
-    val offsets          : bool          (* neg --columns      *)
+    val input        : string option (* input file     *)
+    val extension    : string option (* file extension *)
+    val dirs         : string list   (* -I             *)
+    val project_root : string option (* --project-root *)
+    val show_pp      : bool          (* --show-pp      *)
+    val offsets      : bool          (* neg --columns  *)
 
     type status = [
       `Done
@@ -72,11 +72,11 @@ module Make (Preprocessor_CLI: PREPROCESSOR_CLI) : S =
 
     let make_help buffer : Buffer.t =
       let options = [
-        "  -t, --tokens     Print tokens";
-        "  -u, --units      Print lexical units";
-        "  -c, --copy       Print lexemes and markup";
-        "      --bytes      Bytes for source locations";
-        "      --preprocess Run the preprocessor"
+        "  -t, --tokens       Print tokens";
+        "  -u, --units        Print lexical units";
+        "  -c, --copy         Print lexemes and markup";
+        "      --bytes        Bytes for source locations";
+        "      --preprocess   Run the preprocessor"
       ] in
       begin
         Buffer.add_string buffer (String.concat ~sep:"\n" options);

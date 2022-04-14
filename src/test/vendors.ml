@@ -38,7 +38,12 @@ let redblack ~raise:_ () =
   ) ~init:tree lst in
   ()
 
-
 let main = test_suite "Vendors" [
     test "RedblackTree" redblack ;
+
+    test "ModuleResolutions - empty project" Mod_res_tests.empty_project ;
+    test "ModuleResolutions - no installation" Mod_res_tests.no_installation_json ;
+    test "ModuleResolutions - no lock file" Mod_res_tests.no_lock_file ;
+    test "ModuleResolutions - working project" Mod_res_tests.working_project ;
+    test "ModuleResolutions - complex project" Mod_res_tests.complex_project ;
 ]

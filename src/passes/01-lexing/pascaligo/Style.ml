@@ -36,50 +36,6 @@ let fail region error =
   let msg = error_to_string error in
   Stdlib.Error Region.{value=msg;region}
 
-(* Predicates on the tokens *)
-
-let is_int    = function Token.Int _ -> true | _ -> false
-let is_string = function Token.String _ -> true | _ -> false
-let is_bytes  = function Token.Bytes _ -> true | _ -> false
-
-let is_hexa = function
-  Token.UIdent t -> 
-    (match t#payload with
-      "A"| "a"| "B"| "b"| "C"| "c" | "D"| "d"| "E"| "e"| "F"| "f" -> true
-    | _->  false
-    )
-  | _ -> false
-
-let is_sym =
-  let open Token in
-  function
-    SEMI _
-  | COMMA _
-  | LPAR _
-  | RPAR _
-  | LBRACE _
-  | RBRACE _
-  | LBRACKET _
-  | RBRACKET _
-  | CONS _
-  | VBAR _
-  | ARROW _
-  | ASS _
-  | EQ _
-  | COLON _
-  | LT _
-  | LE _
-  | GT _
-  | GE _
-  | NE _
-  | PLUS _
-  | MINUS _
-  | SLASH _
-  | TIMES _
-  | DOT _
-  | WILD _
-  | CARET _ -> true
-  | _ -> false
 
 (* Checking the style *)
 
@@ -100,7 +56,7 @@ let rec check orig = function
               else fail region Missing_break
          else
            if   is_bytes token
-           then if   is_int next || is_hexa next
+           then if   is_int next || is_hex next
                 then fail region Odd_lengthed_bytes
                 else
                   if   is_sym next || is_eof next

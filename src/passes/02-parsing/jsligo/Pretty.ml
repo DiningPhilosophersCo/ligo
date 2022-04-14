@@ -6,6 +6,7 @@ module Region = Simple_utils.Region
 open! Region
 open! PPrint
 module Option = Simple_utils.Option
+module List = Core.List
 
 let pp_braces printer (node : 'a braces reg) =
   let inside = node.value.inside
@@ -16,15 +17,14 @@ let pp_brackets printer (node : 'a brackets reg) =
   in string "[" ^^ nest 1 (printer inside ^^ string "]")
 
 let pp_nsepseq :
-  'a. string -> ('a -> document) -> ('a, _ Token.wrap) Utils.nsepseq -> document =
+  'a. string -> ('a -> document) -> ('a, lexeme Wrap.t) Utils.nsepseq -> document =
   fun sep printer elements ->
     let elems = Utils.nsepseq_to_list elements
     and sep   = string sep ^^ break 1
     in separate_map sep printer elems
 
-
-let rec print ast =
-  let stmt     = Utils.nseq_to_list ast.statements in
+let rec print cst =
+  let stmt     = Utils.nseq_to_list cst.statements in
   let stmt     = List.filter_map ~f:pp_toplevel_statement stmt in
   let app stmt = group (stmt ^^ string ";")
   in separate_map (hardline ^^ hardline) app stmt
@@ -86,9 +86,9 @@ and pp_namespace ?top {value = (_, name, statements, attributes); _} =
   let is_private = List.exists ~f:(fun a -> String.equal a.value "private") attributes in
   let attributes  = filter_private attributes in
   let pp_statements = pp_nsepseq ";" pp_statement in
-  (if List.is_empty attributes then empty else pp_attributes attributes) ^^ 
+  (if List.is_empty attributes then empty else pp_attributes attributes) ^^
   string "namespace " ^^ string name.value
-  ^^ (if ((top && is_private) || not top) then string "" else string "export ") 
+  ^^ (if ((top && is_private) || not top) then string "" else string "export ")
   ^^ group (pp_braces pp_statements statements)
 
 and pp_cond_expr {value; _} =
@@ -104,7 +104,7 @@ and pp_return {value = {expr; _}; _} =
     Some s -> string "return " ^^ pp_expr s
   | None -> string "return"
 
-and filter_private (attributes: CST.attributes) : CST.attributes = 
+and filter_private (attributes: CST.attributes) : CST.attributes =
   List.filter ~f:(fun (v: CST.attribute) -> not (String.equal v.value "private")) attributes
 
 and pp_let ?top (node : let_decl reg) =
@@ -116,7 +116,7 @@ and pp_let ?top (node : let_decl reg) =
   let is_private = List.exists ~f:(fun a -> String.equal a.value "private") attributes in
   let attributes  = filter_private attributes in
   (if List.is_empty attributes then empty else pp_attributes attributes)
-     ^^ (if ((top && is_private) || not top) then string "" else string "export ") 
+     ^^ (if ((top && is_private) || not top) then string "" else string "export ")
      ^^ string "let " ^^ pp_nsepseq "," pp_val_binding bindings
 
 and pp_const {value = {bindings; _}; _} =
@@ -203,13 +203,13 @@ and pp_expr = function
 | ECodeInj _ -> failwith "TODO: ECodeInj"
 
 and pp_array (node: (array_item, comma) Utils.sepseq brackets reg) =
-  match node.value.inside with 
-    Some node -> 
+  match node.value.inside with
+    Some node ->
       let pp_items = pp_nsepseq "," pp_array_item in
       let result = string "[" ^^ nest 1 (pp_items node ^^ string "]") in
       group result
       (* pp_brackets (fun _ -> empty) node *)
-  | None -> 
+  | None ->
       pp_brackets (fun _ -> empty) node
 
 and pp_call_expr {value; _} =
@@ -259,7 +259,7 @@ and pp_projection {value = {expr; selection}; _} =
   pp_expr expr ^^ pp_selection selection
 
 and pp_assign (a, op, b) =
-  let operator = match op.value with 
+  let operator = match op.value with
       Eq -> " = "
     | Assignment_operator Times_eq ->  " *= "
     | Assignment_operator Div_eq ->    " /= "
@@ -349,7 +349,7 @@ and pp_seq {value; _} =
 
 and pp_type_expr: type_expr -> document = function
   TProd   t -> pp_cartesian t
-| TSum    t -> break 0 ^^ pp_sum_type t
+| TSum    t -> pp_sum_type t
 | TObject t -> pp_object_type t
 | TApp    t -> pp_type_app t
 | TFun    t -> pp_fun_type t
@@ -364,17 +364,29 @@ and pp_module_access : type a.(a -> document) -> a module_access reg -> document
   let {module_name; field; _} = value in
   group (pp_ident module_name ^^ string "." ^^ break 0 ^^ f field)
 
- and pp_cartesian (node: CST.cartesian) =
+and pp_cartesian (node: CST.cartesian) =
   let pp_type_exprs = pp_nsepseq "," pp_type_expr
   in group (
     pp_attributes node.attributes ^^ hardline ^^
     pp_brackets pp_type_exprs node.inside)
 
- and pp_sum_type (node : sum_type reg) =
+and pp_sum_type (node : sum_type reg) =
   let {variants; attributes; _} = node.value in
-  let variants = pp_nsepseq "|" pp_variant variants.value in
-  if List.is_empty attributes then variants
-  else group (pp_attributes attributes ^/^ variants)
+  let head, tail = variants.value in
+  let head = pp_variant head
+  and padding_flat =
+    if List.is_empty attributes then string "| " else empty
+  and padding_non_flat =
+    if List.is_empty attributes then string "| " else blank 2 in
+  let head =
+    if List.is_empty tail then head
+    else ifflat (padding_flat ^^ head) (padding_non_flat ^^ head)
+  and tail = List.map ~f:snd tail
+  and app variant =
+    break 1 ^^ string "| " ^^ pp_variant variant in
+  let thread = head ^^ concat_map app tail in
+  if attributes = [] then thread
+  else group (pp_attributes attributes ^/^ thread)
 
 and pp_variant (node : variant reg) =
   let {tuple; attributes; _} = node.value in
@@ -390,9 +402,10 @@ and pp_variant_comp (node: variant_comp) =
     match params with
       None -> pp_string constr, []
     | Some (_comma, params) ->
-       pp_string constr , Utils.nsepseq_to_list params in
-  let sep = string "," ^^ break 1
-  in constr ^^ sep ^^ separate_map sep pp_type_expr params
+       pp_string constr , Utils.nsepseq_to_list params
+  in if params = [] then constr
+     else let sep = string "," ^/^ break 0
+          in group (constr ^^ sep ^^ separate_map sep pp_type_expr params)
 
 and pp_attributes = function
   [] -> empty
@@ -409,7 +422,7 @@ and pp_field_decl {value; _} =
   let name = if List.is_empty attributes then pp_ident field_name
              else attr ^/^ pp_ident field_name in
   match field_type with
-    TVar v when Caml.(=) v field_name -> name
+    TVar v when String.equal v.value field_name.value -> name
   | _ -> let t_expr = pp_type_expr field_type
         in prefix 2 1 (name ^^ string ":") t_expr
 

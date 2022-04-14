@@ -58,10 +58,10 @@ module Mutator (M : Monad) = struct
        let z = f z in
        return (EArith (Nat {value=(s, Z.of_int z);region}))
     | EArith (Mutez {value=(s, z);region}) ->
-       let* z = mutate_nat (Z.to_int z) in
+       let* z = mutate_nat (Z.to_int @@ Z.of_int64 z) in
        let* f = transform_nat |> map_return |> oneof in
        let z = f z in
-       return (EArith (Mutez {value=(s, Z.of_int z);region}))
+       return (EArith (Mutez {value=(s, Int64.of_int z);region}))
     | ELogic (BoolExpr (Or op)) | ELogic (BoolExpr (And op)) ->
        let* ctor = bool_bin_op_ctor |> map_return |> oneof in
        return (ELogic (BoolExpr (ctor op)))
@@ -82,12 +82,6 @@ module Mutator (M : Monad) = struct
                                  t = (fun x -> return x);
                                  d = (fun x -> return x); }
 
-  let mutate_expression_list ?n (expr : Cst.Reasonligo.expr) =
-    get_list ?n @@ map_expression mutate_mapper expr
-
-  let mutate_expression ?n (expr: Cst.Reasonligo.expr) =
-    let rndexpr = map_expression mutate_mapper expr in
-    get_one ?n rndexpr
 
   let mutate_module_ ?n (mod_ : Cst.Reasonligo.t) =
     let rndmod_ = map_module mutate_mapper mod_ in

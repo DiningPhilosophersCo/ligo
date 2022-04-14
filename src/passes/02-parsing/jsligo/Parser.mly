@@ -15,8 +15,9 @@ module Wrap = Lexing_shared.Wrap
 
 (* Utilities *)
 
-let unwrap = Wrap.payload
-let wrap   = Wrap.wrap
+let unwrap wrap = Region.{value=wrap#payload; region=wrap#region}
+
+let wrap = Wrap.wrap
 
 let ghost = wrap "" ghost
 
@@ -207,8 +208,8 @@ stmt_or_namespace:
 %inline attributes:
   ioption(nseq("[@attr]") { Utils.nseq_to_list $1 }) {
     let l = list_of_option $1 in
-    List.map ~f:unwrap l
-  }
+    let filter (attr: Attr.t reg) = {attr with value = fst attr.value}
+    in List.map filter l }
 
 (* Namespace Statement *)
 
@@ -683,11 +684,12 @@ object_rest_pattern:
 (* Type declarations *)
 
 type_decl:
-  "type" type_name ioption(type_params) "=" type_expr {
-    let kwd_type = $1 in
-    let eq = $4 in
-    let region = cover kwd_type#region (type_expr_to_region $5) in
-    let value  = {kwd_type; name=$2; params=$3; eq; type_expr=$5; attributes=[private_attribute]}
+  attributes "type" type_name ioption(type_params) "=" type_expr {
+    let kwd_type = $2 in
+    let eq = $5 in
+    let region = cover kwd_type#region (type_expr_to_region $6) in
+    let value  = {kwd_type; name=$3; params=$4; eq; type_expr=$6;
+                  attributes=private_attribute::$1}
     in SType {region; value} }
 
 type_params:
@@ -818,7 +820,7 @@ field_decl:
     let value = {
       field_name=$2;
       colon=ghost;  (* TODO: Create a "new" CST node *)
-      field_type = TVar $2;
+      field_type = TVar {$2 with region = Region.ghost}; (* TODO *)
       attributes=$1}
     in {$2 with value}
   }
@@ -933,7 +935,7 @@ property:
     in Property_rest {region; value} }
 
 property_name:
-  "<int>"    {       EArith (Int (unwrap $1)) }
+  "<int>"    { EArith  (Int (unwrap $1))    }
+| "<string>" { EString (String (unwrap $1)) }
 | ctor
-| field_name {               EVar $1 }
-| "<string>" {   EString (String (unwrap $1)) }
+| field_name { EVar $1 }

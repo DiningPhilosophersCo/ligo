@@ -1,10 +1,5 @@
 open Types
 
-let module_access : ('a -> 'b) -> 'a module_access -> 'b module_access
-= fun f {module_name; element} ->
-  let element = f element in
-  {module_name; element}
-
 (* Types level *)
 
 let for_all : ('a -> 'b) -> 'a abstraction -> 'b abstraction =
@@ -17,13 +12,14 @@ let type_app : ('a -> 'b) -> 'a type_app -> 'b type_app
   let arguments = List.map ~f:g arguments in
   {type_operator; arguments}
 
+let row_element : ('a -> 'b) -> 'a row_element -> 'b row_element
+= fun g {associated_type ; attributes ; decl_pos}  ->
+  let associated_type = g associated_type in
+  ({associated_type ; attributes ; decl_pos}: 'b row_element)
+
 let rows : ('a -> 'b) -> 'a rows -> 'b rows
 = fun g {fields; attributes} ->
-  let fields = LMap.map
-  (fun {associated_type ; attributes ; decl_pos} ->
-    let associated_type = g associated_type in
-    ({associated_type ; attributes ; decl_pos}: 'b row_element)
-  ) fields in
+  let fields = LMap.map (row_element g) fields in
   {fields; attributes}
 
 let arrow : ('a -> 'b) -> 'a arrow -> 'b arrow
@@ -74,6 +70,11 @@ let lambda : ('a -> 'b) -> ('c -> 'd) -> ('a,'c) lambda -> ('b,'d) lambda
   let output_type = Option.map ~f:g output_type in
   let result = f result in
   {binder;output_type;result}
+
+let type_abs : ('a -> 'b) -> 'a type_abs -> 'b type_abs
+= fun f {type_binder;result}->
+  let result = f result in
+  {type_binder;result}
 
 let path : ('a -> 'b) -> 'a access list -> 'b access list
 = fun f path ->
@@ -156,10 +157,10 @@ let for_
   {binder; start; final; incr; f_body}
 
 let for_each
-= fun f {fe_binder; collection; collection_type; fe_body} ->
+= fun f {fe_binder; collection; fe_body; collection_type} ->
   let collection = f collection in
   let fe_body    = f fe_body in
-  {fe_binder; collection; collection_type; fe_body}
+  {fe_binder; collection; fe_body ; collection_type}
 
 let while_loop
 = fun f {cond; body} ->
@@ -168,44 +169,52 @@ let while_loop
   {cond; body}
 
 (* Declaration *)
-let declaration_type : ('a -> 'b) -> 'a declaration_type -> 'b declaration_type
-= fun g {type_binder; type_expr; type_attr} ->
+let declaration_type : ('a -> 'b) -> ('attra -> 'attrb) -> ('a,'attra) declaration_type' -> ('b,'attrb) declaration_type'
+= fun g h {type_binder; type_expr; type_attr} ->
   let type_expr = g type_expr in
+  let type_attr = h type_attr in
   {type_binder; type_expr; type_attr}
 
-let declaration_constant : ('a -> 'b) -> ('c -> 'd) -> ('a,'c) declaration_constant -> ('b,'d) declaration_constant
-= fun f g {binder=b; attr; expr} ->
-  let binder = binder g b in
-  let expr   = f expr     in
+let declaration_constant : ('a -> 'b) -> ('c -> 'd) -> ('attra -> 'attrb) -> ('a,'c,'attra) declaration_constant' -> ('b,'d,'attrb) declaration_constant'
+= fun map_e map_ty map_attr_e {binder=b; attr; expr} ->
+  let binder = binder map_ty b in
+  let expr   = map_e expr     in
+  let attr = map_attr_e attr in
   {binder;attr;expr}
 
-let rec declaration_module : ('a -> 'b) -> ('c -> 'd) -> ('a,'c) declaration_module -> ('b,'d) declaration_module
-= fun f g {module_binder; module_; module_attr} ->
-  let module_ = module' f g module_ in
+let rec declaration_module : ('e_src -> 'e_dst) -> ('ty_src -> 'ty_dst) -> ('ea_src -> 'ea_dst) -> ('ta_src -> 'ta_dst) -> ('ma_src -> 'ma_dst) ->
+  ('e_src,'ty_src,'ea_src,'ta_src,'ma_src) declaration_module' -> ('e_dst,'ty_dst,'ea_dst,'ta_dst,'ma_dst) declaration_module'
+= fun map_e map_ty map_attr_e map_attr_t map_attr_m {module_binder; module_; module_attr} ->
+  let module_ = module_expr map_e map_ty map_attr_e map_attr_t map_attr_m module_ in
+  let module_attr = map_attr_t module_attr in
   {module_binder;module_;module_attr}
 
+and mod_in : ('e_src -> 'e_dst) -> ('ty_src -> 'ty_dst) -> ('ea_src -> 'ea_dst) -> ('ta_src -> 'ta_dst) -> ('ma_src -> 'ma_dst) ->
+  ('e_src,'ty_src,'ea_src,'ta_src,'ma_src) mod_in' -> ('e_dst,'ty_dst,'ea_dst,'ta_dst,'ma_dst) mod_in'
+= fun map_e map_ty map_attr_e map_attr_t map_attr_m { module_binder; rhs ; let_result} ->
+  let rhs = module_expr map_e map_ty map_attr_e map_attr_t map_attr_m rhs in
+  let let_result = map_e let_result in
+  { module_binder; rhs ; let_result}
 and module_alias
-= fun ma ->
-  ma
+= fun ma -> ma
 
+and declarations f g h i j prg =
+List.map ~f:(Location.map (declaration f g h i j)) prg
 and declaration
-= fun f g -> function
-  Declaration_type    ty -> let ty = declaration_type      g ty in Declaration_type ty
-| Declaration_constant c -> let c  = declaration_constant f g c in Declaration_constant c
-| Declaration_module   m -> let m  = declaration_module   f g m in Declaration_module   m
-| Module_alias        ma -> let ma = module_alias            ma in Module_alias        ma
+= fun map_e map_ty map_attr_e map_attr_t map_attr_m -> function
+  Declaration_type    ty -> let ty = declaration_type     map_ty map_attr_t ty in Declaration_type ty
+| Declaration_constant c -> let c  = declaration_constant map_e map_ty map_attr_e c in Declaration_constant c
+| Declaration_module   m -> let m  = declaration_module   map_e map_ty map_attr_e map_attr_t map_attr_m m in Declaration_module m
 
-and module' : ('a -> 'b) -> ('c -> 'd) -> ('a,'c) module' -> ('b,'d) module'
-= fun f g prg ->
-  List.map ~f:(Location.map (declaration f g)) prg
-
-and mod_in :  ('a -> 'b) -> ('c -> 'd) -> ('a,'c) mod_in -> ('b,'d) mod_in
-= fun f g {module_binder; rhs; let_result} ->
-  let rhs        = (module' f g) rhs in
-  let let_result = f let_result in
-  {module_binder; rhs; let_result}
-
-and mod_alias :  ('a -> 'b) -> 'a mod_alias -> 'b mod_alias
-= fun f {alias; binders; result} ->
-  let result = f result in
-  {alias; binders; result}
+and module_expr : ('e_src -> 'e_dst) -> ('ty_src -> 'ty_dst) -> ('ea_src -> 'ea_dst) -> ('ta_src -> 'ta_dst) -> ('ma_src -> 'ma_dst) ->
+    ('a,'c,'ea_src,'ta_src,'ma_src) module_expr' -> ('b,'d,'ea_dst,'ta_dst,'ma_dst) module_expr' =
+  fun map_e map_ty map_attr_e map_attr_t map_attr_m mexp ->
+    Location.map
+      (function
+      | M_struct prg ->
+        let prg = declarations map_e map_ty map_attr_e map_attr_t map_attr_m prg in
+        M_struct prg
+      | M_variable x -> M_variable x
+      | M_module_path path -> M_module_path path
+      )
+      mexp

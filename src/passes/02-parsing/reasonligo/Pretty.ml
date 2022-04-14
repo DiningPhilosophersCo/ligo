@@ -1,11 +1,14 @@
 [@@@warning "-42"]
 
+module List = Core.List
+
 module CST = Cst_reasonligo.CST
 open CST
 module Region = Simple_utils.Region
 open! Region
 open! PPrint
 module Option = Simple_utils.Option
+
 (*module Directive = LexerLib.Directive*)
 
 let pp_par printer (node : 'a par reg) =
@@ -16,8 +19,8 @@ let pp_braces printer (node : 'a braces reg) =
   let inside = node.value.inside
   in string "{" ^^ nest 1 (printer inside ^^ string "}")
 
-let rec print ast =
-  let decl = Utils.nseq_to_list ast.decl in
+let rec print cst =
+  let decl = Utils.nseq_to_list cst.decl in
   let decl = List.filter_map ~f:pp_declaration decl
   in separate_map (hardline ^^ hardline) group decl
 
@@ -292,7 +295,7 @@ and pp_arith_expr = function
 | Mutez e -> pp_mutez e
 
 and pp_mutez {value; _} =
-  Z.to_string (snd value) ^ "mutez" |> string
+  Int64.to_string (snd value) ^ "mutez" |> string
 
 and pp_string_expr = function
      Cat e -> pp_bin_op "++" e
@@ -331,7 +334,11 @@ and pp_record_expr ne_inj = pp_ne_injection pp_field_assign ne_inj
 
 and pp_field_assign {value; _} =
   let {field_name; field_expr; _} = value in
-  prefix 2 1 (pp_ident field_name ^^ string ":") (pp_expr field_expr)
+  match field_expr with
+    EVar field_name' when field_name = field_name' ->
+      pp_ident field_name
+  | _ ->
+      prefix 2 1 (pp_ident field_name ^^ string ":") (pp_expr field_expr)
 
 and pp_ne_injection :
   'a.('a -> document) -> 'a ne_injection reg -> document =
@@ -343,13 +350,13 @@ and pp_ne_injection :
         None -> elements
       | Some (opening, closing) ->
           string opening ^^ nest 2 (break 0 ^^ elements)
-          ^^ break 1 ^^ string closing in
+          ^^ string closing in
     let inj = if List.is_empty attributes then inj
               else break 0 ^^ pp_attributes attributes ^/^ inj
     in inj
 
 and pp_nsepseq :
-  'a.string -> ('a -> document) -> ('a, _ Token.wrap) Utils.nsepseq -> document =
+  'a.string -> ('a -> document) -> ('a, lexeme Wrap.t) Utils.nsepseq -> document =
   fun sep printer elements ->
     let elems = Utils.nsepseq_to_list elements
     and sep   = string sep ^^ break 1
@@ -532,7 +539,7 @@ and pp_field_decl {value; _} =
   let name = if List.is_empty attributes then pp_ident field_name
              else attr ^/^ pp_ident field_name in
   match field_type with
-    TVar v when Caml.(=) v field_name -> name
+    TVar v when String.equal v.value field_name.value -> name
   | _ -> let t_expr = pp_type_expr field_type
         in prefix 2 1 (name ^^ string ":") t_expr
 

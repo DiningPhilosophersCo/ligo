@@ -1,5 +1,7 @@
 [@@@warning "-42"]
 
+module List = Core.List
+
 module CST = Cst_cameligo.CST
 open CST
 module Region = Simple_utils.Region
@@ -11,10 +13,14 @@ module Token  = Lexing_cameligo.Token
 let pp_par printer {value; _} =
   string "(" ^^ nest 1 (printer value.inside ^^ string ")")
 
-let rec print ast =
-  let decl = Utils.nseq_to_list ast.decl in
+(* The CST *)
+
+let rec print cst =
+  let decl = Utils.nseq_to_list cst.decl in
   let decl = List.filter_map ~f:pp_declaration decl
   in separate_map (hardline ^^ hardline) group decl
+
+(* Declarations *)
 
 and pp_declaration = function
   Let         decl -> Some (pp_let_decl     decl)
@@ -37,6 +43,20 @@ and pp_dir_decl = function
     in string lexeme
 *)
 
+(* Variables *)
+
+and pp_ident t = string t.value
+
+(* Strings *)
+
+and pp_string s = string "\"" ^^ pp_ident s ^^ string "\""
+
+(* Verbatim strings *)
+
+and pp_verbatim s = string "{|" ^^ pp_ident s ^^ string "|}"
+
+(* Value declarations *)
+
 and pp_let_decl {value; _} =
   let _, rec_opt, binding, attr = value in
   let let_str =
@@ -47,29 +67,41 @@ and pp_let_decl {value; _} =
                 else pp_attributes attr ^/^ let_str
   in let_str ^^ pp_let_binding binding
 
+and pp_attribute (node : Attr.t reg) =
+  let key, val_opt = node.value in
+  let thread = string "[@" ^^ string key in
+  let thread = match val_opt with
+                 Some String value ->
+                   group (thread ^/^ nest 2 (string value))
+               | None -> thread in
+  let thread = thread ^^ string "]"
+  in thread
+
 and pp_attributes = function
-    [] -> empty
-| attr ->
-   let make s = string "[@" ^^ string s.value ^^ string "]"
-   in separate_map (break 0) make attr
-
-and pp_ident t = string t.value
-
-and pp_string s = string "\"" ^^ pp_ident s ^^ string "\""
-
-and pp_verbatim s = string "{|" ^^ pp_ident s ^^ string "|}"
+     [] -> empty
+| attrs -> separate_map (break 0) pp_attribute attrs
 
 and pp_let_binding (binding : let_binding) =
-  let {binders; lhs_type; let_rhs; _} = binding in
+  let {type_params; binders; rhs_type; let_rhs; _} = binding in
   let head, tail = binders in
-  let patterns =
-    group (nest 2 (separate_map (break 1) pp_pattern (head::tail))) in
+  let thread = pp_type_params (pp_pattern head) type_params in
+  let thread =
+    if List.is_empty tail then thread
+    else
+      thread ^^ (*string " " ^^*)
+      group (nest 2 (break 1 ^^ separate_map (break 1) pp_pattern tail)) in
   let lhs =
-    patterns ^^
-    match lhs_type with
+    thread ^^
+    match rhs_type with
             None -> empty
     | Some (_,e) -> group (break 1 ^^ string ": " ^^ pp_type_expr e)
   in prefix 2 1 (lhs ^^ string " =") (pp_expr let_rhs)
+
+and pp_type_params thread = function
+  None -> thread
+| Some type_params ->
+    let params = pp_nseq pp_ident type_params.value.inside.type_vars
+    in thread ^//^ string "(type " ^^ params ^^ string ")"
 
 and pp_pattern = function
   PConstr   p -> pp_pconstr p
@@ -130,7 +162,7 @@ and pp_ptuple {value; _} =
      then pp_pattern head
      else pp_pattern head ^^ string "," ^^ app (List.map ~f:snd tail)
 
-and pp_precord fields = pp_ne_injection pp_field_pattern fields
+and pp_precord fields = group (pp_ne_injection pp_field_pattern fields)
 
 and pp_field_pattern {value; _} =
   let {field_name; pattern; _} = value in
@@ -141,10 +173,22 @@ and pp_ptyped {value; _} =
   group (pp_pattern pattern ^^ string " :" ^/^ pp_type_expr type_expr)
 
 and pp_type_decl decl =
-  let {name; type_expr; _} = decl.value in
+  let {name; params; type_expr; _} = decl.value in
+  let params = pp_type_vars params in
   let padding = match type_expr with TSum _ -> 0 | _ -> 2 in
-  string "type " ^^ pp_ident name ^^ string " ="
+  string "type " ^^ params ^^ pp_ident name ^^ string " ="
   ^^ group (nest padding (break 1 ^^ pp_type_expr type_expr))
+
+and pp_type_vars (node : type_vars option) =
+  match node with
+    None -> empty
+  | Some QParam param ->
+      pp_type_var param ^^ string " "
+  | Some QParamTuple tuple ->
+      pp_par (pp_nsepseq "," pp_type_var) tuple ^^ string " "
+
+and pp_type_var (node : type_var reg) =
+  string "'" ^^ pp_ident node.value.name
 
 and pp_module_decl decl =
   let {name; module_; _} = decl.value in
@@ -259,7 +303,7 @@ and pp_arith_expr = function
 | Mutez e -> pp_mutez e
 
 and pp_mutez {value; _} =
-  Z.to_string (snd value) ^ "mutez" |> string
+  Int64.to_string (snd value) ^ "mutez" |> string
 
 and pp_string_expr = function
      Cat e -> pp_bin_op "^" e
@@ -309,13 +353,13 @@ and pp_ne_injection :
       match Option.map ~f:pp_compound compound with
         None -> elements
       | Some ((opening, _), (closing, _)) ->
-         string opening ^^ nest 1 elements ^^ string closing in
+          string opening ^^ align elements ^^ string closing in
     let inj = if List.is_empty attributes then inj
               else pp_attributes attributes ^/^ inj
     in inj
 
 and pp_nsepseq :
-  'a.string -> ('a -> document) -> ('a, _ Token.wrap) Utils.nsepseq -> document =
+  'a.string -> ('a -> document) -> ('a, lexeme Wrap.t) Utils.nsepseq -> document =
   fun sep printer elements ->
     let elems = Utils.nsepseq_to_list elements
     and sep   = string sep ^^ break 1
@@ -331,10 +375,11 @@ and pp_projection {value; _} =
   let fields = separate_map sep pp_selection fields in
   group (pp_ident struct_name ^^ string "." ^^ break 0 ^^ fields)
 
-and pp_module_access : type a.(a -> document) -> a module_access reg -> document
-= fun f {value; _} ->
-  let {module_name; field; _} = value in
-  group (pp_ident module_name ^^ string "." ^^ break 0 ^^ f field)
+and pp_module_access :
+  type a.(a -> document) -> a module_access reg -> document =
+  fun f {value; _} ->
+    let {module_name; field; _} = value in
+    group (pp_ident module_name ^^ string "." ^^ break 0 ^^ f field)
 
 and pp_selection = function
   FieldName v   -> string v.value
@@ -418,13 +463,13 @@ and pp_mod_alias {value; _} =
      ^^ string " in" ^^ hardline ^^ group (pp_expr body)
 
 and pp_fun {value; _} =
-  let {binders; lhs_type; body; _} = value in
+  let {binders; rhs_type; body; _} = value in
   let binders = pp_nseq pp_pattern binders
   and annot   =
-    match lhs_type with
+    match rhs_type with
       None -> empty
     | Some (_,e) ->
-        group (break 1 ^^ string ": "
+        group (break 1 ^^ string ":"
                ^^ nest 2 (break 1 ^^ pp_type_expr e))
   in group (string "fun " ^^ nest 4 binders ^^ annot
      ^^ string " ->" ^^ nest 2 (break 1 ^^ pp_expr body))
@@ -442,17 +487,17 @@ and pp_seq {value; _} =
      ^^ string closing
 
 and pp_type_expr = function
-  TProd t   -> pp_cartesian t
-| TSum t    -> pp_sum_type t
-| TRecord t -> pp_record_type t
-| TApp t    -> pp_type_app t
-| TFun t    -> pp_fun_type t
-| TPar t    -> pp_type_par t
-| TVar t    -> pp_ident t
-| TString s -> pp_string s
-| TInt i    -> pp_int i
-| TModA   t -> pp_module_access pp_type_expr t
-| TArg    t -> pp_quoted_param t
+  TProd t    -> pp_cartesian t
+| TSum t     -> pp_sum_type t
+| TRecord t  -> pp_record_type t
+| TApp t     -> pp_type_app t
+| TFun t     -> pp_fun_type t
+| TPar t     -> pp_type_par t
+| TVar t     -> pp_ident t
+| TString s  -> pp_string s
+| TInt i     -> pp_int i
+| TModA t    -> pp_module_access pp_type_expr t
+| TArg t     -> pp_quoted_param t
 
 and pp_quoted_param param =
   let quoted = {param with value = "'" ^ param.value.name.value}
@@ -503,15 +548,16 @@ and pp_field_decl {value; _} =
   let t_expr = pp_type_expr field_type
   in prefix 2 1 (name ^^ string " :") t_expr
 
-and pp_type_app {value = (ctor, type_constr_arg); _} =
-  pp_type_constr_arg type_constr_arg
-  ^^ group (nest 2 (break 1 ^^ pp_type_constr ctor))
+and pp_type_app (node : (type_constr * type_constr_arg) reg) =
+  let {value; _} = node in
+  let ctor, arg = value in
+  prefix 2 1 (pp_type_constr_arg arg) (pp_type_constr ctor)
 
 and pp_type_constr_arg = function
   CArg t -> pp_type_expr t
-| CArgTuple t -> pp_constr_arg_tuple t
+| CArgTuple t -> pp_ctor_arg_tuple t
 
-and pp_constr_arg_tuple {value; _} =
+and pp_ctor_arg_tuple {value; _} =
   let head, tail = value.inside in
   let rec app = function
     []  -> empty
@@ -526,7 +572,7 @@ and pp_constr_arg_tuple {value; _} =
       pp_type_expr head ^^ string "," ^^ app (h :: tail)
     in string "(" ^^ nest 1 (components ^^ string ")")
 
-and pp_type_constr ctor = string ctor.value
+and pp_type_constr constr = string constr.value
 
 and pp_fun_type {value; _} =
   let lhs, _, rhs = value in

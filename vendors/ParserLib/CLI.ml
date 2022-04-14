@@ -21,12 +21,12 @@ module type PREPROCESSING_CLI =
   sig
     include COMMENTS
 
-    val input            : string option (* input file         *)
-    val extension        : string option (* file extension     *)
-    val dirs             : string list   (* -I                 *)
-    val project_root     : string option (* --project-root     *)
-    val show_pp          : bool          (* --show-pp          *)
-    val offsets          : bool          (* neg --columns      *)
+    val input        : string option (* input file         *)
+    val extension    : string option (* file extension     *)
+    val dirs         : string list   (* -I                 *)
+    val project_root : string option (* --project-root     *)
+    val show_pp      : bool          (* --show-pp          *)
+    val offsets      : bool          (* neg --columns      *)
 
     type status = [
       `Done
@@ -67,9 +67,10 @@ module type S =
     val mono       : bool
     val pretty     : bool
     val cst        : bool
-    val cst_tokens : bool
     val recovery   : bool
-    (* debug options *)
+
+    (* Debug options *)
+
     val trace_recovery        : bool
     val trace_recovery_output : string option
 
@@ -95,15 +96,13 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
 
     let make_help buffer : Buffer.t =
       let options = [
-        "      --mono       Use Menhir monolithic API";
-        "      --cst        Print the CST";
-        "      --cst-tokens Print tokens from the CST";
-        "      --pretty     Pretty-print the input";
-        "      --recovery   Enable error recovery";
-        "      debug options:";
+        "      --mono         Use Menhir monolithic API";
+        "      --cst          Print the CST";
+        "      --pretty       Pretty-print the input";
+        "      --recovery     Enable error recovery";
+        "      Debug options:";
         "      --trace-recovery [output_file]";
-        "                   Enable verbose printing of intermediate steps of error recovery algorithm to";
-        "                   output_file if it is passed or stdout otherwise"
+        "                     Enable verbose printing of intermediate steps\n                     of error recovery algorithm to output_file\n                     if provided, or stdout otherwise"
       ] in
       begin
         Buffer.add_string buffer (String.concat "\n" options);
@@ -116,9 +115,10 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
     let mono       = ref false
     and pretty     = ref false
     and cst        = ref false
-    and cst_tokens = ref false
     and recovery   = ref false
-    (* debug options *)
+
+    (* Debug options *)
+
     and trace_recovery        = ref false
     and trace_recovery_output = ref None
 
@@ -198,7 +198,6 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
         noshort, "mono",       set mono true, None;
         noshort, "pretty",     set pretty true, None;
         noshort, "cst",        set cst true, None;
-        noshort, "cst-tokens", set cst_tokens true, None;
         noshort, "recovery",   set recovery true, None;
         noshort, "trace-recovery", set trace_recovery true,
           Some (fun path -> trace_recovery := true;
@@ -242,7 +241,6 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
       |> add "--mono"
       |> add "--pretty"
       |> add "--cst"
-      |> add "--cst-tokens"
       |> add "--recovery"
       |> add "--trace-recovery"
 
@@ -280,9 +278,10 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
     let mono       = !mono
     and pretty     = !pretty
     and cst        = !cst
-    and cst_tokens = !cst_tokens
     and recovery   = !recovery
+
     (* Debug options *)
+
     and trace_recovery        = !trace_recovery
     and trace_recovery_output = !trace_recovery_output
 
@@ -294,11 +293,11 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
         sprintf "mono       = %b" mono;
         sprintf "pretty     = %b" pretty;
         sprintf "cst        = %b" cst;
-        sprintf "cst_tokens = %b" cst_tokens;
         sprintf "recovery   = %b" recovery;
         sprintf "trace_recovery = %b" trace_recovery;
         sprintf "trace_recovery_output = %s" @@
-            Option.value trace_recovery_output ~default:"None"] in
+          Option.value trace_recovery_output ~default:"None"
+      ] in
     begin
       Buffer.add_string buffer (String.concat "\n" options);
       Buffer.add_char   buffer '\n';
@@ -308,14 +307,13 @@ module Make (Lexer_CLI: LEXER_CLI) : S =
     (* Checking combinations of options *)
 
     let status =
-      match mono, pretty, cst, cst_tokens, recovery, trace_recovery with
-      |     _,  true,  true,     _,     _,     _ -> `Conflict ("--pretty", "--cst")
-      |     _,  true,     _,  true,     _,     _ -> `Conflict ("--pretty", "--cst-tokens")
-      |     _,     _,  true,  true,     _,     _ -> `Conflict ("--cst", "--cst-tokens")
-      |  true,     _,     _,     _,  true,     _ -> `Conflict ("--mono", "--recovery")
-      |     _,     _,     _,     _, false,  true -> `DependsOnOtherOption
-                                                      ("--trace-recovery", "--recovery")
-      |     _,     _,     _,     _,     _,     _ -> status
+      match
+        mono, pretty,  cst, recovery, trace_recovery with
+           _,   true, true,        _,    _ -> `Conflict ("--pretty", "--cst")
+      | true,      _,    _,     true,    _ -> `Conflict ("--mono", "--recovery")
+      |    _,      _,    _,    false, true -> `DependsOnOtherOption
+                                                 ("--trace-recovery", "--recovery")
+      |    _,     _,     _,     _,     _ -> status
 
 
     (* Status *)
